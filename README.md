@@ -4,9 +4,10 @@
 Reflection extension methods meant to be used by humans.
 
 ## Type extensions
-Have you ever wanted to output a type name in an exception message before only for it to read like this?
 
 ### Type.GetHumanReadableName
+
+Have you ever wanted to output a type name in an exception message before only for it to read like this?
 
 ```c#
 "Reflection4Humans.Extensions.Tests.Dummy`1[System.String] did something weird!"
