@@ -42,3 +42,39 @@ var isAttribute = type.IsAttribute();
 ```
 
 Well now you have it.
+
+## TypeFetcher
+
+Wouldn't it be awesome if there was a way to get all your type metadata in all your assemblies in a straightforward way like this?
+
+```c#
+var allMyAbstractClasses = TypeFetcher.Query().IsClass().IsAbstract().ToList();
+```
+
+Well now you can!
+
+Currently, TypeFetcher only supports the following criterion :
+- IsClass / IsNotClass
+- IsAbstract / IsNotAbstract (applies to both classes and interfaces unless also searching for classes)
+- IsStruct / IsNotStruct
+- IsInterface / IsNotInterface
+- IsAttribute / IsNotAttribute
+- IsGeneric / IsNotGeneric
+- IsGenericTypeDefinition / IsNotGenericTypeDefinition
+- IsEnum /IsNotEnum
+- Implements
+- HasAttributes
+
+It is still being actively tested and may (very probably) change a lot in its syntax and usability.
+
+### Why should I use this when I can do it myself?
+
+You certainly can use the following (and might have) :
+
+```c#
+AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes())[...]
+```
+
+But if you're like me then you probably don't like remembering that whole trainwreck and might even have to look up how you did it before in order to use it.
+
+Not only that but I have also encountered problems with the above line in some cases because assemblies are not always automatically loaded and some types got left out. TypeFetcher does that for you. I won't hide that there's a bigger performance cost to it but getting types is always something that should be used sparingly.

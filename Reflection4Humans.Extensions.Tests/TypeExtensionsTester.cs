@@ -15,7 +15,7 @@ public class TypeExtensionsTester
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null;
+            Type type = null!;
 
             //Act
             var action = () => type.GetHumanReadableName();

@@ -17,10 +17,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ToolBX.Eloquentest" Version="1.0.5" />
+    <PackageReference Include="ToolBX.TimeProvider" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Reflection4Humans.Extensions\Reflection4Humans.Extensions.csproj" />
+    <ProjectReference Include="..\Reflection4Humans.TypeFetcher\Reflection4Humans.TypeFetcher.csproj" />
   </ItemGroup>
 
 </Project>
