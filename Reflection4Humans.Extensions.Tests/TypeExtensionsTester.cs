@@ -1,4 +1,5 @@
-﻿using Reflection4Humans.Extensions.Tests.Dummies;
+﻿using AutoFixture;
+using Reflection4Humans.Extensions.Tests.Dummies;
 using ToolBX.Reflection4Humans.Extensions;
 using ToolBX.Reflection4Humans.Extensions.Resources;
 using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
@@ -126,6 +127,144 @@ public class TypeExtensionsTester
 
             //Assert
             result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class GetPropertyPath : Tester
+    {
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+            var propertyName = Fixture.Create<string>();
+            var comparison = Fixture.Create<StringComparison>();
+
+            //Act
+            var action = () => type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void WhenPropertyNameIsEmpty_Throw(string propertyName)
+        {
+            //Arrange
+            var type = Fixture.Create<Type>();
+            var comparison = Fixture.Create<StringComparison>();
+
+            //Act
+            var action = () => type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(propertyName));
+        }
+
+        [TestMethod]
+        public void WhenPropertyIsNotOnObject_Throw()
+        {
+            //Arrange
+            var type = Fixture.Create<Type>();
+            var propertyName = Fixture.Create<string>();
+            var comparison = Fixture.Create<StringComparison>();
+
+            //Act
+            var action = () => type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithMessage(string.Format(Resource.PropertyNotFoundOnType, propertyName, type.Name));
+        }
+
+        [TestMethod]
+        public void WhenChildPropertyIsNotOnChild_Throw()
+        {
+            //Arrange
+            var type = typeof(DummyChild);
+            var missingProperty = Fixture.Create<string>();
+            var propertyName = $"{nameof(DummyChild.GrandChild)}.{missingProperty}";
+            var comparison = Fixture.Create<StringComparison>();
+
+            //Act
+            var action = () => type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithMessage(string.Format(Resource.PropertyNotFoundOnType, missingProperty, nameof(DummyGrandChild)));
+        }
+
+        [TestMethod]
+        public void WhenPropertyIsOnObjectButWithDifferentCasingWithoutIgnoreCase_Throw()
+        {
+            //Arrange
+            var type = typeof(DummyChild);
+            var propertyName = $"{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age).ToUpper()}";
+            var comparison = StringComparison.CurrentCulture;
+
+            //Act
+            var action = () => type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            action.Should().Throw<ArgumentException>().WithMessage(string.Format(Resource.PropertyNotFoundOnType, nameof(DummyGrandChild.Age).ToUpper(), nameof(DummyGrandChild)));
+        }
+
+        [TestMethod]
+        public void WhenPropertyIsOnObjectWithSameCasingWithoutIgnoreCase_Return()
+        {
+            //Arrange
+            var type = typeof(DummyChild);
+            var propertyName = $"{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age)}";
+            var comparison = StringComparison.CurrentCulture;
+
+            //Act
+            var result = type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            result.Should().BeEquivalentTo(new List<PropertyPath>
+            {
+                new() { Property = typeof(DummyChild).GetProperty(nameof(DummyChild.GrandChild))!, Owner = typeof(DummyChild) },
+                new() { Property = typeof(DummyGrandChild).GetProperty(nameof(DummyGrandChild.Age))!, Owner = typeof(DummyGrandChild) },
+            });
+        }
+
+        [TestMethod]
+        public void WhenPropertyIsOnObjectWithDifferentCasingWithIgnoreCase_Return()
+        {
+            //Arrange
+            var type = typeof(DummyChild);
+            var propertyName = $"{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age).ToUpper()}";
+            var comparison = StringComparison.InvariantCultureIgnoreCase;
+
+            //Act
+            var result = type.GetPropertyPath(propertyName, comparison);
+
+            //Assert
+            result.Should().BeEquivalentTo(new List<PropertyPath>
+            {
+                new() { Property = typeof(DummyChild).GetProperty(nameof(DummyChild.GrandChild))!, Owner = typeof(DummyChild) },
+                new() { Property = typeof(DummyGrandChild).GetProperty(nameof(DummyGrandChild.Age))!, Owner = typeof(DummyGrandChild) },
+            });
+        }
+
+        [TestMethod]
+        public void WhenPropertyIsOnGrandChild_ReturnFullPath()
+        {
+            //Arrange
+            var type = typeof(MultiLevelDummy);
+
+            //Act
+            var result = type.GetPropertyPath($"{nameof(MultiLevelDummy.Child)}.{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age)}");
+
+            //Assert
+            result.Should().BeEquivalentTo(new List<PropertyPath>
+            {
+                new() { Property = typeof(MultiLevelDummy).GetProperty(nameof(MultiLevelDummy.Child))!, Owner = typeof(MultiLevelDummy) },
+                new() { Property = typeof(DummyChild).GetProperty(nameof(DummyChild.GrandChild))!, Owner = typeof(DummyChild) },
+                new() { Property = typeof(DummyGrandChild).GetProperty(nameof(DummyGrandChild.Age))!, Owner = typeof(DummyGrandChild) },
+            });
         }
     }
 }

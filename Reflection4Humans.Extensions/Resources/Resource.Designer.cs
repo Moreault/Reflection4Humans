@@ -68,5 +68,14 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
                 return ResourceManager.GetString("CannotUseMethodBecauseParamaterIsMandatory", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t get property path : property &apos;{0}&apos; was not found on type &apos;{1}&apos;.
+        /// </summary>
+        public static string PropertyNotFoundOnType {
+            get {
+                return ResourceManager.GetString("PropertyNotFoundOnType", resourceCulture);
+            }
+        }
     }
 }

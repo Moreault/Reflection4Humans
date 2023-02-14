@@ -120,4 +120,7 @@
   <data name="CannotUseMethodBecauseParamaterIsMandatory" xml:space="preserve">
     <value>Impossible d'utiliser la méthode {0} : Le paramètre {1} est obligatoire.</value>
   </data>
+  <data name="PropertyNotFoundOnType" xml:space="preserve">
+	  <value>Impossible d'obtenir le chemin de la propriété : il n'y a pas de propriété '{0}' sur le type '{1}'</value>
+  </data>
 </root>
