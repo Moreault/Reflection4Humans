@@ -43,6 +43,34 @@ var isAttribute = type.IsAttribute();
 
 Well now you have it.
 
+### Type.GetPropertyPath
+
+```c#
+//Say you have a multi-level object like this
+public record Person
+{
+	public string Name { get; init; }
+	public Job Job { get; init; }
+}
+
+//Maybe you would like to have code looking at the Salary from a Person object
+public record Job
+{
+	public string Title { get; init; }
+	public decimal Salary { get; init; }
+}
+
+public void DoStuff()
+{
+	//The propertyPath variable now holds the PropertyInfo objects for Person's Job property as well as Job's Salary property, 
+	//including the types for Person and Job. Essentially looking something like this : 
+	//{ { Property = [Job PropertyInfo], Owner = [Person type object] }, { Property = [Salary PropertyInfo], Owner = [Job type object] } }
+	var propertyPath = typeof(Person).GetPropertyPath("Job.Salary");
+
+	...
+}
+```
+
 ## TypeFetcher
 
 Wouldn't it be awesome if there was a way to get all your type metadata in all your assemblies in a straightforward way like this?
