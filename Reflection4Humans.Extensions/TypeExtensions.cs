@@ -38,7 +38,7 @@ public static class TypeExtensions
         var splitted = propertyName.Split('.');
         foreach (var part in splitted)
         {
-            var property = currentType.GetProperty(part, bindingFlags) ?? throw new ArgumentException(string.Format(Resource.PropertyNotFoundOnType, part, currentType.Name));
+            var property = currentType.GetProperty(part, bindingFlags) ?? throw new ArgumentException(string.Format(Resource.PropertyNotFoundOnType, part, currentType.Name), nameof(propertyName));
             path.Add(new PropertyPath { Property = property, Owner = currentType });
             currentType = property.PropertyType;
         }

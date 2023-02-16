@@ -177,7 +177,7 @@ public class TypeExtensionsTester
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage(string.Format(Resource.PropertyNotFoundOnType, propertyName, type.Name));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Resource.PropertyNotFoundOnType, propertyName, type.Name)}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
@@ -193,7 +193,7 @@ public class TypeExtensionsTester
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage(string.Format(Resource.PropertyNotFoundOnType, missingProperty, nameof(DummyGrandChild)));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Resource.PropertyNotFoundOnType, missingProperty, nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
@@ -208,7 +208,7 @@ public class TypeExtensionsTester
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage(string.Format(Resource.PropertyNotFoundOnType, nameof(DummyGrandChild.Age).ToUpper(), nameof(DummyGrandChild)));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Resource.PropertyNotFoundOnType, nameof(DummyGrandChild.Age).ToUpper(), nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
