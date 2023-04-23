@@ -1,5 +1,6 @@
 ﻿namespace ToolBX.Reflection4Humans.TypeFetcher;
 
+#pragma warning disable CS8604
 internal static class AssemblyLoader
 {
     private static bool _areAssembliesLoaded;
@@ -46,3 +47,4 @@ internal static class AssemblyLoader
         _areAssembliesLoaded = true;
     }
 }
+#pragma warning restore CS8604
