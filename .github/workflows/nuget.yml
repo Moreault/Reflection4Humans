@@ -30,4 +30,6 @@ jobs:
       run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
       
     - name: Publish to NuGet.org
-      run: nuget push ${{ env.NuGetDirectory }}/*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+      run: | 
+        nuget push ${{ env.NuGetDirectory }}/ToolBX.Reflection4Humans.Extensions.*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}} --skip-duplicate
+        nuget push ${{ env.NuGetDirectory }}/ToolBX.Reflection4Humans.TypeFetcher.*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}} --skip-duplicate
