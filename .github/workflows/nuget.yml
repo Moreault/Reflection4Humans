@@ -30,7 +30,4 @@ jobs:
       run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
       
     - name: Publish to NuGet.org
-      run: |
-          foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          }
+      run: nuget push ${{ env.NuGetDirectory }}\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
