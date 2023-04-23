@@ -2,5 +2,5 @@
 
 public abstract class DummyAbstractAttribute : Attribute
 {
-    public Type Type { get; set; }
+    public Type? Type { get; set; }
 }
