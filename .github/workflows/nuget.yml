@@ -26,10 +26,21 @@ jobs:
     - name: Build project
       run: dotnet build --configuration Release
       
-    - name: Pack project
-      run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
+    - name: Pack projects
+      run: dotnet pack --no-build --include-symbols --include-source --configuration Release
+      
+    - name: Find nupkg files
+      id: find-nupkg
+      run: |
+        find ${{ github.workspace }} -name "*.nupkg" -print0 | xargs -0 -I {} echo "::add-output::nupkg-files::{}"
+        find ${{ github.workspace }} -name "*.snupkg" -print0 | xargs -0 -I {} echo "::add-output::snupkg-files::{}"
       
     - name: Publish to NuGet.org
-      run: | 
-        dotnet nuget push .${{ env.NuGetDirectory }}/Reflection4Humans.Extensions.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-        dotnet nuget push .${{ env.NuGetDirectory }}/Reflection4Humans.TypeFetcher.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: |
+        echo "Publishing NuGet packages..."
+        echo "nupkg-files: ${{ steps.find-nupkg.outputs.nupkg-files }}"
+        echo "snupkg-files: ${{ steps.find-nupkg.outputs.snupkg-files }}"
+        dotnet nuget push ${{ steps.find-nupkg.outputs.nupkg-files }} --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+        dotnet nuget push ${{ steps.find-nupkg.outputs.snupkg-files }} --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --symbol-source https://api.nuget.org/v3/index.json --skip-duplicate
