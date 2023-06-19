@@ -4,7 +4,7 @@ public static class TypeExtensions
 {
     public static string GetHumanReadableName(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type), string.Format(Resource.CannotUseMethodBecauseParamaterIsMandatory, nameof(GetHumanReadableName), nameof(type)));
+        if (type == null) throw new ArgumentNullException(nameof(type), string.Format(Exceptions.CannotUseMethodBecauseParamaterIsMandatory, nameof(GetHumanReadableName), nameof(type)));
 
         var name = type.Name;
         var indexOfApostrophe = name.IndexOf('`');
@@ -38,7 +38,7 @@ public static class TypeExtensions
         var splitted = propertyName.Split('.');
         foreach (var part in splitted)
         {
-            var property = currentType.GetProperty(part, bindingFlags) ?? throw new ArgumentException(string.Format(Resource.PropertyNotFoundOnType, part, currentType.Name), nameof(propertyName));
+            var property = currentType.GetProperty(part, bindingFlags) ?? throw new ArgumentException(string.Format(Exceptions.PropertyNotFoundOnType, part, currentType.Name), nameof(propertyName));
             path.Add(new PropertyPath { Property = property, Owner = currentType });
             currentType = property.PropertyType;
         }

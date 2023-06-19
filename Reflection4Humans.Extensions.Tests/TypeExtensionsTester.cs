@@ -1,8 +1,4 @@
-﻿using AutoFixture;
-using Reflection4Humans.Extensions.Tests.Dummies;
-using ToolBX.Reflection4Humans.Extensions;
-using ToolBX.Reflection4Humans.Extensions.Resources;
-using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
+﻿using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
 
 namespace Reflection4Humans.Extensions.Tests;
 
@@ -22,7 +18,7 @@ public class TypeExtensionsTester
             var action = () => type.GetHumanReadableName();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithMessage(string.Format($"{Resource.CannotUseMethodBecauseParamaterIsMandatory}*", nameof(TypeExtensions.GetHumanReadableName), "type"));
+            action.Should().Throw<ArgumentNullException>().WithMessage(string.Format($"{Exceptions.CannotUseMethodBecauseParamaterIsMandatory}*", nameof(TypeExtensions.GetHumanReadableName), "type"));
         }
 
         [TestMethod]
@@ -177,7 +173,7 @@ public class TypeExtensionsTester
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Resource.PropertyNotFoundOnType, propertyName, type.Name)}*").WithParameterName(nameof(propertyName));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, propertyName, type.Name)}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
@@ -193,7 +189,7 @@ public class TypeExtensionsTester
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Resource.PropertyNotFoundOnType, missingProperty, nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, missingProperty, nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
@@ -208,7 +204,7 @@ public class TypeExtensionsTester
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Resource.PropertyNotFoundOnType, nameof(DummyGrandChild.Age).ToUpper(), nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, nameof(DummyGrandChild.Age).ToUpper(), nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]

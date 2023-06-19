@@ -118,9 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CannotUseMethodBecauseParamaterIsMandatory" xml:space="preserve">
-    <value>Impossible d'utiliser la méthode {0} : Le paramètre {1} est obligatoire.</value>
+	  <value>Impossible d'utiliser la méthode {0} : le paramètre {1} est obligatoire</value>
   </data>
   <data name="PropertyNotFoundOnType" xml:space="preserve">
 	  <value>Impossible d'obtenir le chemin de la propriété : il n'y a pas de propriété '{0}' sur le type '{1}'</value>
+  </data>
+  <data name="MemberKindUnsupported" xml:space="preserve">
+	  <value>Impossible d'utiliser la méthode {0} : MemberKind {1} n'est pas supporté</value>
+  </data>
+  <data name="AccessModifierUnsupported" xml:space="preserve">
+	  <value>Impossible d'utiliser la méthode {0} : le niveau d'accès est non reconnu et non supporté</value>
   </data>
 </root>

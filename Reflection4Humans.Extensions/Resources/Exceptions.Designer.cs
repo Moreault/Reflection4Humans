@@ -22,24 +22,24 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resource {
+    internal class Exceptions {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource() {
+        internal Exceptions() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ToolBX.Reflection4Humans.Extensions.Resources.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ToolBX.Reflection4Humans.Extensions.Resources.Exceptions", typeof(Exceptions).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,18 +61,36 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t use method {0} : Parameter {1} is mandatory..
+        ///   Looks up a localized string similar to .
         /// </summary>
-        public static string CannotUseMethodBecauseParamaterIsMandatory {
+        internal static string AccessModifierUnsupported {
+            get {
+                return ResourceManager.GetString("AccessModifierUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t use method {0} : Parameter {1} is mandatory.
+        /// </summary>
+        internal static string CannotUseMethodBecauseParamaterIsMandatory {
             get {
                 return ResourceManager.GetString("CannotUseMethodBecauseParamaterIsMandatory", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t use method {0} : Member kind &apos;{1}&apos; is unsupported.
+        /// </summary>
+        internal static string MemberKindUnsupported {
+            get {
+                return ResourceManager.GetString("MemberKindUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t get property path : property &apos;{0}&apos; was not found on type &apos;{1}&apos;.
         /// </summary>
-        public static string PropertyNotFoundOnType {
+        internal static string PropertyNotFoundOnType {
             get {
                 return ResourceManager.GetString("PropertyNotFoundOnType", resourceCulture);
             }
