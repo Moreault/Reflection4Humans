@@ -3,7 +3,7 @@
 namespace Reflection4Humans.Extensions.Tests;
 
 [TestClass]
-public class TypeExtensionsTester
+public class TypeExtensionsTest
 {
     [TestClass]
     public class GetReadableName : Tester

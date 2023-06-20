@@ -82,9 +82,9 @@ public static class MemberSearchExtensions
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.FieldInfo).ToList();
     }
 
-    public static FieldInfo GetSingleField(this Type type, Func<FieldSearchOptions, bool>? predicate = null) => type.GetAllFields(predicate).Single();
+    public static FieldInfo GetSingleField(this Type type, string name, Func<FieldSearchOptions, bool>? predicate = null) => type.GetAllFields(predicate).Single(x => x.Name == name);
 
-    public static FieldInfo? GetSingleFieldOrDefault(this Type type, Func<FieldSearchOptions, bool>? predicate = null) => type.GetAllFields(predicate).Single();
+    public static FieldInfo? GetSingleFieldOrDefault(this Type type, string name, Func<FieldSearchOptions, bool>? predicate = null) => type.GetAllFields(predicate).Single(x => x.Name == name);
 
     public static IReadOnlyList<PropertyInfo> GetAllProperties(this Type type, Func<PropertySearchOptions, bool>? predicate = null)
     {
@@ -94,14 +94,26 @@ public static class MemberSearchExtensions
         if (predicate is null)
             return properties;
 
-        var searchOptions = properties.Select(x => new
+        var searchOptions = properties.Select(x =>
         {
-            PropertyInfo = x,
-            Search = new PropertySearchOptions
+            Accessor accessor;
+            if (x.GetMethod is null)
+                accessor = Accessor.SetOnly;
+            else if (x.SetMethod is null)
+                accessor = Accessor.GetOnly;
+            else
+                accessor = Accessor.GetAndSet;
+
+            return new
             {
-                AccessModifier = x.GetAccessModifier(),
-                Scope = x.GetAccessScope()
-            }
+                PropertyInfo = x,
+                Search = new PropertySearchOptions
+                {
+                    AccessModifier = x.GetAccessModifier(),
+                    Scope = x.GetAccessScope(),
+                    Accessor = accessor
+                }
+            };
         });
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.PropertyInfo).ToList();
     }
@@ -110,7 +122,9 @@ public static class MemberSearchExtensions
 
     public static PropertyInfo? GetSinglePropertyOrDefault(this Type type, Func<PropertySearchOptions, bool>? predicate = null) => type.GetAllProperties(predicate).Single();
 
-    public static IReadOnlyList<MethodInfo> GetAllMethods(this Type type, Func<MethodSearchOptions, bool>? predicate = null)
+    public static IReadOnlyList<MethodInfo> GetAllMethods(this Type type, Func<MethodSearchOptions, bool>? predicate = null) => type.GetAllMethodsInternal(predicate).ToList();
+
+    private static IEnumerable<MethodInfo> GetAllMethodsInternal(this Type type, Func<MethodSearchOptions, bool>? predicate = null)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
 
@@ -127,12 +141,12 @@ public static class MemberSearchExtensions
                 Scope = x.GetAccessScope()
             }
         });
-        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.MethodInfo).ToList();
+        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.MethodInfo);
     }
 
-    public static MethodInfo GetSingleMethod(this Type type, Func<MethodSearchOptions, bool>? predicate = null) => type.GetAllMethods(predicate).Single();
+    public static MethodInfo GetSingleMethod(this Type type, string name, Func<MethodSearchOptions, bool>? predicate = null) => type.GetAllMethodsInternal(predicate).Single(x => x.Name == name);
 
-    public static MethodInfo? GetSingleMethodOrDefault(this Type type, Func<MethodSearchOptions, bool>? predicate = null) => type.GetAllMethods(predicate).Single();
+    public static MethodInfo? GetSingleMethodOrDefault(this Type type, string name, Func<MethodSearchOptions, bool>? predicate = null) => type.GetAllMethods(predicate).SingleOrDefault(x => x.Name == name);
 
     public static IReadOnlyList<ConstructorInfo> GetAllConstructors(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null)
     {
@@ -177,7 +191,7 @@ public sealed record FieldSearchOptions : MemberSearcOptionsBase
 
 public sealed record PropertySearchOptions : MemberSearcOptionsBase
 {
-
+    public Accessor Accessor { get; init; }
 }
 
 public sealed record MethodSearchOptions : MemberSearcOptionsBase

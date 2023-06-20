@@ -61,7 +61,7 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Can&apos;t use method {0} : accessModifier is unrecognized and unsupported.
         /// </summary>
         internal static string AccessModifierUnsupported {
             get {
@@ -70,7 +70,7 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t use method {0} : Parameter {1} is mandatory.
+        ///   Looks up a localized string similar to Can&apos;t use method {0} : parameter {1} is mandatory.
         /// </summary>
         internal static string CannotUseMethodBecauseParamaterIsMandatory {
             get {
@@ -79,7 +79,7 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t use method {0} : Member kind &apos;{1}&apos; is unsupported.
+        ///   Looks up a localized string similar to Can&apos;t use method {0} : member kind &apos;{1}&apos; is unsupported.
         /// </summary>
         internal static string MemberKindUnsupported {
             get {

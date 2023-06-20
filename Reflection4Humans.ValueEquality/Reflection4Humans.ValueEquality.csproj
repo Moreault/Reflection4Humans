@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
+		<Nullable>enable</Nullable>
+		<Authors>Mathieu Moreault</Authors>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageId>ToolBX.$(AssemblyName)</PackageId>
+		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>2.2.0-beta1</Version>
+		<Description>Adds extensions to automatically compare objects by value.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Reflection4Humans.Extensions\Reflection4Humans.Extensions.csproj" />
+	</ItemGroup>
+
+</Project>

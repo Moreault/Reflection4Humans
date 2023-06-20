@@ -47,7 +47,6 @@ public class MemberSearchExtensionsTest
 
         private bool _wasPoked;
 
-
         protected string Poke()
         {
             SomeoneTouchedMeVeryPrivately();
@@ -99,6 +98,66 @@ public class MemberSearchExtensionsTest
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
                 "get_NextId", "NextId", "_nextId", "Equals", "ReferenceEquals"
+            });
+        }
+
+        [TestMethod]
+        public void WhenSearchingForPrivateStaticMembers_ReturnOnlyPrivateStaticMembers()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetAllMembers(x => x is { Scope: AccessScope.Static, AccessModifier: AccessModifier.Private });
+
+            //Assert
+            result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
+            {
+                "_nextId"
+            });
+        }
+
+        [TestMethod]
+        public void WhenSearchingForPublicStaticMembers_ReturnOnlyPublicStaticMembers()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetAllMembers(x => x is { Scope: AccessScope.Static, AccessModifier: AccessModifier.Public });
+
+            //Assert
+            result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
+            {
+                "get_NextId", "NextId", "Equals", "ReferenceEquals"
+            });
+        }
+
+        [TestMethod]
+        public void WhenSearchingForPrivateProperties_ReturnOnlyPrivateProperties()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetAllMembers(x => x is { AccessModifier: AccessModifier.Private, Kind: MemberKind.Property });
+
+            //Assert
+            result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
+            {
+                "PrivateGetSetProperty"
+            });
+        }
+
+        [TestMethod]
+        public void WhenSearchingForPrivateFields_ReturnOnlyPrivateFields()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetAllMembers(x => x is { AccessModifier: AccessModifier.Private, Kind: MemberKind.Field });
+
+            //Assert
+            result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
+            {
+                "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField", "_wasPoked", "_nextId"
             });
         }
 
