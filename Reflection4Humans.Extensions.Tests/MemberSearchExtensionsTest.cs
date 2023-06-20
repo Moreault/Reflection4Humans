@@ -92,7 +92,7 @@ public class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.Scope == AccessScope.Static);
+            var result = typeof(Dummy).GetAllMembers(x => x.IsStatic);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -107,7 +107,7 @@ public class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x is { Scope: AccessScope.Static, AccessModifier: AccessModifier.Private });
+            var result = typeof(Dummy).GetAllMembers(x => x.IsStatic && x.IsPrivate);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -122,7 +122,7 @@ public class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x is { Scope: AccessScope.Static, AccessModifier: AccessModifier.Public });
+            var result = typeof(Dummy).GetAllMembers(x => x.IsStatic && x.IsPublic);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -137,7 +137,7 @@ public class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x is { AccessModifier: AccessModifier.Private, Kind: MemberKind.Property });
+            var result = typeof(Dummy).GetAllMembers(x => x.IsPrivate && x.IsProperty);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -152,7 +152,7 @@ public class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x is { AccessModifier: AccessModifier.Private, Kind: MemberKind.Field });
+            var result = typeof(Dummy).GetAllMembers(x => x.IsPrivate && x.IsField);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -167,7 +167,7 @@ public class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.Scope == AccessScope.Instance);
+            var result = typeof(Dummy).GetAllMembers(x => x.IsInstance);
 
             var getHashCode1 = result.First(x => x.Name == "GetHashCode");
             var getHashCode2 = result.Last(x => x.Name == "GetHashCode");
@@ -177,11 +177,28 @@ public class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_Id", "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", 
-                "SomeoneTouchedMe", "SomeoneTouchedMe", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode", ".ctor", 
-                "Id", "PrivateGetSetProperty", "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField", "SomeoneTouchedMeVeryPrivately", ".ctor", 
+                "get_Id", "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe",
+                "SomeoneTouchedMe", "SomeoneTouchedMe", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode", ".ctor",
+                "Id", "PrivateGetSetProperty", "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField", "SomeoneTouchedMeVeryPrivately", ".ctor",
                 "_wasPoked", ".ctor"
             });
+        }
+    }
+
+    [TestClass]
+    public class GetSingleMethod : Tester
+    {
+        //TODO Test
+        [TestMethod]
+        public void WhenGetFirstTouchWithCorrectParameters_ReturnFirstTouchMethod()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleMethod("SomeoneTouchedMe", x => x.HasParameters<int, string>() && !x.IsGeneric);
+
+            //Assert
+            result.Should().NotBeNull();
         }
     }
 }

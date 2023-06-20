@@ -10,13 +10,13 @@ public static class ValueEqualityExtensions
         if (ReferenceEquals(first, second)) return true;
         if (ReferenceEquals(first, null) || ReferenceEquals(second, null)) return false;
 
-        var firstFields = first.GetType().GetAllFields(x => x.Scope == AccessScope.Instance && x.AccessModifier == AccessModifier.Public);
-        var secondFields = second.GetType().GetAllFields(x => x.Scope == AccessScope.Instance && x.AccessModifier == AccessModifier.Public);
+        var firstFields = first.GetType().GetAllFields(x => x.IsInstance && x.IsPublic);
+        var secondFields = second.GetType().GetAllFields(x => x.IsInstance && x.IsPublic);
 
         if (!firstFields.Select(x => x.GetValue(first)).SequenceEqual(secondFields.Select(x => x.GetValue(second)))) return false;
 
-        var firstProperties = first.GetType().GetAllProperties(x => x.Scope == AccessScope.Instance && x.AccessModifier == AccessModifier.Public).Where(x => x.GetMethod != null);
-        var secondProperties = second.GetType().GetAllProperties(x => x.Scope == AccessScope.Instance && x.AccessModifier == AccessModifier.Public).Where(x => x.GetMethod != null);
+        var firstProperties = first.GetType().GetAllProperties(x => x.IsInstance && x.IsPublic).Where(x => x.GetMethod != null);
+        var secondProperties = second.GetType().GetAllProperties(x => x.IsInstance && x.IsPublic).Where(x => x.GetMethod != null);
 
         return firstProperties.Select(x => x.GetValue(first)).SequenceEqual(secondProperties.Select(x => x.GetValue(second)));
     }

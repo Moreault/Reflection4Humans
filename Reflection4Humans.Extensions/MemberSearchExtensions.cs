@@ -1,4 +1,6 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+﻿using System.Collections.Immutable;
+
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class MemberSearchExtensions
 {
@@ -44,15 +46,31 @@ public static class MemberSearchExtensions
         if (predicate is null)
             return members.ToArray();
 
-        var searchOptions = members.Distinct(new MemberInfoEqualityComparer()).Select(x => new
+        var searchOptions = members.Distinct(new MemberInfoEqualityComparer()).Select(x =>
         {
-            MemberInfo = x,
-            Search = new MemberSearchOptions
+            var isStatic = x.IsStatic();
+            var isField = x is FieldInfo;
+            var isProperty = !isField && x is PropertyInfo;
+            var isMethod = !isProperty && x is MethodInfo;
+            var isConstructor = !isMethod && x is ConstructorInfo;
+
+            return new
             {
-                AccessModifier = x.GetAccessModifier(),
-                Scope = x.GetAccessScope(),
-                Kind = x.GetKind()
-            }
+                MemberInfo = x,
+                Search = new MemberSearchOptions
+                {
+                    IsPublic = x.IsPublic(),
+                    IsInternal = x.IsInternal(),
+                    IsProtected = x.IsProtected(),
+                    IsPrivate = x.IsPrivate(),
+                    IsStatic = isStatic,
+                    IsInstance = !isStatic,
+                    IsField = isField,
+                    IsProperty = isProperty,
+                    IsMethod = isMethod,
+                    IsConstructor = isConstructor,
+                }
+            };
         });
 
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.MemberInfo).ToList();
@@ -75,8 +93,12 @@ public static class MemberSearchExtensions
             FieldInfo = x,
             Search = new FieldSearchOptions
             {
-                AccessModifier = x.GetAccessModifier(),
-                Scope = x.GetAccessScope()
+                IsPublic = x.IsPublic,
+                IsInternal = x.IsAssembly,
+                IsProtected = x.IsFamily,
+                IsPrivate = x.IsPrivate,
+                IsStatic = x.IsStatic,
+                IsInstance = !x.IsStatic,
             }
         });
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.FieldInfo).ToList();
@@ -94,26 +116,20 @@ public static class MemberSearchExtensions
         if (predicate is null)
             return properties;
 
-        var searchOptions = properties.Select(x =>
+        var searchOptions = properties.Select(x => new
         {
-            Accessor accessor;
-            if (x.GetMethod is null)
-                accessor = Accessor.SetOnly;
-            else if (x.SetMethod is null)
-                accessor = Accessor.GetOnly;
-            else
-                accessor = Accessor.GetAndSet;
-
-            return new
+            PropertyInfo = x,
+            Search = new PropertySearchOptions
             {
-                PropertyInfo = x,
-                Search = new PropertySearchOptions
-                {
-                    AccessModifier = x.GetAccessModifier(),
-                    Scope = x.GetAccessScope(),
-                    Accessor = accessor
-                }
-            };
+                IsPublic = x.IsPublic(),
+                IsInternal = x.IsInternal(),
+                IsProtected = x.IsProtected(),
+                IsPrivate = x.IsPrivate(),
+                IsStatic = x.IsStatic(),
+                IsInstance = !x.IsStatic(),
+                IsGet = x.GetMethod != null,
+                IsSet = x.SetMethod != null,
+            }
         });
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.PropertyInfo).ToList();
     }
@@ -137,8 +153,14 @@ public static class MemberSearchExtensions
             MethodInfo = x,
             Search = new MethodSearchOptions
             {
-                AccessModifier = x.GetAccessModifier(),
-                Scope = x.GetAccessScope()
+                IsPublic = x.IsPublic,
+                IsInternal = x.IsAssembly,
+                IsProtected = x.IsFamily,
+                IsPrivate = x.IsPrivate,
+                IsStatic = x.IsStatic,
+                IsInstance = !x.IsStatic,
+                Parameters = x.GetParameters(),
+                GenericParameters = x.GetGenericArguments()
             }
         });
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.MethodInfo);
@@ -161,8 +183,12 @@ public static class MemberSearchExtensions
             ConstructorInfo = x,
             Search = new ConstructorSearchOptions
             {
-                AccessModifier = x.GetAccessModifier(),
-                Scope = x.GetAccessScope()
+                IsPublic = x.IsPublic,
+                IsInternal = x.IsAssembly,
+                IsProtected = x.IsFamily,
+                IsPrivate = x.IsPrivate,
+                IsStatic = x.IsStatic,
+                IsInstance = !x.IsStatic,
             }
         });
         return searchOptions.Where(x => predicate(x.Search)).Select(x => x.ConstructorInfo).ToList();
@@ -175,13 +201,21 @@ public static class MemberSearchExtensions
 
 public abstract record MemberSearcOptionsBase
 {
-    public AccessModifier AccessModifier { get; init; }
-    public AccessScope Scope { get; init; }
+    public bool IsPublic { get; init; }
+    public bool IsInternal { get; init; }
+    public bool IsProtected { get; init; }
+    public bool IsPrivate { get; init; }
+
+    public bool IsStatic { get; init; }
+    public bool IsInstance { get; init; }
 }
 
 public sealed record MemberSearchOptions : MemberSearcOptionsBase
 {
-    public MemberKind Kind { get; init; }
+    public bool IsMethod { get; init; }
+    public bool IsField { get; init; }
+    public bool IsConstructor { get; init; }
+    public bool IsProperty { get; init; }
 }
 
 public sealed record FieldSearchOptions : MemberSearcOptionsBase
@@ -191,15 +225,39 @@ public sealed record FieldSearchOptions : MemberSearcOptionsBase
 
 public sealed record PropertySearchOptions : MemberSearcOptionsBase
 {
-    public Accessor Accessor { get; init; }
+    public bool IsGet { get; init; }
+    public bool IsSet { get; init; }
 }
 
-public sealed record MethodSearchOptions : MemberSearcOptionsBase
+public abstract record MethodSearchOptionsBase : MemberSearcOptionsBase
+{
+    internal ParameterInfo[] Parameters { get; init; } = Array.Empty<ParameterInfo>();
+    internal Type[] GenericParameters { get; init; } = Array.Empty<Type>();
+
+    public bool HasParameters<T1>() => HasParameters(typeof(T1));
+    public bool HasParameters<T1, T2>() => HasParameters(typeof(T1), typeof(T2));
+    public bool HasParameters<T1, T2, T3>() => HasParameters(typeof(T1), typeof(T2), typeof(T3));
+    public bool HasParameters<T1, T2, T3, T4>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
+    public bool HasParameters<T1, T2, T3, T4, T5>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
+    public bool HasParameters<T1, T2, T3, T4, T5, T6>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
+    public bool HasParameters<T1, T2, T3, T4, T5, T6, T7>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7));
+    public bool HasParameters<T1, T2, T3, T4, T5, T6, T7, T8>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8));
+    public bool HasParameters<T1, T2, T3, T4, T5, T6, T7, T8, T9>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9));
+    public bool HasParameters<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>() => HasParameters(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9), typeof(T10));
+    public bool HasParameters(params Type[] parameters) => Parameters.Select(x => x.ParameterType).SequenceEqual(parameters);
+
+    public bool HasGenericParameters(int count) => GenericParameters.Length == count;
+
+    public bool IsGeneric => !HasGenericParameters(0);
+
+}
+
+public sealed record MethodSearchOptions : MethodSearchOptionsBase
 {
 
 }
 
-public sealed record ConstructorSearchOptions : MemberSearcOptionsBase
+public sealed record ConstructorSearchOptions : MethodSearchOptionsBase
 {
 
 }
