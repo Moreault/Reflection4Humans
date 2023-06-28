@@ -12,7 +12,7 @@ public static class MemberInfoExtensions
             return propertyInfo.IsStatic();
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsStatic;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsStatic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
     public static bool IsPrivate(this MemberInfo memberInfo)
@@ -25,7 +25,7 @@ public static class MemberInfoExtensions
             return propertyInfo.GetMethod?.IsPrivate ?? propertyInfo.SetMethod!.IsPrivate;
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsPrivate;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPrivate), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
     public static bool IsProtected(this MemberInfo memberInfo)
@@ -38,7 +38,7 @@ public static class MemberInfoExtensions
             return propertyInfo.GetMethod?.IsFamily ?? propertyInfo.SetMethod!.IsFamily;
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsFamily;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsProtected), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
     public static bool IsInternal(this MemberInfo memberInfo)
@@ -51,20 +51,7 @@ public static class MemberInfoExtensions
             return propertyInfo.GetMethod?.IsAssembly ?? propertyInfo.SetMethod!.IsAssembly;
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsAssembly;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
-    }
-
-    public static bool IsProtectedInternal(this MemberInfo memberInfo)
-    {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.IsFamilyAndAssembly;
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.GetMethod?.IsFamilyAndAssembly ?? propertyInfo.SetMethod!.IsFamilyAndAssembly;
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.IsFamilyAndAssembly;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsInternal), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
     public static bool IsPublic(this MemberInfo memberInfo)
@@ -77,32 +64,6 @@ public static class MemberInfoExtensions
             return propertyInfo.GetMethod?.IsPublic ?? propertyInfo.SetMethod!.IsPublic;
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsPublic;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
-    }
-
-    public static MemberKind GetKind(this MemberInfo memberInfo)
-    {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-        if (memberInfo is PropertyInfo) return MemberKind.Property;
-        if (memberInfo is FieldInfo) return MemberKind.Field;
-        if (memberInfo is MethodInfo methodInfo) return MemberKind.Method;
-        if (memberInfo is ConstructorInfo constructorInfo) return MemberKind.Constructor;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(GetKind), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
-    }
-
-    public static AccessScope GetAccessScope(this MemberInfo memberInfo)
-    {
-        return memberInfo.IsStatic() ? AccessScope.Static : AccessScope.Instance;
-    }
-
-    public static AccessModifier GetAccessModifier(this MemberInfo memberInfo)
-    {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-        if (memberInfo.IsPublic()) return AccessModifier.Public;
-        if (memberInfo.IsPrivate()) return AccessModifier.Private;
-        if (memberInfo.IsProtected()) return AccessModifier.Protected;
-        if (memberInfo.IsInternal()) return AccessModifier.Internal;
-        if (memberInfo.IsProtectedInternal()) return AccessModifier.ProtectedInternal;
-        return AccessModifier.PrivateProtected;
+        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPublic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 }

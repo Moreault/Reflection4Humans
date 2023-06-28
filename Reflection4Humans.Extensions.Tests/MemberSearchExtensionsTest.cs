@@ -1,13 +1,15 @@
 ﻿namespace Reflection4Humans.Extensions.Tests;
 
 [TestClass]
-public class MemberSearchExtensionsTest
+public partial class MemberSearchExtensionsTest
 {
     public class Dummy : AbstractDummy<Dummy>
     {
         public long Id { get; }
 
         private string PrivateGetSetProperty { get; set; }
+
+        private protected string GetOnlyProperty { get; } = "abc";
 
         public Dummy()
         {
@@ -47,6 +49,12 @@ public class MemberSearchExtensionsTest
 
         private bool _wasPoked;
 
+        protected internal int SetOnlyProperty
+        {
+            set => _setOnlyValue = value;
+        }
+        private int _setOnlyValue;
+
         protected string Poke()
         {
             SomeoneTouchedMeVeryPrivately();
@@ -54,12 +62,16 @@ public class MemberSearchExtensionsTest
         }
 
         private void SomeoneTouchedMeVeryPrivately() => _wasPoked = true;
+
+        protected AbstractDummy()
+        {
+
+        }
     }
 
     [TestClass]
     public class GetAllMembers : Tester
     {
-        //TODO Test
         [TestMethod]
         public void WhenTypeIsNull_Throw()
         {
@@ -83,7 +95,7 @@ public class MemberSearchExtensionsTest
             var result = typeof(Dummy).GetAllMembers();
 
             //Assert
-            result.Should().HaveCount(42);
+            result.Should().HaveCount(50);
         }
 
         [TestMethod]
@@ -157,7 +169,7 @@ public class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField", "_wasPoked", "_nextId"
+                "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField", "<GetOnlyProperty>k__BackingField", "_wasPoked", "_setOnlyValue", "_nextId"
             });
         }
 
@@ -177,25 +189,89 @@ public class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_Id", "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe",
-                "SomeoneTouchedMe", "SomeoneTouchedMe", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode", ".ctor",
-                "Id", "PrivateGetSetProperty", "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField", "SomeoneTouchedMeVeryPrivately", ".ctor",
-                "_wasPoked", ".ctor"
+                "get_Id", "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "get_GetOnlyProperty", "SomeoneTouchedMe",
+                "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "set_SetOnlyProperty", "Poke",
+                "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode", ".ctor", "Id", "PrivateGetSetProperty",
+                "GetOnlyProperty", "SetOnlyProperty", "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField",
+                "<GetOnlyProperty>k__BackingField", "SomeoneTouchedMeVeryPrivately", ".ctor", "_wasPoked", "_setOnlyValue", ".ctor"
             });
         }
     }
 
     [TestClass]
-    public class GetSingleMethod : Tester
+    public class GetSingleMember : Tester
     {
-        //TODO Test
         [TestMethod]
-        public void WhenGetFirstTouchWithCorrectParameters_ReturnFirstTouchMethod()
+        public void WhenThereIsMoreThanOneResultWithName_Throw()
         {
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod("SomeoneTouchedMe", x => x.HasParameters<int, string>() && !x.IsGeneric);
+            var action = () => typeof(Dummy).GetSingleMember("SomeoneTouchedMe");
+
+            //Assert
+            action.Should().Throw<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoResultWithName_Throw()
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Dummy).GetSingleMember("SomeoneTouchedMeRightNow");
+
+            //Assert
+            action.Should().Throw<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        public void WhenThereIsExactlyOneResultWithName_Return()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleMember("GetOnlyProperty");
+
+            //Assert
+            result.Should().NotBeNull();
+        }
+    }
+
+    [TestClass]
+    public class GetSingleMemberOrDefault : Tester
+    {
+        [TestMethod]
+        public void WhenThereIsMoreThanOneResultWithName_Throw()
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Dummy).GetSingleMemberOrDefault("SomeoneTouchedMe");
+
+            //Assert
+            action.Should().Throw<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoResultWithName_Throw()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleMemberOrDefault("SomeoneTouchedMeRightNow");
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void WhenThereIsExactlyOneResultWithName_Return()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleMemberOrDefault("GetOnlyProperty");
 
             //Assert
             result.Should().NotBeNull();
