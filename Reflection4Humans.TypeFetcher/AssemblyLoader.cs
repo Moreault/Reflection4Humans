@@ -27,12 +27,17 @@ internal static class AssemblyLoader
 
         void LoadReferencedAssembly(Assembly assembly)
         {
-            // Check all referenced assemblies of the specified assembly
-            foreach (var an in assembly.GetReferencedAssemblies().Where(a => ShouldLoad(a.FullName)))
+            try
             {
-                // Load the assembly and load its dependencies
-                LoadReferencedAssembly(Assembly.Load(an)); // AppDomain.CurrentDomain.Load(name)
-                loaded.TryAdd(an.FullName, true);
+                foreach (var an in assembly.GetReferencedAssemblies().Where(a => ShouldLoad(a.FullName)))
+                {
+                    LoadReferencedAssembly(Assembly.Load(an));
+                    loaded.TryAdd(an.FullName, true);
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                //Happens with some (usually unimportant) assemblies but still unsure of the reason as of 2023-06-28
             }
         }
 
