@@ -263,4 +263,33 @@ public class TypeExtensionsTest
             });
         }
     }
+
+    [TestClass]
+    public class GetDirectInterfaces : Tester
+    {
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.GetDirectInterfaces();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void Always_OnlyReturnInterfacesOnCurrentType()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(DummyWithInterfaces).GetDirectInterfaces();
+
+            //Assert
+            result.Should().BeEquivalentTo(new List<Type> { typeof(ITopDummy1), typeof(ITopDummy2) });
+        }
+    }
 }

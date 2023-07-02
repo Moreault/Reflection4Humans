@@ -7,6 +7,8 @@ public partial class MemberSearchExtensionsTest
     {
         public long Id { get; }
 
+        public new int ShadowedField;
+
         private string PrivateGetSetProperty { get; set; }
 
         private protected string GetOnlyProperty { get; } = "abc";
@@ -40,12 +42,26 @@ public partial class MemberSearchExtensionsTest
         {
 
         }
+
+        public void Overload() { }
+        public void Overload(string arg1) { }
+        public void Overload(string arg1, int arg2) { }
+        public void Overload(string arg1, int arg2, long arg3) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5, float arg6) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5, float arg6, double arg7) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5, float arg6, double arg7, string arg8) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5, float arg6, double arg7, string arg8, int arg9) { }
+        public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5, float arg6, double arg7, string arg8, int arg9, char arg10) { }
     }
 
     public abstract class AbstractDummy<T>
     {
         public static long NextId => _nextId++;
         private static long _nextId;
+
+        protected int ShadowedField;
 
         private bool _wasPoked;
 
@@ -95,7 +111,7 @@ public partial class MemberSearchExtensionsTest
             var result = typeof(Dummy).GetAllMembers();
 
             //Assert
-            result.Should().HaveCount(50);
+            result.Should().HaveCount(64);
         }
 
         [TestMethod]
@@ -189,11 +205,38 @@ public partial class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_Id", "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "get_GetOnlyProperty", "SomeoneTouchedMe",
-                "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "set_SetOnlyProperty", "Poke",
-                "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode", ".ctor", "Id", "PrivateGetSetProperty",
-                "GetOnlyProperty", "SetOnlyProperty", "<Id>k__BackingField", "<PrivateGetSetProperty>k__BackingField",
-                "<GetOnlyProperty>k__BackingField", "SomeoneTouchedMeVeryPrivately", ".ctor", "_wasPoked", "_setOnlyValue", ".ctor"
+                "get_Id", "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "get_GetOnlyProperty", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe",
+                "SomeoneTouchedMe", "SomeoneTouchedMe", "set_SetOnlyProperty", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode",
+                ".ctor", "Id", "PrivateGetSetProperty", "GetOnlyProperty", "SetOnlyProperty", "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField",
+                "<GetOnlyProperty>k__BackingField", "ShadowedField", "SomeoneTouchedMeVeryPrivately", ".ctor", "_wasPoked", "_setOnlyValue", ".ctor",
+                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload",
+            });
+        }
+
+        [TestMethod]
+        public void WhenGettingOnlyConstructors_ReturnAllConstructors()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetAllMembers(x => x.IsConstructor);
+
+            //Assert
+            result.Should().HaveCount(3);
+        }
+
+        [TestMethod]
+        public void WhenGettingOnlyPrivateMethods_ReturnAllPrivateMethods()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetAllMembers(x => x.IsPrivate && x.IsMethod);
+
+            //Assert
+            result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
+            {
+                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMeVeryPrivately"
             });
         }
     }
@@ -201,6 +244,21 @@ public partial class MemberSearchExtensionsTest
     [TestClass]
     public class GetSingleMember : Tester
     {
+        [TestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void WhenNameIsEmpty_Throw(string name)
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Dummy).GetSingleMember(name);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>();
+        }
+
         [TestMethod]
         public void WhenThereIsMoreThanOneResultWithName_Throw()
         {
@@ -241,6 +299,21 @@ public partial class MemberSearchExtensionsTest
     [TestClass]
     public class GetSingleMemberOrDefault : Tester
     {
+        [TestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void WhenNameIsEmpty_Throw(string name)
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Dummy).GetSingleMemberOrDefault(name);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>();
+        }
+
         [TestMethod]
         public void WhenThereIsMoreThanOneResultWithName_Throw()
         {

@@ -83,7 +83,6 @@ public partial class MemberSearchExtensionsTest
     [TestClass]
     public class GetSingleProperty : Tester
     {
-        //TODO Test
         [TestMethod]
         public void WhenTypeIsNull_Throw()
         {
@@ -131,14 +130,91 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
+            var result = typeof(Dummy).GetSingleProperty("GetOnlyProperty", x => x.IsGet && !x.IsSet);
 
             //Assert
+            result.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void WhenLookingForPropertyWithSetButThereIsExactlyOne_Throw()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleProperty("SetOnlyProperty", x => x.IsSet);
+
+            //Assert
+            result.Should().NotBeNull();
         }
     }
 
     [TestClass]
     public class GetSinglePropertyOrDefault : Tester
     {
-        //TODO Test
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+            var name = Fixture.Create<string>();
+
+            //Act
+            var action = () => type.GetSinglePropertyOrDefault(name);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void WhenNameIsNullOrEmpty_Throw(string name)
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Dummy).GetSinglePropertyOrDefault(name);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
+        }
+
+        [TestMethod]
+        public void WhenLookingForPropertyWithGetButThereIsNone_Throw()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSinglePropertyOrDefault("SetOnlyProperty", x => x.IsGet);
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void WhenLookingForPropertyWithGetButThereIsExactlyOne_ReturnTheOne()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSinglePropertyOrDefault("GetOnlyProperty", x => x.IsGet && !x.IsSet);
+
+            //Assert
+            result.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void WhenLookingForPropertyWithSetButThereIsExactlyOne_Throw()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSinglePropertyOrDefault("SetOnlyProperty", x => x.IsSet);
+
+            //Assert
+            result.Should().NotBeNull();
+        }
     }
 }
