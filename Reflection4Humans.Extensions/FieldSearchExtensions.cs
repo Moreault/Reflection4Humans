@@ -20,20 +20,7 @@ public static class FieldSearchExtensions
         if (predicate is null)
             return fields;
 
-        var searchOptions = fields.Distinct(new MemberInfoEqualityComparer<FieldInfo>()).Select(x => new
-        {
-            FieldInfo = x,
-            Search = new FieldSearchOptions
-            {
-                IsPublic = x.IsPublic,
-                IsInternal = x.IsAssembly,
-                IsProtected = x.IsFamily,
-                IsPrivate = x.IsPrivate,
-                IsStatic = x.IsStatic,
-                IsInstance = !x.IsStatic
-            }
-        });
-        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.FieldInfo);
+        return fields.Distinct(new MemberInfoEqualityComparer<FieldInfo>()).Select(x => new FieldSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
     }
 
     public static FieldInfo GetSingleField(this Type type, string name, Func<FieldSearchOptions, bool>? predicate = null)
@@ -49,7 +36,9 @@ public static class FieldSearchExtensions
     }
 }
 
-public sealed record FieldSearchOptions : MemberSearcOptionsBase
+public sealed record FieldSearchOptions : MemberSearcOptionsBase<FieldInfo>
 {
-
+    public FieldSearchOptions(FieldInfo memberInfo) : base(memberInfo)
+    {
+    }
 }

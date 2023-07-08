@@ -20,30 +20,17 @@ public static class ConstructorSearchExtensions
         if (predicate is null)
             return constructors;
 
-        var searchOptions = constructors.Distinct(new MemberInfoEqualityComparer<ConstructorInfo>()).Select(x => new
-        {
-            ConstructorInfo = x,
-            Search = new ConstructorSearchOptions
-            {
-                IsPublic = x.IsPublic,
-                IsInternal = x.IsAssembly,
-                IsProtected = x.IsFamily,
-                IsPrivate = x.IsPrivate,
-                IsStatic = x.IsStatic,
-                IsInstance = !x.IsStatic,
-                Parameters = x.GetParameters()
-            }
-        });
-        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.ConstructorInfo);
+        return constructors.Distinct(new MemberInfoEqualityComparer<ConstructorInfo>()).Select(x => new ConstructorSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
     }
-
 
     public static ConstructorInfo GetSingleConstructor(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null) => type.GetAllConstructors(predicate).Single();
 
     public static ConstructorInfo? GetSingleConstructorOrDefault(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null) => type.GetAllConstructors(predicate).SingleOrDefault();
 }
 
-public sealed record ConstructorSearchOptions : MethodSearchOptionsBase
+public sealed record ConstructorSearchOptions : MethodSearchOptionsBase<ConstructorInfo>
 {
-
+    public ConstructorSearchOptions(ConstructorInfo memberInfo) : base(memberInfo)
+    {
+    }
 }

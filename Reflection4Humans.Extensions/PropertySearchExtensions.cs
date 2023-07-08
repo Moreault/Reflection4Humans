@@ -19,23 +19,8 @@ public static class PropertySearchExtensions
 
         if (predicate is null)
             return properties;
-
-        var searchOptions = properties.Distinct(new MemberInfoEqualityComparer<PropertyInfo>()).Select(x => new
-        {
-            PropertyInfo = x,
-            Search = new PropertySearchOptions
-            {
-                IsPublic = x.IsPublic(),
-                IsInternal = x.IsInternal(),
-                IsProtected = x.IsProtected(),
-                IsPrivate = x.IsPrivate(),
-                IsStatic = x.IsStatic(),
-                IsInstance = !x.IsStatic(),
-                IsGet = x.GetMethod != null,
-                IsSet = x.SetMethod != null
-            }
-        });
-        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.PropertyInfo);
+        
+        return properties.Distinct(new MemberInfoEqualityComparer<PropertyInfo>()).Select(x => new PropertySearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
     }
 
     public static PropertyInfo GetSingleProperty(this Type type, string name, Func<PropertySearchOptions, bool>? predicate = null)
@@ -52,8 +37,12 @@ public static class PropertySearchExtensions
     }
 }
 
-public sealed record PropertySearchOptions : MemberSearcOptionsBase
+public sealed record PropertySearchOptions : MemberSearcOptionsBase<PropertyInfo>
 {
-    public bool IsGet { get; init; }
-    public bool IsSet { get; init; }
+    public bool IsGet => MemberInfo.GetMethod != null;
+    public bool IsSet => MemberInfo.SetMethod != null;
+
+    public PropertySearchOptions(PropertyInfo memberInfo) : base(memberInfo)
+    {
+    }
 }

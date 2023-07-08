@@ -33,6 +33,12 @@ public class MemberInfoExtensionsTest
             static Dummy() { }
         }
 
+        public sealed class SealedDummy { }
+
+        public abstract class AbstractDummy { }
+
+        public static class StaticDummy { }
+
         [TestMethod]
         public void WhenMemberInfoIsNull_Throw()
         {
@@ -160,6 +166,42 @@ public class MemberInfoExtensionsTest
 
             //Assert
             action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsStatic), nameof(DummyMemberInfo)));
+        }
+
+        [TestMethod]
+        public void WhenIsTypeAndIsStatic_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(StaticDummy).IsStatic();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenIsTypeAndIsNotStaticButAbstract_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(AbstractDummy).IsStatic();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsTypeAndIsNotStaticButSealed_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(SealedDummy).IsStatic();
+
+            //Assert
+            result.Should().BeFalse();
         }
     }
 

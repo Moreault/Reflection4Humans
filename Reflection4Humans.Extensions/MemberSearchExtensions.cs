@@ -19,35 +19,8 @@ public static class MemberSearchExtensions
 
         if (predicate is null)
             return members;
-
-        var searchOptions = members.Distinct(new MemberInfoEqualityComparer<MemberInfo>()).Select(x =>
-        {
-            var isStatic = x.IsStatic();
-            var isField = x is FieldInfo;
-            var isProperty = !isField && x is PropertyInfo;
-            var isMethod = !isProperty && x is MethodInfo;
-            var isConstructor = !isMethod && x is ConstructorInfo;
-
-            return new
-            {
-                MemberInfo = x,
-                Search = new MemberSearchOptions
-                {
-                    IsPublic = x.IsPublic(),
-                    IsInternal = x.IsInternal(),
-                    IsProtected = x.IsProtected(),
-                    IsPrivate = x.IsPrivate(),
-                    IsStatic = isStatic,
-                    IsInstance = !isStatic,
-                    IsField = isField,
-                    IsProperty = isProperty,
-                    IsMethod = isMethod,
-                    IsConstructor = isConstructor
-                }
-            };
-        });
-
-        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.MemberInfo);
+        
+        return members.Distinct(new MemberInfoEqualityComparer<MemberInfo>()).Select(x => new MemberSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
     }
 
     public static MemberInfo GetSingleMember(this Type type, string name, Func<MemberSearchOptions, bool>? predicate = null)
@@ -63,21 +36,32 @@ public static class MemberSearchExtensions
     }
 }
 
-public abstract record MemberSearcOptionsBase
+public abstract record MemberSearcOptionsBase<T> where T : MemberInfo
 {
-    public bool IsPublic { get; init; }
-    public bool IsInternal { get; init; }
-    public bool IsProtected { get; init; }
-    public bool IsPrivate { get; init; }
+    internal readonly T MemberInfo;
 
-    public bool IsStatic { get; init; }
-    public bool IsInstance { get; init; }
+    public bool IsPublic => MemberInfo.IsPublic();
+    public bool IsInternal => MemberInfo.IsInternal();
+    public bool IsProtected => MemberInfo.IsProtected();
+    public bool IsPrivate => MemberInfo.IsPrivate();
+
+    public bool IsStatic => MemberInfo.IsStatic();
+    public bool IsInstance => !IsStatic;
+
+    protected MemberSearcOptionsBase(T memberInfo)
+    {
+        MemberInfo = memberInfo ?? throw new ArgumentNullException(nameof(memberInfo));
+    }
 }
 
-public sealed record MemberSearchOptions : MemberSearcOptionsBase
+public sealed record MemberSearchOptions : MemberSearcOptionsBase<MemberInfo>
 {
-    public bool IsMethod { get; init; }
-    public bool IsField { get; init; }
-    public bool IsConstructor { get; init; }
-    public bool IsProperty { get; init; }
+    public bool IsMethod => MemberInfo is MethodInfo;
+    public bool IsField => MemberInfo is FieldInfo;
+    public bool IsConstructor => MemberInfo is ConstructorInfo;
+    public bool IsProperty => MemberInfo is PropertyInfo;
+
+    public MemberSearchOptions(MemberInfo memberInfo) : base(memberInfo)
+    {
+    }
 }

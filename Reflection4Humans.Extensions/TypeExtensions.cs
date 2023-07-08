@@ -17,7 +17,7 @@ public static class TypeExtensions
 
     public static bool IsAttribute(this Type type)
     {
-        return type == typeof(Attribute) || type.BaseType is { } && type.BaseType.IsAttribute();
+        return type == typeof(Attribute) || type.BaseType is not null && type.BaseType.IsAttribute();
     }
 
     /// <summary>
@@ -65,5 +65,14 @@ public static class TypeExtensions
         var baseTypeInterfaces = type.BaseType?.GetInterfaces() ?? Array.Empty<Type>();
         childInterfaces.AddRange(baseTypeInterfaces);
         return allInterfaces.Except(childInterfaces).ToList();
+    }
+
+    public static bool Implements<T>(this Type type) => type.Implements(typeof(T));
+
+    public static bool Implements(this Type type, Type value)
+    {
+        if (type is null) throw new ArgumentNullException(nameof(type));
+        if (value is null) throw new ArgumentNullException(nameof(value));
+        return type.GetInterfaces().Any(x => x == value);
     }
 }

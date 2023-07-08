@@ -12,6 +12,8 @@ public static class MemberInfoExtensions
             return propertyInfo.IsStatic();
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsStatic;
+        if (memberInfo is Type type)
+            return type.IsClass && type.IsAbstract && type.IsSealed;
         throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsStatic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 

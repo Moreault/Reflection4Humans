@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace ToolBX.Reflection4Humans.Extensions;
+﻿namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class MethodSearchExtensions
 {
@@ -22,22 +20,7 @@ public static class MethodSearchExtensions
         if (predicate is null)
             return methods;
 
-        var searchOptions = methods.Distinct(new MemberInfoEqualityComparer<MethodInfo>()).Select(x => new
-        {
-            MethodInfo = x,
-            Search = new MethodSearchOptions
-            {
-                IsPublic = x.IsPublic,
-                IsInternal = x.IsAssembly,
-                IsProtected = x.IsFamily,
-                IsPrivate = x.IsPrivate,
-                IsStatic = x.IsStatic,
-                IsInstance = !x.IsStatic,
-                Parameters = x.GetParameters(),
-                GenericParameters = x.GetGenericArguments()
-            }
-        });
-        return searchOptions.Where(x => predicate(x.Search)).Select(x => x.MethodInfo);
+        return methods.Distinct(new MemberInfoEqualityComparer<MethodInfo>()).Select(x => new MethodSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
     }
 
     public static MethodInfo GetSingleMethod(this Type type, string name, Func<MethodSearchOptions, bool>? predicate = null)
@@ -53,9 +36,9 @@ public static class MethodSearchExtensions
     }
 }
 
-public abstract record MethodSearchOptionsBase : MemberSearcOptionsBase
+public abstract record MethodSearchOptionsBase<T> : MemberSearcOptionsBase<T> where T : MethodBase
 {
-    internal ParameterInfo[] Parameters { get; init; } = Array.Empty<ParameterInfo>();
+    internal ParameterInfo[] Parameters => MemberInfo.GetParameters();
 
     public bool HasParameters<T1>() => HasParameters(typeof(T1));
     public bool HasParameters<T1, T2>() => HasParameters(typeof(T1), typeof(T2));
@@ -72,13 +55,21 @@ public abstract record MethodSearchOptionsBase : MemberSearcOptionsBase
     public bool HasNoParameter => HasParameters();
 
     public bool HasParameters(int count) => Parameters.Length == count;
+
+    protected MethodSearchOptionsBase(T memberInfo) : base(memberInfo)
+    {
+    }
 }
 
-public sealed record MethodSearchOptions : MethodSearchOptionsBase
+public sealed record MethodSearchOptions : MethodSearchOptionsBase<MethodInfo>
 {
-    internal Type[] GenericParameters { get; init; } = Array.Empty<Type>();
+    internal Type[] GenericParameters => MemberInfo.GetGenericArguments();
 
     public bool HasGenericParameters(int count) => GenericParameters.Length == count;
 
     public bool IsGeneric => !HasGenericParameters(0);
+
+    public MethodSearchOptions(MethodInfo memberInfo) : base(memberInfo)
+    {
+    }
 }
