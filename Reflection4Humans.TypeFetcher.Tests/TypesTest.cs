@@ -10,7 +10,7 @@ public class TypesTest
         public void WhenPredicateIsNull_Throw()
         {
             //Arrange
-            Func<TypeSearchOptions, bool> predicate = null!;
+            Func<Type, bool> predicate = null!;
 
             //Act
             var action = () => Types.Where(predicate);
@@ -220,7 +220,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsAttribute).ToList();
+            var result = Types.Where(x => x.IsAttribute()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -246,7 +246,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsInterface && x.IsAttribute).ToList();
+            var result = Types.Where(x => x.IsInterface && x.IsAttribute()).ToList();
 
             //Assert
             //It is impossible to both class AND interface
@@ -259,7 +259,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsAttribute && x.IsAbstract).ToList();
+            var result = Types.Where(x => x.IsAttribute() && x.IsAbstract).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -285,7 +285,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsAttribute && x.IsAbstract && x.IsClass).ToList();
+            var result = Types.Where(x => x.IsAttribute() && x.IsAbstract && x.IsClass).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -311,7 +311,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsAttribute && !x.IsAbstract).ToList();
+            var result = Types.Where(x => x.IsAttribute() && !x.IsAbstract).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -337,7 +337,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => !x.IsAttribute).ToList();
+            var result = Types.Where(x => !x.IsAttribute()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -389,7 +389,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => !x.IsStruct).ToList();
+            var result = Types.Where(x => !x.IsValueType).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -415,7 +415,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsStruct).ToList();
+            var result = Types.Where(x => x.IsValueType).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -495,7 +495,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsGeneric).ToList();
+            var result = Types.Where(x => x.IsGenericType).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -525,7 +525,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => !x.IsGeneric).ToList();
+            var result = Types.Where(x => !x.IsGenericType).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -665,7 +665,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsStatic).ToList();
+            var result = Types.Where(x => x.IsStatic()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -692,7 +692,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => !x.IsStatic).ToList();
+            var result = Types.Where(x => !x.IsStatic()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -748,7 +748,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsPrivate).ToList();
+            var result = Types.Where(x => x.IsPrivate()).ToList();
 
             //Assert
             result.Select(x => x.Name).Should().Contain(new List<string>
@@ -778,7 +778,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsProtected).ToList();
+            var result = Types.Where(x => x.IsProtected()).ToList();
 
             //Assert
             result.Select(x => x.Name).Should().Contain(new List<string>
@@ -808,7 +808,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.IsInternal).ToList();
+            var result = Types.Where(x => x.IsInternal()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -928,7 +928,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.HasNoInterface).ToList();
+            var result = Types.Where(x => !x.HasInterface()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>
@@ -1037,7 +1037,7 @@ public class TypesTest
             var action = () => Types.Where(x => x.HasAttribute(null!)).ToList();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName("type");
+            action.Should().Throw<ArgumentNullException>().WithParameterName("attribute");
         }
 
         [TestMethod]
@@ -1061,7 +1061,7 @@ public class TypesTest
             var action = () => Types.Where(x => x.DirectlyImplements(null!)).ToList();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName("type");
+            action.Should().Throw<ArgumentNullException>().WithParameterName("interface");
         }
 
         [TestMethod]
@@ -1070,7 +1070,7 @@ public class TypesTest
             //Arrange
 
             //Act
-            var result = Types.Where(x => x.HasNoAttribute).ToList();
+            var result = Types.Where(x => !x.HasAttribute()).ToList();
 
             //Assert
             result.Should().Contain(new List<Type>

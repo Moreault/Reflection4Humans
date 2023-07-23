@@ -2,4 +2,5 @@
 
 public class DummyAttribute : Attribute
 {
+    public string Name { get; set; }
 }

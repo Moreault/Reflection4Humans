@@ -13,15 +13,11 @@
 		<Version>2.2.0-beta1</Version>
 		<Description>Provides a more straightforward way for a human being to get types from all loaded assemblies using the TypeFetcher class.</Description>
 		<PackageIcon>reflection4humans.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReadmeFile></PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/Moreault/Reflection4Humans</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Include="..\README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
 	  <None Include="..\reflection4humans.png">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>

@@ -2,8 +2,6 @@
 
 namespace Reflection4Humans.Extensions.Tests;
 
-
-
 [TestClass]
 public class MemberInfoExtensionsTest
 {
@@ -147,7 +145,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInstanceConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetAllConstructors(x => x.IsInstance && x.HasNoParameter).First();
+            MemberInfo memberInfo = typeof(Dummy).GetAllConstructors(x => x.IsInstance() && x.HasNoParameter()).First();
 
             //Act
             var result = memberInfo.IsStatic();
@@ -502,7 +500,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProtectedConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsProtected && x.HasNoParameter);
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsProtected() && x.HasNoParameter());
 
             //Act
             var result = memberInfo.IsProtected();
@@ -515,7 +513,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonProtectedConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsProtected && x.HasParameters<int>());
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsProtected() && x.HasParameters<int>());
 
             //Act
             var result = memberInfo.IsProtected();
@@ -572,6 +570,8 @@ public class MemberInfoExtensionsTest
 
             }
         }
+
+        internal record InternalDummy{}
 
         [TestMethod]
         public void WhenMemberInfoIsNull_Throw()
@@ -668,7 +668,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInternalConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsInternal);
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsInternal());
 
             //Act
             var result = memberInfo.IsInternal();
@@ -681,7 +681,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonInternalConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsInternal && x.HasParameters<int>());
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsInternal() && x.HasParameters<int>());
 
             //Act
             var result = memberInfo.IsInternal();
@@ -700,6 +700,30 @@ public class MemberInfoExtensionsTest
 
             //Assert
             action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsInternal), nameof(DummyMemberInfo)));
+        }
+
+        [TestMethod]
+        public void WhenIsInternalClass_ReturnTrue()
+        {
+            //Arrange
+            
+            //Act
+            var result = typeof(InternalDummy).IsInternal();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenIsPublicClass_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).IsInternal();
+
+            //Assert
+            result.Should().BeFalse();
         }
     }
 
@@ -869,4 +893,324 @@ public class MemberInfoExtensionsTest
         }
     }
 
+    [TestClass]
+    public class IsConstructor : Tester
+    {
+        public record Dummy
+        {
+            public string Field;
+
+            public int Property { get; set; }
+
+            public void Method() { }
+
+            private Dummy() { }
+        }
+
+        [TestMethod]
+        public void WhenMemberInfoIsNull_Throw()
+        {
+            //Arrange
+            MemberInfo memberInfo = null!;
+
+            //Act
+            var action = () => memberInfo.IsConstructor();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(memberInfo));
+        }
+
+        [TestMethod]
+        public void WhenIsConstructor_ReturnTrue()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+
+            //Act
+            var result = memberInfo.IsConstructor();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenIsMethod_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+
+            //Act
+            var result = memberInfo.IsConstructor();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsField_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+
+            //Act
+            var result = memberInfo.IsConstructor();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsProperty_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+
+            //Act
+            var result = memberInfo.IsConstructor();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+    }
+
+    [TestClass]
+    public class IsMethod : Tester
+    {
+        public record Dummy
+        {
+            public string Field;
+
+            public int Property { get; set; }
+
+            public void Method() { }
+
+            private Dummy() { }
+        }
+
+        [TestMethod]
+        public void WhenMemberInfoIsNull_Throw()
+        {
+            //Arrange
+            MemberInfo memberInfo = null!;
+
+            //Act
+            var action = () => memberInfo.IsMethod();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(memberInfo));
+        }
+
+        [TestMethod]
+        public void WhenIsConstructor_ReturnTrue()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+
+            //Act
+            var result = memberInfo.IsMethod();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenIsMethod_ReturnTrue()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+
+            //Act
+            var result = memberInfo.IsMethod();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenIsField_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+
+            //Act
+            var result = memberInfo.IsMethod();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsProperty_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+
+            //Act
+            var result = memberInfo.IsMethod();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+    }
+
+    [TestClass]
+    public class IsField : Tester
+    {
+        public record Dummy
+        {
+            public string Field;
+
+            public int Property { get; set; }
+
+            public void Method() { }
+
+            private Dummy() { }
+        }
+
+        [TestMethod]
+        public void WhenMemberInfoIsNull_Throw()
+        {
+            //Arrange
+            MemberInfo memberInfo = null!;
+
+            //Act
+            var action = () => memberInfo.IsField();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(memberInfo));
+        }
+
+        [TestMethod]
+        public void WhenIsConstructor_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+
+            //Act
+            var result = memberInfo.IsField();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsMethod_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+
+            //Act
+            var result = memberInfo.IsField();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsField_ReturnTrue()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+
+            //Act
+            var result = memberInfo.IsField();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenIsProperty_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+
+            //Act
+            var result = memberInfo.IsField();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+    }
+
+    [TestClass]
+    public class IsProperty : Tester
+    {
+        public record Dummy
+        {
+            public string Field;
+
+            public int Property { get; set; }
+
+            public void Method() { }
+
+            private Dummy() { }
+        }
+
+        //TODO Test
+        [TestMethod]
+        public void WhenMemberInfoIsNull_Throw()
+        {
+            //Arrange
+            MemberInfo memberInfo = null!;
+
+            //Act
+            var action = () => memberInfo.IsProperty();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(memberInfo));
+        }
+
+        [TestMethod]
+        public void WhenIsConstructor_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+
+            //Act
+            var result = memberInfo.IsProperty();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsMethod_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+
+            //Act
+            var result = memberInfo.IsProperty();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsField_ReturnFalse()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+
+            //Act
+            var result = memberInfo.IsProperty();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsProperty_ReturnTrue()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+
+            //Act
+            var result = memberInfo.IsProperty();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
 }

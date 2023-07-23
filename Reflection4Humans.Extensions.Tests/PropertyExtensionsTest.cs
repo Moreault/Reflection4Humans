@@ -29,7 +29,6 @@ public class PropertyExtensionsTest
     [TestClass]
     public class IsStatic : Tester
     {
-        //TODO Test
         [TestMethod]
         public void WhenPropertyInfoIsNull_Throw()
         {
@@ -122,4 +121,115 @@ public class PropertyExtensionsTest
         }
     }
 
+    [TestClass]
+    public class IsGet : Tester
+    {
+        [TestMethod]
+        public void WhenPropertyInfoIsNull_Throw()
+        {
+            //Arrange
+            PropertyInfo propertyInfo = null!;
+
+            //Act
+            var action = () => propertyInfo.IsGet();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(propertyInfo));
+        }
+
+        [TestMethod]
+        public void WhenPropertyInfoHasGetOnly_ReturnTrue()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
+
+            //Act
+            var result = propertyInfo.IsGet();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenPropertyInfoHasBothGetAndSet_ReturnTrue()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetSet");
+
+            //Act
+            var result = propertyInfo.IsGet();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenPropertyInfoHasNoGet_ReturnFalse()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceSetOnly");
+
+            //Act
+            var result = propertyInfo.IsGet();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+    }
+
+    [TestClass]
+    public class IsSet : Tester
+    {
+        [TestMethod]
+        public void WhenPropertyInfoIsNull_Throw()
+        {
+            //Arrange
+            PropertyInfo propertyInfo = null!;
+
+            //Act
+            var action = () => propertyInfo.IsSet();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(propertyInfo));
+        }
+
+        [TestMethod]
+        public void WhenPropertyInfoHasGetOnly_ReturnFalse()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
+
+            //Act
+            var result = propertyInfo.IsSet();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenPropertyInfoHasBothGetAndSet_ReturnTrue()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetSet");
+
+            //Act
+            var result = propertyInfo.IsSet();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenPropertyInfoHasNoGet_ReturnTrue()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceSetOnly");
+
+            //Act
+            var result = propertyInfo.IsSet();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
 }

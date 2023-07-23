@@ -52,7 +52,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleConstructor(x => x.HasNoParameter);
+            var action = () => typeof(Dummy).GetSingleConstructor(x => x.HasNoParameter());
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -64,7 +64,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleConstructor(x => x.IsInternal);
+            var action = () => typeof(Dummy).GetSingleConstructor(x => x.IsInternal());
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -76,7 +76,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result= typeof(Dummy).GetSingleConstructor(x => x.IsProtected);
+            var result= typeof(Dummy).GetSingleConstructor(x => x.IsProtected());
 
             //Assert
             result.Should().NotBeNull();
@@ -92,7 +92,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleConstructorOrDefault(x => x.HasNoParameter);
+            var action = () => typeof(Dummy).GetSingleConstructorOrDefault(x => x.HasNoParameter());
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -104,7 +104,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleConstructorOrDefault(x => x.IsInternal);
+            var result = typeof(Dummy).GetSingleConstructorOrDefault(x => x.IsInternal());
 
             //Assert
             result.Should().BeNull();
@@ -116,7 +116,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleConstructorOrDefault(x => x.IsProtected);
+            var result = typeof(Dummy).GetSingleConstructorOrDefault(x => x.IsProtected());
 
             //Assert
             result.Should().NotBeNull();

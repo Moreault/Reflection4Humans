@@ -24,7 +24,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMethods(x => x.IsGeneric);
+            var result = typeof(Dummy).GetAllMethods(x => x.IsGenericMethod);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -82,7 +82,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod("SomeoneTouchedMe", x => x.HasParameters<int, string>() && !x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, string>() && !x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -94,7 +94,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod("SomeoneTouchedMe", x => x.HasParameters<int, string>() && x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, string>() && x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -106,7 +106,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod("SomeoneTouchedMe", x => x.HasParameters<int, Dummy>() && !x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, Dummy>() && !x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -118,7 +118,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod("SomeoneTouchedMe", x => x.HasParameters<int, Dummy>() && x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, Dummy>() && x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -130,7 +130,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasNoParameter);
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasNoParameter());
 
             //Assert
             result.Should().NotBeNull();
@@ -142,7 +142,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string>());
 
             //Assert
             result.Should().NotBeNull();
@@ -154,7 +154,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int>());
 
             //Assert
             result.Should().NotBeNull();
@@ -166,7 +166,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long>());
 
             //Assert
             result.Should().NotBeNull();
@@ -178,7 +178,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char>());
 
             //Assert
             result.Should().NotBeNull();
@@ -190,7 +190,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char, string>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char, string>());
 
             //Assert
             result.Should().NotBeNull();
@@ -202,7 +202,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char, string, float>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char, string, float>());
 
             //Assert
             result.Should().NotBeNull();
@@ -214,7 +214,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char, string, float, double>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char, string, float, double>());
 
             //Assert
             result.Should().NotBeNull();
@@ -226,7 +226,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char, string, float, double, string>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char, string, float, double, string>());
 
             //Assert
             result.Should().NotBeNull();
@@ -238,7 +238,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char, string, float, double, string, int>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char, string, float, double, string, int>());
 
             //Assert
             result.Should().NotBeNull();
@@ -250,7 +250,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters<string, int, long, char, string, float, double, string, int, char>());
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters<string, int, long, char, string, float, double, string, int, char>());
 
             //Assert
             result.Should().NotBeNull();
@@ -262,7 +262,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(1));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(1));
 
             //Assert
             result.Should().NotBeNull();
@@ -274,7 +274,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(2));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(2));
 
             //Assert
             result.Should().NotBeNull();
@@ -286,7 +286,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(3));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(3));
 
             //Assert
             result.Should().NotBeNull();
@@ -298,7 +298,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(4));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(4));
 
             //Assert
             result.Should().NotBeNull();
@@ -310,7 +310,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(5));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(5));
 
             //Assert
             result.Should().NotBeNull();
@@ -322,7 +322,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(6));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(6));
 
             //Assert
             result.Should().NotBeNull();
@@ -334,7 +334,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(7));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(7));
 
             //Assert
             result.Should().NotBeNull();
@@ -346,7 +346,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(8));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(8));
 
             //Assert
             result.Should().NotBeNull();
@@ -358,7 +358,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(9));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(9));
 
             //Assert
             result.Should().NotBeNull();
@@ -370,7 +370,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethod(nameof(Dummy.Overload), x => x.HasParameters(10));
+            var result = typeof(Dummy).GetSingleMethod(x => x.Name == nameof(Dummy.Overload) && x.HasParameters(10));
 
             //Assert
             result.Should().NotBeNull();
@@ -425,7 +425,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethodOrDefault("SomeoneTouchedMe", x => x.HasParameters<int, string>() && !x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethodOrDefault(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, string>() && !x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -437,7 +437,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethodOrDefault("SomeoneTouchedMe", x => x.HasParameters<int, string>() && x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethodOrDefault(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, string>() && x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -449,7 +449,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethodOrDefault("SomeoneTouchedMe", x => x.HasParameters<int, Dummy>() && !x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethodOrDefault(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, Dummy>() && !x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();
@@ -461,7 +461,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMethodOrDefault("SomeoneTouchedMe", x => x.HasParameters<int, Dummy>() && x.IsGeneric);
+            var result = typeof(Dummy).GetSingleMethodOrDefault(x => x.Name == "SomeoneTouchedMe" && x.HasParameters<int, Dummy>() && x.IsGenericMethod);
 
             //Assert
             result.Should().NotBeNull();

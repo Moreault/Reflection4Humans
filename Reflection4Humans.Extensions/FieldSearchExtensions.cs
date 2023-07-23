@@ -2,9 +2,9 @@
 
 public static class FieldSearchExtensions
 {
-    public static IReadOnlyList<FieldInfo> GetAllFields(this Type type, Func<FieldSearchOptions, bool>? predicate = null) => type.GetAllFieldsInternal(predicate).ToList();
+    public static IReadOnlyList<FieldInfo> GetAllFields(this Type type, Func<FieldInfo, bool>? predicate = null) => type.GetAllFieldsInternal(predicate).ToList();
 
-    private static IEnumerable<FieldInfo> GetAllFieldsInternal(this Type type, Func<FieldSearchOptions, bool>? predicate = null)
+    private static IEnumerable<FieldInfo> GetAllFieldsInternal(this Type type, Func<FieldInfo, bool>? predicate = null)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
 
@@ -17,28 +17,23 @@ public static class FieldSearchExtensions
             currentType = currentType.BaseType;
         } while (currentType != null);
 
-        if (predicate is null)
-            return fields;
-
-        return fields.Distinct(new MemberInfoEqualityComparer<FieldInfo>()).Select(x => new FieldSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
+        fields = fields.Distinct(new MemberInfoEqualityComparer<FieldInfo>());
+        return predicate is null ? fields : fields.Where(predicate);
     }
 
-    public static FieldInfo GetSingleField(this Type type, string name, Func<FieldSearchOptions, bool>? predicate = null)
+    public static FieldInfo GetSingleField(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        return type.GetAllFieldsInternal(predicate).Single(x => x.Name == name);
+        return type.GetAllFieldsInternal(x => x.Name.Equals(name, stringComparison)).Single();
     }
 
-    public static FieldInfo? GetSingleFieldOrDefault(this Type type, string name, Func<FieldSearchOptions, bool>? predicate = null)
+    public static FieldInfo? GetSingleFieldOrDefault(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        return type.GetAllFieldsInternal(predicate).SingleOrDefault(x => x.Name == name);
+        return type.GetAllFieldsInternal(x => x.Name.Equals(name, stringComparison)).SingleOrDefault();
     }
-}
 
-public sealed record FieldSearchOptions : MemberSearcOptionsBase<FieldInfo>
-{
-    public FieldSearchOptions(FieldInfo memberInfo) : base(memberInfo)
-    {
-    }
+    public static FieldInfo GetSingleField(this Type type, Func<FieldInfo, bool>? predicate = null) => type.GetAllFieldsInternal(predicate).Single();
+
+    public static FieldInfo? GetSingleFieldOrDefault(this Type type, Func<FieldInfo, bool>? predicate = null) => type.GetAllFieldsInternal(predicate).SingleOrDefault();
 }

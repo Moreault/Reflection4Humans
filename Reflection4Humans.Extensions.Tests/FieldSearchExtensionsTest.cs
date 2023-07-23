@@ -31,7 +31,7 @@ public partial class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField", "<GetOnlyProperty>k__BackingField", "ShadowedField", "ShadowedField", "_wasPoked", "_setOnlyValue", "_nextId"
+                "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField", "<GetOnlyProperty>k__BackingField", "ShadowedField", "_wasPoked", "_setOnlyValue", "_nextId"
             });
         }
 
@@ -113,7 +113,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleField("ShadowedField", x => x.IsPublic);
+            var result = typeof(Dummy).GetSingleField(x => x.Name == "ShadowedField" && x.IsPublic);
 
             //Assert
             result.Should().NotBeNull();
@@ -182,7 +182,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleFieldOrDefault("ShadowedField", x => x.IsPublic);
+            var result = typeof(Dummy).GetSingleFieldOrDefault(x => x.Name == "ShadowedField" && x.IsPublic);
 
             //Assert
             result.Should().NotBeNull();

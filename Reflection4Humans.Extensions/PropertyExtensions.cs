@@ -7,4 +7,16 @@ public static class PropertyExtensions
         if (propertyInfo is null) throw new ArgumentNullException(nameof(propertyInfo));
         return propertyInfo.GetMethod?.IsStatic ?? propertyInfo.SetMethod?.IsStatic ?? false;
     }
+
+    public static bool IsGet(this PropertyInfo propertyInfo)
+    {
+        if (propertyInfo is null) throw new ArgumentNullException(nameof(propertyInfo));
+        return propertyInfo.GetMethod != null;
+    }
+
+    public static bool IsSet(this PropertyInfo propertyInfo)
+    {
+        if (propertyInfo is null) throw new ArgumentNullException(nameof(propertyInfo));
+        return propertyInfo.SetMethod != null;
+    }
 }

@@ -13,14 +13,10 @@
 		<Version>2.2.0-beta1</Version>
 		<PackageIcon>reflection4humans.png</PackageIcon>
 		<Description>Reflection extension methods meant to be used by humans.</Description>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReadmeFile></PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
 		<None Include="..\reflection4humans.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>

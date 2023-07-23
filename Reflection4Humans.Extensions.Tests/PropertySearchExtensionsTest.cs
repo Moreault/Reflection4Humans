@@ -25,7 +25,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllProperties(x => x.IsSet && !x.IsGet);
+            var result = typeof(Dummy).GetAllProperties(x => x.IsSet() && !x.IsGet());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -40,43 +40,13 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllProperties(x => x.IsGet && !x.IsSet);
+            var result = typeof(Dummy).GetAllProperties(x => x.IsGet() && !x.IsSet());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
                 "Id", "GetOnlyProperty", "NextId"
             });
-        }
-
-        [TestMethod]
-        public void WhenGettingAnyWithSet_ReturnAllProprtiesWithSets()
-        {
-            //Arrange
-
-            //Act
-
-            //Assert
-        }
-
-        [TestMethod]
-        public void WhenGettingAnyWithGet_ReturnAllProprtiesWithGets()
-        {
-            //Arrange
-
-            //Act
-
-            //Assert
-        }
-
-        [TestMethod]
-        public void WhenGettingAllPropertiesWithGetAndSet_ReturnAllProprtiesWithBothGetAndSet()
-        {
-            //Arrange
-
-            //Act
-
-            //Assert
         }
     }
 
@@ -118,7 +88,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleProperty("SetOnlyProperty", x => x.IsGet);
+            var action = () => typeof(Dummy).GetSingleProperty(x => x.Name == "SetOnlyProperty" && x.IsGet());
 
             //Assert
             action.Should().Throw<Exception>();
@@ -130,7 +100,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleProperty("GetOnlyProperty", x => x.IsGet && !x.IsSet);
+            var result = typeof(Dummy).GetSingleProperty(x => x.Name == "GetOnlyProperty" && x.IsGet() && !x.IsSet());
 
             //Assert
             result.Should().NotBeNull();
@@ -142,7 +112,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleProperty("SetOnlyProperty", x => x.IsSet);
+            var result = typeof(Dummy).GetSingleProperty(x => x.Name == "SetOnlyProperty" && x.IsSet());
 
             //Assert
             result.Should().NotBeNull();
@@ -187,7 +157,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSinglePropertyOrDefault("SetOnlyProperty", x => x.IsGet);
+            var result = typeof(Dummy).GetSinglePropertyOrDefault(x => x.Name == "SetOnlyProperty" && x.IsGet());
 
             //Assert
             result.Should().BeNull();
@@ -199,7 +169,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSinglePropertyOrDefault("GetOnlyProperty", x => x.IsGet && !x.IsSet);
+            var result = typeof(Dummy).GetSinglePropertyOrDefault(x => x.Name == "GetOnlyProperty" && x.IsGet() && !x.IsSet());
 
             //Assert
             result.Should().NotBeNull();
@@ -211,7 +181,31 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSinglePropertyOrDefault("SetOnlyProperty", x => x.IsSet);
+            var result = typeof(Dummy).GetSinglePropertyOrDefault(x => x.Name == "SetOnlyProperty" && x.IsSet());
+
+            //Assert
+            result.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void WhenLookingForPropertyByNameButItDoesntExist_ReturnNull()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSinglePropertyOrDefault("Les Meubles Alexandra");
+
+            //Assert
+            result.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void WhenLookingForPropertyByName_ReturnTheProperty()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSinglePropertyOrDefault("GetOnlyProperty");
 
             //Assert
             result.Should().NotBeNull();

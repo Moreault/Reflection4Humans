@@ -292,4 +292,436 @@ public class TypeExtensionsTest
             result.Should().BeEquivalentTo(new List<Type> { typeof(ITopDummy1), typeof(ITopDummy2) });
         }
     }
+
+    [TestClass]
+    public class Implements : Tester
+    {
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+            var value = Fixture.Create<Type>();
+
+            //Act
+            var action = () => type.Implements(value);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenValueIsNull_Throw()
+        {
+            //Arrange
+            var type = Fixture.Create<Type>();
+            Type value = null!;
+
+            //Act
+            var action = () => type.Implements(value);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(value));
+        }
+
+        [TestMethod]
+        public void WhenTypeImplementsInterface_ReturnTrue()
+        {
+            //Arrange
+            var type = typeof(DummyWithInterfaces);
+
+            //Act
+            var result = type.Implements<IDisposable>();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenTypeDoesNotImplementInterface_ReturnFalse()
+        {
+            //Arrange
+            var type = typeof(Dummy);
+
+            //Act
+            var result = type.Implements<IDisposable>();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+    }
+
+    [TestClass]
+    public class HasAttribute_Any : Tester
+    {
+        public class Dummy { }
+
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.HasAttribute();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenTypeDoesNotHaveAnyAttribute_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).HasAttribute();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenTypeHasAttribute_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(DummyWithAttribute).HasAttribute();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class HasAttribute_Generic : Tester
+    {
+        [Dummy(Name = "Roger")]
+        public class DummyRoger { }
+
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.HasAttribute<DummyAttribute>();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenTypeDoesNotHaveAttribute_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).HasAttribute(Fixture.Create<Func<DummyAttribute, bool>>());
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenTypeHasAttributeAndPredicateIsNull_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(DummyRoger).HasAttribute();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenTypeHasAttributeButDoesNotMatchPredicate_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(DummyRoger).HasAttribute<DummyAttribute>(x => x.Name == "Seb");
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenTypeHasAttributeAndPredicateMatches_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(DummyRoger).HasAttribute<DummyAttribute>(x => x.Name == "Roger");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class HasAttribute_Type : Tester
+    {
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+            var attribute = Fixture.Create<Type>();
+
+            //Act
+            var action = () => type.HasAttribute(attribute);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenAttributeIsNull_Throw()
+        {
+            //Arrange
+            var type = Fixture.Create<Type>();
+            Type attribute = null!;
+
+            //Act
+            var action = () => type.HasAttribute(attribute);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(attribute));
+        }
+
+        [TestMethod]
+        public void WhenTypeHasThatAttribute_ReturnTrue()
+        {
+            //Arrange
+            var type = typeof(DummyWithAttribute);
+            var attribute = typeof(DummyAttribute);
+
+            //Act
+            var result = type.HasAttribute(attribute);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenTypeDoesNotHaveAttribute_ReturnFalse()
+        {
+            //Arrange
+            var type = typeof(DummyWithAttribute);
+            var attribute = typeof(SerializableAttribute);
+
+            //Act
+            var result = type.HasAttribute(attribute);
+
+            //Assert
+            result.Should().BeFalse();
+        }
+    }
+
+    [TestClass]
+    public class HasInterface_Any : Tester
+    {
+        public class Dummy { }
+
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.HasInterface();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenTypeHasNoInterface_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).HasInterface();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenTypeHasAnInterface_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(DummyWithInterfaces).HasInterface();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class DirectlyImplements_Generic : Tester
+    {
+        public interface IDummy { }
+
+        public interface IDummyBase { }
+
+        public class Dummy : DummyBase, IDummy { }
+
+        public class DummyBase : IDummyBase { }
+
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.DirectlyImplements<IDummy>();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenIndirectlyImplementsInterface_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements<IDummyBase>();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenTypeIsNotInterface_ReturnsFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements<DummyBase>();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenDoesNotImplementDirectlyOrIndirectly_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements<IDisposable>();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenDirectlyImplements_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements<IDummy>();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class DirectlyImplements_Type : Tester
+    {
+        public interface IDummy { }
+
+        public interface IDummyBase { }
+
+        public class Dummy : DummyBase, IDummy { }
+
+        public class DummyBase : IDummyBase { }
+
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.DirectlyImplements(typeof(IDummy));
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        public void WhenInterfaceIsNull_Throw()
+        {
+            //Arrange
+            var type = typeof(Dummy);
+            Type @interface = null!;
+
+            //Act
+            var action = () => type.DirectlyImplements(@interface);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(@interface));
+        }
+
+        [TestMethod]
+        public void WhenIndirectlyImplementsInterface_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements(typeof(IDummyBase));
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenTypeIsNotInterface_ReturnsFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements(typeof(DummyBase));
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenDoesNotImplementDirectlyOrIndirectly_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements(typeof(IDisposable));
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenDirectlyImplements_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).DirectlyImplements(typeof(IDummy));
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
 }

@@ -2,9 +2,9 @@
 
 public static class MemberSearchExtensions
 {
-    public static IReadOnlyList<MemberInfo> GetAllMembers(this Type type, Func<MemberSearchOptions, bool>? predicate = null) => type.GetAllMembersInternal(predicate).ToList();
+    public static IReadOnlyList<MemberInfo> GetAllMembers(this Type type, Func<MemberInfo, bool>? predicate = null) => type.GetAllMembersInternal(predicate).ToList();
 
-    private static IEnumerable<MemberInfo> GetAllMembersInternal(this Type type, Func<MemberSearchOptions, bool>? predicate = null)
+    private static IEnumerable<MemberInfo> GetAllMembersInternal(this Type type, Func<MemberInfo, bool>? predicate = null)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
 
@@ -17,51 +17,23 @@ public static class MemberSearchExtensions
             currentType = currentType.BaseType;
         } while (currentType != null);
 
-        if (predicate is null)
-            return members;
-        
-        return members.Distinct(new MemberInfoEqualityComparer<MemberInfo>()).Select(x => new MemberSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
+        members = members.Distinct(new MemberInfoEqualityComparer<MemberInfo>());
+        return predicate is null ? members : members.Where(predicate);
     }
 
-    public static MemberInfo GetSingleMember(this Type type, string name, Func<MemberSearchOptions, bool>? predicate = null)
+    public static MemberInfo GetSingleMember(this Type type, Func<MemberInfo, bool>? predicate = null) => type.GetAllMembersInternal(predicate).Single();
+
+    public static MemberInfo? GetSingleMemberOrDefault(this Type type, Func<MemberInfo, bool>? predicate = null) => type.GetAllMembersInternal(predicate).SingleOrDefault();
+
+    public static MemberInfo GetSingleMember(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        return type.GetAllMembersInternal(predicate).Single(x => x.Name == name);
+        return type.GetAllMembersInternal(x => x.Name.Equals(name, stringComparison)).Single();
     }
 
-    public static MemberInfo? GetSingleMemberOrDefault(this Type type, string name, Func<MemberSearchOptions, bool>? predicate = null)
+    public static MemberInfo? GetSingleMemberOrDefault(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-        return type.GetAllMembersInternal(predicate).SingleOrDefault(x => x.Name == name);
-    }
-}
-
-public abstract record MemberSearcOptionsBase<T> where T : MemberInfo
-{
-    internal readonly T MemberInfo;
-
-    public bool IsPublic => MemberInfo.IsPublic();
-    public bool IsInternal => MemberInfo.IsInternal();
-    public bool IsProtected => MemberInfo.IsProtected();
-    public bool IsPrivate => MemberInfo.IsPrivate();
-
-    public bool IsStatic => MemberInfo.IsStatic();
-    public bool IsInstance => !IsStatic;
-
-    protected MemberSearcOptionsBase(T memberInfo)
-    {
-        MemberInfo = memberInfo ?? throw new ArgumentNullException(nameof(memberInfo));
-    }
-}
-
-public sealed record MemberSearchOptions : MemberSearcOptionsBase<MemberInfo>
-{
-    public bool IsMethod => MemberInfo is MethodInfo;
-    public bool IsField => MemberInfo is FieldInfo;
-    public bool IsConstructor => MemberInfo is ConstructorInfo;
-    public bool IsProperty => MemberInfo is PropertyInfo;
-
-    public MemberSearchOptions(MemberInfo memberInfo) : base(memberInfo)
-    {
+        return type.GetAllMembersInternal(x => x.Name.Equals(name, stringComparison)).SingleOrDefault();
     }
 }

@@ -1,57 +1,74 @@
 ﻿namespace Reflection4Humans.ValueEquality.Tests;
 
+public abstract class ValueEqualityComparerTester : Tester
+{
+    internal ValueEqualityComparer Instance { get; private set; } = null!;
+
+    protected override void InitializeTest()
+    {
+        base.InitializeTest();
+        Instance = new ValueEqualityComparer { Options = Fixture.Create<ValueEqualityOptions>() };
+
+    }
+}
+
 [TestClass]
 public class ValueEqualityComparerTest
 {
     [TestClass]
-    public class EqualsMethod : Tester
+    public class EqualsMethod : ValueEqualityComparerTester
     {
-        private ValueEqualityComparer _instance = null!;
-
-        protected override void InitializeTest()
-        {
-            base.InitializeTest();
-            _instance = new ValueEqualityComparer { Options = Fixture.Create<ValueEqualityOptions>() };
-        }
-
         [TestMethod]
         public void WhenBothAreNull_ReturnTrue()
         {
             //Arrange
 
             //Act
+            var result = Instance.Equals(null!, null!);
 
             //Assert
+            result.Should().BeTrue();
         }
 
         [TestMethod]
         public void WhenXIsNullButYIsNot_ReturnFalse()
         {
             //Arrange
+            object x = null!;
+            var y = Fixture.Create<object>();
 
             //Act
+            var result = Instance.Equals(x, y);
 
             //Assert
+            result.Should().BeFalse();
         }
 
         [TestMethod]
         public void WhenYIsNullButXIsNot_ReturnFalse()
         {
             //Arrange
+            var x = Fixture.Create<object>();
+            object y = null!;
 
             //Act
+            var result = Instance.Equals(x, y);
 
             //Assert
+            result.Should().BeFalse();
         }
 
         [TestMethod]
         public void WhenBothAreStringAndEqual_ReturnTrue()
         {
             //Arrange
+            var x = Fixture.Create<string>();
 
             //Act
+            var result = Instance.Equals(x, x);
 
             //Assert
+            result.Should().BeTrue();
         }
 
         [TestMethod]
@@ -64,12 +81,31 @@ public class ValueEqualityComparerTest
         public void WhenBothAreStringWithSameTextButDifferentCasing_ReturnTueOrFalseDependingOnStringComparison(StringComparison comparison, bool expected)
         {
             //Arrange
+            var x = Fixture.Create<string>().ToUpperInvariant();
+            var y = x.ToLowerInvariant();
 
             //Act
+            var result = (Instance with { Options = new ValueEqualityOptions { StringComparison = comparison } }).Equals(x, y);
 
             //Assert
+            result.Should().Be(expected);
         }
     }
 
+    [TestClass]
+    public class GetHashCodeMethod : ValueEqualityComparerTester
+    {
+        [TestMethod]
+        public void Always_ReturnObjectHashCode()
+        {
+            //Arrange
+            var obj = Fixture.Create<object>();
 
+            //Act
+            var result = Instance.GetHashCode(obj);
+
+            //Assert
+            result.Equals(obj.GetHashCode());
+        }
+    }
 }

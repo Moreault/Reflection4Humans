@@ -2,9 +2,9 @@
 
 public static class ConstructorSearchExtensions
 {
-    public static IReadOnlyList<ConstructorInfo> GetAllConstructors(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).ToList();
+    public static IReadOnlyList<ConstructorInfo> GetAllConstructors(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).ToList();
 
-    public static IEnumerable<ConstructorInfo> GetAllConstructorsInternal(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null)
+    public static IEnumerable<ConstructorInfo> GetAllConstructorsInternal(this Type type, Func<ConstructorInfo, bool>? predicate = null)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
 
@@ -17,20 +17,11 @@ public static class ConstructorSearchExtensions
             currentType = currentType.BaseType;
         } while (currentType != null);
 
-        if (predicate is null)
-            return constructors;
-
-        return constructors.Distinct(new MemberInfoEqualityComparer<ConstructorInfo>()).Select(x => new ConstructorSearchOptions(x)).Where(predicate).Select(x => x.MemberInfo);
+        constructors = constructors.Distinct(new MemberInfoEqualityComparer<ConstructorInfo>());
+        return predicate is null ? constructors : constructors.Where(predicate);
     }
 
-    public static ConstructorInfo GetSingleConstructor(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null) => type.GetAllConstructors(predicate).Single();
+    public static ConstructorInfo GetSingleConstructor(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).Single();
 
-    public static ConstructorInfo? GetSingleConstructorOrDefault(this Type type, Func<ConstructorSearchOptions, bool>? predicate = null) => type.GetAllConstructors(predicate).SingleOrDefault();
-}
-
-public sealed record ConstructorSearchOptions : MethodSearchOptionsBase<ConstructorInfo>
-{
-    public ConstructorSearchOptions(ConstructorInfo memberInfo) : base(memberInfo)
-    {
-    }
+    public static ConstructorInfo? GetSingleConstructorOrDefault(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).SingleOrDefault();
 }
