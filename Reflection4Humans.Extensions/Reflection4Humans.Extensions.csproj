@@ -13,7 +13,7 @@
 		<Version>2.2.0-beta1</Version>
 		<PackageIcon>reflection4humans.png</PackageIcon>
 		<Description>Reflection extension methods meant to be used by humans.</Description>
-		<PackageReadmeFile></PackageReadmeFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -42,6 +42,13 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>
