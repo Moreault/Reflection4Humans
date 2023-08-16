@@ -1,11 +1,9 @@
-﻿using System.Xml.Linq;
-
-namespace Reflection4Humans.Extensions.Tests;
+﻿namespace Reflection4Humans.Extensions.Tests;
 
 public partial class MemberSearchExtensionsTest
 {
     [TestClass]
-    public class GetAllFields : Tester
+    public class GetAllEvents : Tester
     {
         [TestMethod]
         public void WhenTypeIsNull_Throw()
@@ -14,45 +12,45 @@ public partial class MemberSearchExtensionsTest
             Type type = null!;
 
             //Act
-            var action = () => type.GetAllFields();
+            var action = () => type.GetAllEvents();
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
         }
 
         [TestMethod]
-        public void WhenTypeIsNotNull_ReturnAllFields()
+        public void WhenGettingAllEvents_ReturnAllOfThem()
         {
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllFields();
+            var result = typeof(Dummy).GetAllEvents();
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField", "<GetOnlyProperty>k__BackingField", "OnPublic", "OnProtected", "OnInternal", "OnPrivate", "OnStatic", "ShadowedField", "_wasPoked", "_setOnlyValue", "_nextId"
+                "OnPublic", "OnProtected", "OnInternal", "OnPrivate", "OnStatic"
             });
         }
 
         [TestMethod]
-        public void WhenSearchingForAllStaticFields_ReturnAllStaticFields()
+        public void WhenGettingAllInstanceEvents_ReturnOnlyInstanceEvents()
         {
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllFields(x => x.IsStatic);
+            var result = typeof(Dummy).GetAllEvents(x => x.IsInstance());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "OnStatic", "_nextId"
+                "OnPublic", "OnProtected", "OnInternal", "OnPrivate"
             });
         }
     }
 
     [TestClass]
-    public class GetSingleField : Tester
+    public class GetSingleEvent : Tester
     {
         [TestMethod]
         public void WhenTypeIsNull_Throw()
@@ -62,7 +60,7 @@ public partial class MemberSearchExtensionsTest
             var name = Fixture.Create<string>();
 
             //Act
-            var action = () => type.GetSingleField(name);
+            var action = () => type.GetSingleEvent(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
@@ -77,43 +75,43 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleField(name);
+            var action = () => typeof(Dummy).GetSingleEvent(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
         }
 
         [TestMethod]
-        public void WhenNoFieldWithName_Throw()
+        public void WhenThereIsNoEventWithName_Throw()
         {
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleField(Fixture.Create<string>());
+            var action = () => typeof(Dummy).GetSingleEvent(Fixture.Create<string>());
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
         }
 
         [TestMethod]
-        public void WhenMultipleFieldsWithSameName_Throw()
+        public void WhenThereIsEventWithName_ReturnEvent()
         {
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleField("ShadowedField");
+            var result = typeof(Dummy).GetSingleEvent("OnInternal");
 
             //Assert
-            action.Should().Throw<InvalidOperationException>();
+            result.Should().NotBeNull();
         }
 
         [TestMethod]
-        public void WhenExactlyOneFieldWithName_ReturnIt()
+        public void WhenGettingSoleProtectedEvent_ReturnIt()
         {
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleField(x => x.Name == "ShadowedField" && x.IsPublic);
+            var result = typeof(Dummy).GetSingleEvent(x => x.IsProtected());
 
             //Assert
             result.Should().NotBeNull();
@@ -121,7 +119,7 @@ public partial class MemberSearchExtensionsTest
     }
 
     [TestClass]
-    public class GetSingleFieldOrDefault : Tester
+    public class GetSingleEventOrDefault : Tester
     {
         [TestMethod]
         public void WhenTypeIsNull_Throw()
@@ -131,7 +129,7 @@ public partial class MemberSearchExtensionsTest
             var name = Fixture.Create<string>();
 
             //Act
-            var action = () => type.GetSingleFieldOrDefault(name);
+            var action = () => type.GetSingleEventOrDefault(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
@@ -146,43 +144,55 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleFieldOrDefault(name);
+            var action = () => typeof(Dummy).GetSingleEventOrDefault(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
         }
 
         [TestMethod]
-        public void WhenNoFieldWithName_DoNotThrow()
+        public void WhenLookingForPropertyByNameButItDoesntExist_ReturnNull()
         {
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleFieldOrDefault(Fixture.Create<string>());
+            var result = typeof(Dummy).GetSingleEventOrDefault("Les Meubles Alexandra");
 
             //Assert
-            action.Should().NotThrow();
+            result.Should().BeNull();
         }
 
         [TestMethod]
-        public void WhenMultipleFieldsWithSameName_Throw()
+        public void WhenThereIsNoEventWithName_ReturnNull()
         {
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleFieldOrDefault("ShadowedField");
+            var result = typeof(Dummy).GetSingleEventOrDefault(Fixture.Create<string>());
 
             //Assert
-            action.Should().Throw<InvalidOperationException>();
+            result.Should().BeNull();
         }
 
         [TestMethod]
-        public void WhenExactlyOneFieldWithName_ReturnIt()
+        public void WhenThereIsEventWithName_ReturnEvent()
         {
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleFieldOrDefault(x => x.Name == "ShadowedField" && x.IsPublic);
+            var result = typeof(Dummy).GetSingleEventOrDefault("OnPrivate");
+
+            //Assert
+            result.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void WhenGettingSoleProtectedEvent_ReturnIt()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEventOrDefault(x => x.IsProtected());
 
             //Assert
             result.Should().NotBeNull();

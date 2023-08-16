@@ -8,40 +8,44 @@
 		<Authors>Mathieu Moreault</Authors>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
-		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
+		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans/Reflection4Humans.TypeGenerator/</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Version>2.2.0-beta2</Version>
 		<PackageIcon>reflection4humans.png</PackageIcon>
-		<Description>Reflection extension methods meant to be used by humans.</Description>
+		<Description>Generates temporary types at runtime based on interfaces and classes.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\reflection4humans.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+	  <None Include="..\reflection4humans.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Reflection4Humans.Extensions\Reflection4Humans.Extensions.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>Reflection4Humans.Extensions.Tests</_Parameter1>
+			<_Parameter1>Reflection4Humans.TypeGenerator.Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Resources\Exceptions.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Exceptions.resx</DependentUpon>
-		</Compile>
+	  <Compile Update="Resources\Exceptions.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Exceptions.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Update="Resources\Exceptions.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Exceptions.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>

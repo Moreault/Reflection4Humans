@@ -8,6 +8,8 @@ public class MemberInfoExtensionsTest
     [TestClass]
     public class IsStatic : Tester
     {
+        public delegate void TestEventHandler(object sender, EventArgs e);
+
         public record Dummy
         {
             private static int _staticField;
@@ -15,6 +17,9 @@ public class MemberInfoExtensionsTest
 
             public static long StaticProperty { get; set; }
             public short InstanceProperty { get; }
+
+            public static event TestEventHandler OnStaticTest;
+            public event TestEventHandler OnTest;
 
             public static void StaticMethod()
             {
@@ -201,11 +206,37 @@ public class MemberInfoExtensionsTest
             //Assert
             result.Should().BeFalse();
         }
+
+        [TestMethod]
+        public void WhenEventIsStatic_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent(nameof(Dummy.OnStaticTest)).IsStatic();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenEventIsNotStatic_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent(nameof(Dummy.OnTest)).IsStatic();
+
+            //Assert
+            result.Should().BeFalse();
+        }
     }
 
     [TestClass]
     public class IsPrivate : Tester
     {
+        public delegate void TestEventHandler(object sender, EventArgs e);
+
         public record Dummy
         {
             private int _privateField;
@@ -217,6 +248,9 @@ public class MemberInfoExtensionsTest
             }
             private string _privatePropertyField;
             internal char NonPrivateProperty { get; }
+
+            public event TestEventHandler OnPublic;
+            private event TestEventHandler OnPrivate;
 
             private void PrivateMethod()
             {
@@ -367,11 +401,37 @@ public class MemberInfoExtensionsTest
             //Assert
             action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsPrivate), nameof(DummyMemberInfo)));
         }
+
+        [TestMethod]
+        public void WhenEventIsPrivate_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnPrivate").IsPrivate();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenEventIsNotPrivate_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsPrivate();
+
+            //Assert
+            result.Should().BeFalse();
+        }
     }
 
     [TestClass]
     public class IsProtected : Tester
     {
+        public delegate void TestEventHandler(object sender, EventArgs e);
+
         public record Dummy
         {
             protected int _protectedField;
@@ -383,6 +443,9 @@ public class MemberInfoExtensionsTest
             }
             protected string _protectedPropertyField;
             internal char NonProtectedProperty { get; }
+
+            public event TestEventHandler OnPublic;
+            protected event TestEventHandler OnProtected;
 
             protected void ProtectedMethod()
             {
@@ -533,11 +596,37 @@ public class MemberInfoExtensionsTest
             //Assert
             action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsProtected), nameof(DummyMemberInfo)));
         }
+
+        [TestMethod]
+        public void WhenEventIsProtected_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnProtected").IsProtected();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenEventIsNotProtected_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsProtected();
+
+            //Assert
+            result.Should().BeFalse();
+        }
     }
 
     [TestClass]
     public class IsInternal : Tester
     {
+        public delegate void TestEventHandler(object sender, EventArgs e);
+
         public record Dummy
         {
             internal int _internalField;
@@ -549,6 +638,9 @@ public class MemberInfoExtensionsTest
             }
             internal string _internalPropertyField;
             private char NonInternalProperty { get; }
+
+            public event TestEventHandler OnPublic;
+            internal event TestEventHandler OnInternal;
 
             internal void InternalMethod()
             {
@@ -725,11 +817,37 @@ public class MemberInfoExtensionsTest
             //Assert
             result.Should().BeFalse();
         }
+
+        [TestMethod]
+        public void WhenEventIsInternal_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnInternal").IsInternal();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenEventIsNotInternal_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsInternal();
+
+            //Assert
+            result.Should().BeFalse();
+        }
     }
 
     [TestClass]
     public class IsPublic : Tester
     {
+        public delegate void TestEventHandler(object sender, EventArgs e);
+
         public record Dummy
         {
             public int _publicField;
@@ -741,6 +859,9 @@ public class MemberInfoExtensionsTest
             }
             private string _publicPropertyField;
             private char NonPublicProperty { get; }
+
+            public event TestEventHandler OnPublic;
+            internal event TestEventHandler OnInternal;
 
             public void PublicMethod()
             {
@@ -890,6 +1011,30 @@ public class MemberInfoExtensionsTest
 
             //Assert
             action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsPublic), nameof(DummyMemberInfo)));
+        }
+
+        [TestMethod]
+        public void WhenEventIsPublic_ReturnTrue()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsPublic();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenEventIsNotPublic_ReturnFalse()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Dummy).GetSingleEvent("OnInternal").IsPublic();
+
+            //Assert
+            result.Should().BeFalse();
         }
     }
 

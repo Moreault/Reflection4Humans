@@ -12,6 +12,7 @@ Reflection extension methods meant to be used by humans.
 * Type.GetAllFields
 * Type.GetAllMethods
 * Type.GetAllConstructors
+* Type GetAllEvents
 
 The above extension methods will return all members of said kind on any .NET type. There is no confusing flag for which you need to specify whether or not you want private, protected or static members. It's all done via predicates.
 
@@ -42,6 +43,7 @@ var constructors = typeof(Dummy).GetAllConstructors(x => x.HasParameters<int>() 
 * Type.GetSingleField & Type.GetSingleFieldOrDefault
 * Type.GetSingleMethod & Type.GetSingleMethodOrDefault
 * Type.GetSingleConstructor & Type.GetSingleConstructorOrDefault
+* Type.GetSingleEvent & Type.GetSingleEventOrDefault
 
 As you probably expect, the overload without "Default" in it will throw an exception if there is no member found. That is the only difference between the two. They are used the exact same way as the above "GetAll" extensions. There are additional overloads that do a simple search by name but they will throw an exception if there is more than one result to your query so make sure that there is indeed only one member by that name.
 

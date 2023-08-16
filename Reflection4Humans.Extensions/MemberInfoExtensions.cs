@@ -14,6 +14,8 @@ public static class MemberInfoExtensions
             return methodInfo.IsStatic;
         if (memberInfo is Type type)
             return type.IsClass && type.IsAbstract && type.IsSealed;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.AddMethod?.IsStatic ?? eventInfo.AddMethod!.IsStatic;
         throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsStatic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
@@ -31,6 +33,8 @@ public static class MemberInfoExtensions
             return methodInfo.IsPrivate;
         if (memberInfo is Type type)
             return type.IsNestedPrivate;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.AddMethod?.IsPrivate ?? eventInfo.RemoveMethod!.IsPrivate;
         throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPrivate), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
@@ -46,6 +50,8 @@ public static class MemberInfoExtensions
             return methodInfo.IsFamily;
         if (memberInfo is Type type)
             return type.IsNestedFamily;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.AddMethod?.IsFamily ?? eventInfo.RemoveMethod!.IsFamily;
         throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsProtected), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
@@ -61,6 +67,8 @@ public static class MemberInfoExtensions
             return methodInfo.IsAssembly;
         if (memberInfo is Type type)
             return type.IsNestedAssembly;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.AddMethod?.IsAssembly ?? eventInfo.RemoveMethod!.IsAssembly;
         throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsInternal), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 
@@ -74,6 +82,8 @@ public static class MemberInfoExtensions
             return propertyInfo.GetMethod?.IsPublic ?? propertyInfo.SetMethod!.IsPublic;
         if (memberInfo is MethodBase methodInfo)
             return methodInfo.IsPublic;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.AddMethod?.IsPublic ?? eventInfo.RemoveMethod!.IsPublic;
         throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPublic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
     }
 

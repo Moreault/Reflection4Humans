@@ -3,6 +3,8 @@
 [TestClass]
 public partial class MemberSearchExtensionsTest
 {
+    public delegate void TestEventHandler(object sender, EventArgs e);
+
     public class Dummy : AbstractDummy<Dummy>
     {
         public long Id { get; }
@@ -12,6 +14,12 @@ public partial class MemberSearchExtensionsTest
         private string PrivateGetSetProperty { get; set; }
 
         private protected string GetOnlyProperty { get; } = "abc";
+
+        public static event TestEventHandler OnStatic;
+        public event TestEventHandler OnPublic;
+        protected event TestEventHandler OnProtected;
+        internal event TestEventHandler OnInternal;
+        private event TestEventHandler OnPrivate;
 
         public Dummy()
         {
@@ -111,7 +119,7 @@ public partial class MemberSearchExtensionsTest
             var result = typeof(Dummy).GetAllMembers();
 
             //Assert
-            result.Should().HaveCount(48);
+            result.Should().HaveCount(63);
         }
 
         [TestMethod]
@@ -125,7 +133,7 @@ public partial class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_NextId", "NextId", "_nextId", "Equals", "ReferenceEquals"
+                "add_OnStatic", "remove_OnStatic", "OnStatic", "get_NextId", "NextId", "_nextId", "Equals", "ReferenceEquals"
             });
         }
 
@@ -155,7 +163,7 @@ public partial class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_NextId", "NextId", "Equals", "ReferenceEquals"
+                "add_OnStatic", "remove_OnStatic", "OnStatic", "get_NextId", "NextId", "Equals", "ReferenceEquals"
             });
         }
 
@@ -209,7 +217,10 @@ public partial class MemberSearchExtensionsTest
                 "SomeoneTouchedMe", "SomeoneTouchedMe", "set_SetOnlyProperty", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode",
                 ".ctor", "Id", "PrivateGetSetProperty", "GetOnlyProperty", "SetOnlyProperty", "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField",
                 "<GetOnlyProperty>k__BackingField", "ShadowedField", "SomeoneTouchedMeVeryPrivately", ".ctor", "_wasPoked", "_setOnlyValue", ".ctor",
-                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload",
+                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload", 
+                "OnProtected", "OnInternal", "OnPrivate", "OnPublic",
+                "add_OnProtected", "add_OnInternal", "add_OnPrivate", "add_OnPublic",
+                "remove_OnProtected", "remove_OnInternal", "remove_OnPrivate", "remove_OnPublic",
             });
         }
 
@@ -236,7 +247,8 @@ public partial class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMeVeryPrivately"
+                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "add_OnPrivate", "remove_OnPrivate", "SomeoneTouchedMe", "SomeoneTouchedMe", 
+                "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMeVeryPrivately"
             });
         }
     }
