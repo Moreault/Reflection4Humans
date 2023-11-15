@@ -19,4 +19,10 @@ public static class PropertyExtensions
         if (propertyInfo is null) throw new ArgumentNullException(nameof(propertyInfo));
         return propertyInfo.SetMethod != null;
     }
+
+    public static bool IsIndexer(this PropertyInfo propertyInfo)
+    {
+        if (propertyInfo is null) throw new ArgumentNullException(nameof(propertyInfo));
+        return propertyInfo.GetIndexParameters().Length > 0;
+    }
 }

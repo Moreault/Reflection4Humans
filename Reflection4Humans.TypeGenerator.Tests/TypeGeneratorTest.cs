@@ -1,7 +1,4 @@
-﻿using ToolBX.Reflection4Humans.Extensions;
-using ToolBX.Reflection4Humans.TypeGenerator.Resources;
-
-namespace Reflection4Humans.TypeGenerator.Tests;
+﻿namespace Reflection4Humans.TypeGenerator.Tests;
 
 [TestClass]
 public class TypeGeneratorTest
@@ -152,6 +149,23 @@ public class TypeGeneratorTest
 
             //Assert
             action.Should().Throw<ArgumentException>().WithMessage(string.Format(Exceptions.CannotGenerateFromStaticType, nameof(StaticBogus)) + "*");
+        }
+
+        [TestMethod]
+        public void WhenTypeIsInterface_GetSetPropertiesHaveBasicFunctionality()
+        {
+            //Arrange
+            var type = ToolBX.Reflection4Humans.TypeGenerator.TypeGenerator.From<IBogus>();
+            var instance = (IBogus)Activator.CreateInstance(type)!;
+
+            var value = Fixture.Create<int>();
+            instance.GetSetProperty = value;
+
+            //Act
+            var result = instance.GetSetProperty;
+
+            //Assert
+            result.Should().Be(value);
         }
     }
 }

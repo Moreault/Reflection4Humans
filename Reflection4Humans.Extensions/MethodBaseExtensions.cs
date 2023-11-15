@@ -32,4 +32,20 @@ public static class MethodBaseExtensions
         if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
         return methodInfo.GetParameters().Length == 0;
     }
+
+    public static bool IsPropertyAccessor(this MethodBase method)
+    {
+        if (method is null) throw new ArgumentNullException(nameof(method));
+        if (method.IsSpecialName && method.IsPublic && method.DeclaringType != null)
+        {
+            var property = method.DeclaringType.GetProperty(method.Name[4..]);
+            if (property != null)
+            {
+                var accessors = property.GetAccessors();
+                return accessors.Contains(method);
+            }
+        }
+
+        return false;
+    }
 }

@@ -24,6 +24,12 @@ public class PropertyExtensionsTest
         private static string _staticSetOnly;
 
         internal static int StaticGetSet { get; set; }
+
+        public int this[string index]
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
     }
 
     [TestClass]
@@ -227,6 +233,49 @@ public class PropertyExtensionsTest
 
             //Act
             var result = propertyInfo.IsSet();
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class IsIndexer : Tester
+    {
+        [TestMethod]
+        public void WhenPropertInfoIsNull_Throw()
+        {
+            //Arrange
+            PropertyInfo propertyInfo = null!;
+
+            //Act
+            var action = () => propertyInfo.IsIndexer();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(propertyInfo));
+        }
+
+        [TestMethod]
+        public void WhenIsRegularGetOnly_ReturnFalse()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
+
+            //Act
+            var result = propertyInfo.IsIndexer();
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenIsIndexer_ReturnFalse()
+        {
+            //Arrange
+            var propertyInfo = typeof(Dummy).GetSingleProperty("Item");
+
+            //Act
+            var result = propertyInfo.IsIndexer();
 
             //Assert
             result.Should().BeTrue();
