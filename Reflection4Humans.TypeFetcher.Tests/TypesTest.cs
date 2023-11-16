@@ -4,6 +4,42 @@
 public class TypesTest
 {
     [TestClass]
+    public class From : Tester
+    {
+        [TestMethod]
+        public void WhenAssemblyIsNull_Throw()
+        {
+            //Arrange
+            Assembly assembly = null!;
+
+            //Act
+            var action = () => Types.From(assembly);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(assembly));
+        }
+
+        [TestMethod]
+        public void WhenIsCurrentAssembly_ReturnTypesFromCurrentAssembly()
+        {
+            //Arrange
+
+            //Act
+            var result = Types.From(Assembly.GetExecutingAssembly()).ToList();
+
+            //Assert
+            result.Should().Contain(new List<Type>
+            {
+                typeof(AbstractDummy),
+                typeof(Dummy),
+                typeof(DummyAttribute),
+                typeof(DummyAbstractAttribute),
+                typeof(StaticDummy),
+            });
+        }
+    }
+
+    [TestClass]
     public class Where : Tester
     {
         [TestMethod]

@@ -2,6 +2,18 @@
 
 public static class Types
 {
+    /// <summary>
+    /// Returns all types from the specified assembly.
+    /// </summary>
+    public static IEnumerable<Type> From(Assembly assembly)
+    {
+        if (assembly is null) throw new ArgumentNullException(nameof(assembly));
+        return assembly.GetTypes().DistinctBy(x => x.FullName);
+    }
+
+    /// <summary>
+    /// Queries all types from the all assemblies.
+    /// </summary>
     public static IEnumerable<Type> Where(Func<Type, bool> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
