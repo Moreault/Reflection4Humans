@@ -1,4 +1,7 @@
-﻿namespace ToolBX.Reflection4Humans.TypeGenerator;
+﻿using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+
+namespace ToolBX.Reflection4Humans.TypeGenerator;
 
 public static class TypeGenerator
 {
@@ -33,7 +36,7 @@ public static class TypeGenerator
             }
             else if (member is PropertyInfo property)
             {
-                var property1Builder = typeBuilder.DefineProperty(property.Name, PropertyAttributes.None, property.PropertyType, Type.EmptyTypes);
+                var propertyBuilder = typeBuilder.DefineProperty(property.Name, PropertyAttributes.None, property.PropertyType, Type.EmptyTypes);
                 var backingField = typeBuilder.DefineField($"<{property.Name}>k__BackingField", property.PropertyType, FieldAttributes.Private);
 
                 if (property.IsGet())
@@ -45,7 +48,7 @@ public static class TypeGenerator
                     ilGenerator.Emit(OpCodes.Ldarg_0);
                     ilGenerator.Emit(OpCodes.Ldfld, backingField);
                     ilGenerator.Emit(OpCodes.Ret);
-                    property1Builder.SetGetMethod(propertyGetter);
+                    propertyBuilder.SetGetMethod(propertyGetter);
                 }
 
                 if (property.IsSet())
@@ -53,12 +56,13 @@ public static class TypeGenerator
                     var propertySetter = property.IsIndexer() ?
                         typeBuilder.DefineMethod("set_Item", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), property.GetIndexParameters().Select(x => x.ParameterType).Concat(new[] { property.PropertyType }).ToArray()) :
                         typeBuilder.DefineMethod($"set_{property.Name}", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new[] { property.PropertyType });
+                    
                     var ilGenerator = propertySetter.GetILGenerator();
                     ilGenerator.Emit(OpCodes.Ldarg_0);
                     ilGenerator.Emit(OpCodes.Ldarg_1);
                     ilGenerator.Emit(OpCodes.Stfld, backingField);
                     ilGenerator.Emit(OpCodes.Ret);
-                    property1Builder.SetSetMethod(propertySetter);
+                    propertyBuilder.SetSetMethod(propertySetter);
                 }
             }
             else if (member is EventInfo eventInfo)
@@ -83,20 +87,16 @@ public static class TypeGenerator
             }
             else if (member is ConstructorInfo constructorInfo)
             {
-                var constructor = typeBuilder.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Any, constructorInfo.GetParameters().Select(x => x.ParameterType).ToArray());
-                var ilGenerator = constructor.GetILGenerator();
+                var constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+                var ilGenerator = constructorBuilder.GetILGenerator();
                 ilGenerator.Emit(OpCodes.Ldarg_0);
-                ilGenerator.Emit(OpCodes.Call);
-                ilGenerator.Emit(OpCodes.Nop);
+                ilGenerator.Emit(OpCodes.Call, constructorInfo);
                 ilGenerator.Emit(OpCodes.Ret);
             }
             else if (member is FieldInfo)
                 continue;
             else throw new NotSupportedException(string.Format(Exceptions.MemberTypeNotSupported, member.GetType().Name));
         }
-
-        if (type.IsInterface)
-            typeBuilder.AddInterfaceImplementation(type);
 
         return typeBuilder.CreateType();
     }

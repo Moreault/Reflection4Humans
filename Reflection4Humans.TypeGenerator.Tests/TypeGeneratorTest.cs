@@ -18,6 +18,8 @@ public class TypeGeneratorTest
         string StringMethod(int a, long b, decimal c);
 
         int GetSetProperty { get; set; }
+        //TODO Fix this!
+        //char GetInitProperty { get; init; }
         char GetProperty { get; }
         string SetProperty { set; }
 
@@ -44,6 +46,8 @@ public class TypeGeneratorTest
 
         public int PublicField;
 
+        public string GetSetProperty { get; set; } = null!;
+
         protected AbstractBogus(string a)
         {
 
@@ -57,6 +61,26 @@ public class TypeGeneratorTest
         protected AbstractBogus(string a, int b)
         {
 
+        }
+    }
+
+    public class Raie : AbstractBogus
+    {
+        public Raie(string a) : base(a)
+        {
+        }
+
+        public Raie(int a) : base(a)
+        {
+        }
+
+        public Raie(string a, int b) : base(a, b)
+        {
+        }
+
+        public override int GetId()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -167,5 +191,23 @@ public class TypeGeneratorTest
             //Assert
             result.Should().Be(value);
         }
+
+        [TestMethod]
+        public void WhenTypeIsAbstractClass_GetSetPropertiesHaveBasicFunctionality()
+        {
+            //Arrange
+            var type = ToolBX.Reflection4Humans.TypeGenerator.TypeGenerator.From<AbstractBogus>();
+            var instance = (AbstractBogus)Activator.CreateInstance(type)!;
+
+            var value = Fixture.Create<string>();
+            instance.GetSetProperty = value;
+
+            //Act
+            var result = instance.GetSetProperty;
+
+            //Assert
+            result.Should().Be(value);
+        }
+
     }
 }

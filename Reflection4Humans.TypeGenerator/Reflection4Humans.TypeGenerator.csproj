@@ -10,7 +10,7 @@
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans/Reflection4Humans.TypeGenerator/</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>2.2.0-beta3</Version>
+		<Version>2.2.0-beta4</Version>
 		<PackageIcon>reflection4humans.png</PackageIcon>
 		<Description>Generates temporary types at runtime based on interfaces and classes.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
