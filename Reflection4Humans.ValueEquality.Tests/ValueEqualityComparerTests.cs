@@ -13,7 +13,7 @@ public abstract class ValueEqualityComparerTester : Tester
 }
 
 [TestClass]
-public class ValueEqualityComparerTest
+public class ValueEqualityComparerTests
 {
     [TestClass]
     public class EqualsMethod : ValueEqualityComparerTester

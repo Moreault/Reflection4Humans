@@ -10,7 +10,7 @@
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>2.2.0-beta4</Version>
+		<Version>2.2.0-beta6</Version>
 		<Description>Adds extensions to automatically compare objects by value.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>reflection4humans.png</PackageIcon>

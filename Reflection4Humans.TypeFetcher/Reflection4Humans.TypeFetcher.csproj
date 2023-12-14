@@ -10,7 +10,7 @@
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>2.2.0-beta4</Version>
+		<Version>2.2.0-beta6</Version>
 		<Description>Provides a more straightforward way for a human being to get types from all loaded assemblies using the TypeFetcher class.</Description>
 		<PackageIcon>reflection4humans.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>

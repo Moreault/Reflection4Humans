@@ -1,6 +1,6 @@
 ﻿namespace Reflection4Humans.ValueEquality.Tests;
 
-public class ValueEqualityExtensionsTest
+public class ValueEqualityExtensionsTests
 {
     public record DummyParent : DummyChild
     {
@@ -53,7 +53,7 @@ public class ValueEqualityExtensionsTest
             var obj2 = obj1 with { Age = Fixture.Create<int>() };
 
             //Act
-            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { Depth = ValueEqualityOptions.EqualityDepth.Shallow });
+            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { Depth = Depth.Shallow });
 
             //Assert
             result.Should().BeFalse();
@@ -67,7 +67,7 @@ public class ValueEqualityExtensionsTest
             var obj2 = obj1 with { Age = Fixture.Create<int>() };
 
             //Act
-            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { Depth = ValueEqualityOptions.EqualityDepth.Recursive });
+            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { Depth = Depth.Recursive });
 
             //Assert
             result.Should().BeFalse();

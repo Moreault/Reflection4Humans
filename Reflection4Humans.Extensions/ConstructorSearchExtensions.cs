@@ -4,7 +4,7 @@ public static class ConstructorSearchExtensions
 {
     public static IReadOnlyList<ConstructorInfo> GetAllConstructors(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).ToList();
 
-    public static IEnumerable<ConstructorInfo> GetAllConstructorsInternal(this Type type, Func<ConstructorInfo, bool>? predicate = null)
+    private static IEnumerable<ConstructorInfo> GetAllConstructorsInternal(this Type type, Func<ConstructorInfo, bool>? predicate = null)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
 
