@@ -19,6 +19,13 @@ public sealed class ValueHashCodeExtensionsTests : Tester
         public char Field;
     }
 
+    public sealed class Splitted<T>
+    {
+        public IReadOnlyList<T> Remaining { get; init; } = Array.Empty<T>();
+
+        public IReadOnlyList<T> Excluded { get; init; } = Array.Empty<T>();
+    }
+
     [TestMethod]
     public void WhenIsNullEnumerable_ReturnZero()
     {
@@ -181,6 +188,36 @@ public sealed class ValueHashCodeExtensionsTests : Tester
         //Act
         var result1 = value1.GetValueHashCode(depth);
         var result2 = value2.GetValueHashCode(depth);
+
+        //Assert
+        result1.Should().NotBe(result2);
+    }
+
+    [TestMethod]
+    public void WhenTwoEquivalentObjectsWithTwoListsWithRecursiveDepth_ShouldBeConsistent()
+    {
+        //Arrange
+        var value1 = Fixture.Create<Splitted<SimpleDummy>>();
+        var value2 = value1.Clone();
+
+        //Act
+        var result1 = value1.GetValueHashCode();
+        var result2 = value2.GetValueHashCode();
+
+        //Assert
+        result1.Should().Be(result2);
+    }
+
+    [TestMethod]
+    public void WhenTwoDifferentObjectsWithTwoListsWithRecursiveDepth_ShouldBeInconsistent()
+    {
+        //Arrange
+        var value1 = Fixture.Create<Splitted<SimpleDummy>>();
+        var value2 = Fixture.Create<Splitted<SimpleDummy>>();
+
+        //Act
+        var result1 = value1.GetValueHashCode();
+        var result2 = value2.GetValueHashCode();
 
         //Assert
         result1.Should().NotBe(result2);

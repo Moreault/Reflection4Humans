@@ -14,15 +14,24 @@ public static class ValueHashCodeExtensions
 
         if (value is IEnumerable enumerable)
         {
-            return enumerable.Cast<object>().Aggregate(17, (hash, obj) =>
+            unchecked
             {
-                var hashcode = depth == Depth.Shallow ? obj?.GetHashCode() ?? 0 : obj?.GetValueHashCode(depth) ?? 0;
-                return hash * 31 + hashcode;
-            });
+                var hash = 17;
+
+                foreach (var obj in enumerable)
+                {
+                    var hashcode = depth == Depth.Shallow ? obj?.GetHashCode() ?? 0 : obj?.GetValueHashCode(depth) ?? 0;
+                    hash = hash * 31 + hashcode;
+                }
+
+                return hash;
+            }
         }
 
-        var fields = typeof(T).GetAllFields(x => x.IsInstance() && x.IsPublic);
-        var properties = typeof(T).GetAllProperties(x => x.IsInstance() && x.IsPublic());
+        var derived = value.GetType();
+
+        var fields = derived.GetAllFields(x => x.IsInstance() && x.IsPublic);
+        var properties = derived.GetAllProperties(x => x.IsInstance() && x.IsPublic());
 
         unchecked
         {
