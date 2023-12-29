@@ -1,4 +1,6 @@
-﻿namespace Reflection4Humans.ValueEquality.Tests;
+﻿using System.Collections;
+
+namespace Reflection4Humans.ValueEquality.Tests;
 
 public class ValueEqualityExtensionsTests
 {
@@ -25,6 +27,31 @@ public class ValueEqualityExtensionsTests
         private int _level;
 
         public List<long> Longs { get; init; } = new();
+    }
+
+    public class DummyCollection<T> : IEnumerable<T>
+    {
+        public T this[int index]
+        {
+            get => _items[index];
+            set => _items[index] = value;
+        }
+
+        private readonly List<T> _items = new();
+
+        public DummyCollection()
+        {
+
+        }
+
+        public DummyCollection(IEnumerable<T> items)
+        {
+            _items.AddRange(items);
+        }
+
+        public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     [TestClass]
@@ -181,5 +208,42 @@ public class ValueEqualityExtensionsTests
         }
 
         //TODO Test equivalent objects with strings with different casings (also test it in collections)
+
+        //TODO Fix issue with indexers (probably should be ignored)
+        [TestMethod]
+        public void WhenEquivalentComplexCollection_ShouldBeTrue()
+        {
+            //Arrange
+            var items = Fixture.CreateMany<DummyChild>().ToList();
+
+            var obj1 = new DummyCollection<DummyChild>(items);
+            var obj2 = new DummyCollection<DummyChild>(items);
+
+            //Act
+            var result = obj1.ValueEquals(obj2);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenEquivalentComplexCollection_ShouldBeFalse()
+        {
+            //Arrange
+            var items1 = Fixture.CreateMany<DummyChild>().ToList();
+            var items2 = Fixture.CreateMany<DummyChild>().ToList();
+
+            var obj1 = new DummyCollection<DummyChild>(items1);
+            var obj2 = new DummyCollection<DummyChild>(items2);
+
+            //Act
+            var result = obj1.ValueEquals(obj2);
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
     }
+
+
 }
