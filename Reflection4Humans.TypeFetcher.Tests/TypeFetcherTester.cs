@@ -1,6 +1,3 @@
-using Reflection4Humans.TypeFetcher.Tests.Dummies;
-using System.Collections.Generic;
-
 namespace Reflection4Humans.TypeFetcher.Tests;
 
 [TestClass]

@@ -10,42 +10,28 @@
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>2.2.0-beta9</Version>
-		<PackageIcon>reflection4humans.png</PackageIcon>
-		<Description>Reflection extension methods meant to be used by humans.</Description>
+		<Version>2.2.0-beta8</Version>
+		<Description>Adds extensions to automatically compare objects by value.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>reflection4humans.png</PackageIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\reflection4humans.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
+		<ProjectReference Include="..\Reflection4Humans.Extensions\Reflection4Humans.Extensions.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>Reflection4Humans.Extensions.Tests</_Parameter1>
+			<_Parameter1>Reflection4Humans.ValueEquality.Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Resources\Exceptions.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Exceptions.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Update="Resources\Exceptions.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="README.md">
+	  <None Include="..\reflection4humans.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\Reflection4Humans.TypeFetcher\README.md">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
