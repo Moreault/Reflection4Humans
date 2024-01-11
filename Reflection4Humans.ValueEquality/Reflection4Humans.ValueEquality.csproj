@@ -11,28 +11,30 @@
 		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Version>2.2.0-beta8</Version>
-		<Description>Provides a more straightforward way for a human being to get types from all loaded assemblies using the TypeFetcher class.</Description>
-		<PackageIcon>reflection4humans.png</PackageIcon>
+		<Description>Adds extensions to automatically compare objects by value.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/Moreault/Reflection4Humans</PackageProjectUrl>
+		<PackageIcon>reflection4humans.png</PackageIcon>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Include="..\reflection4humans.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Reflection4Humans.Extensions\Reflection4Humans.Extensions.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>Reflection4Humans.ValueEquality.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\reflection4humans.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\Reflection4Humans.TypeFetcher\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

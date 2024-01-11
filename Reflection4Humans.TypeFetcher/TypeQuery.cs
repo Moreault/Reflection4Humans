@@ -1,5 +1,6 @@
 ﻿namespace ToolBX.Reflection4Humans.TypeFetcher;
 
+[Obsolete("Use the 'Types' class instead. ITypeQuery will be removed in 3.0.0")]
 public interface ITypeQuery
 {
     ITypeQuery IsClass();

@@ -118,9 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CannotUseMethodBecauseParamaterIsMandatory" xml:space="preserve">
-    <value>Can't use method {0} : Parameter {1} is mandatory.</value>
+	  <value>Can't use method {0} : parameter {1} is mandatory</value>
   </data>
   <data name="PropertyNotFoundOnType" xml:space="preserve">
 	  <value>Can't get property path : property '{0}' was not found on type '{1}'</value>
+  </data>
+  <data name="MemberKindUnsupported" xml:space="preserve">
+	  <value>Can't use method {0} : member kind '{1}' is unsupported</value>
+  </data>
+  <data name="AccessModifierUnsupported" xml:space="preserve">
+	  <value>Can't use method {0} : accessModifier is unrecognized and unsupported</value>
   </data>
 </root>

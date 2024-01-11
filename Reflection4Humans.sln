@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reflection4Humans.Extension
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reflection4Humans.Extensions.Tests", "Reflection4Humans.Extensions.Tests\Reflection4Humans.Extensions.Tests.csproj", "{E12A9BBA-6661-4CE6-BC5B-F2F0EBCC9133}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reflection4Humans.TypeFetcher", "Reflection4Humans.TypeFetcher\Reflection4Humans.TypeFetcher.csproj", "{97E7AD93-8C14-421C-AD88-BFDF0C7AB88C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reflection4Humans.TypeFetcher", "Reflection4Humans.TypeFetcher\Reflection4Humans.TypeFetcher.csproj", "{97E7AD93-8C14-421C-AD88-BFDF0C7AB88C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reflection4Humans.TypeFetcher.Tests", "Reflection4Humans.TypeFetcher.Tests\Reflection4Humans.TypeFetcher.Tests.csproj", "{302AB21D-D61A-4152-A12E-7D5301AC0F5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reflection4Humans.TypeFetcher.Tests", "Reflection4Humans.TypeFetcher.Tests\Reflection4Humans.TypeFetcher.Tests.csproj", "{302AB21D-D61A-4152-A12E-7D5301AC0F5A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reflection4Humans.ValueEquality", "Reflection4Humans.ValueEquality\Reflection4Humans.ValueEquality.csproj", "{A86EE577-BAE5-4552-A2A5-5314AC0FBE3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reflection4Humans.ValueEquality.Tests", "Reflection4Humans.ValueEquality.Tests\Reflection4Humans.ValueEquality.Tests.csproj", "{E0451D48-165E-4379-983B-ED7653B3EBFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{302AB21D-D61A-4152-A12E-7D5301AC0F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{302AB21D-D61A-4152-A12E-7D5301AC0F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{302AB21D-D61A-4152-A12E-7D5301AC0F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86EE577-BAE5-4552-A2A5-5314AC0FBE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86EE577-BAE5-4552-A2A5-5314AC0FBE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86EE577-BAE5-4552-A2A5-5314AC0FBE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86EE577-BAE5-4552-A2A5-5314AC0FBE3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0451D48-165E-4379-983B-ED7653B3EBFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0451D48-165E-4379-983B-ED7653B3EBFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0451D48-165E-4379-983B-ED7653B3EBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0451D48-165E-4379-983B-ED7653B3EBFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
