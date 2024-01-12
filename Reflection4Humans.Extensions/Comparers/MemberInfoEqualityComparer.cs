@@ -1,15 +1,15 @@
 ﻿namespace ToolBX.Reflection4Humans.Extensions.Comparers;
 
-internal class MemberInfoEqualityComparer<T> : IEqualityComparer<T> where T : MemberInfo
+internal sealed class MemberInfoEqualityComparer<T> : IEqualityComparer<T> where T : MemberInfo
 {
-    public bool Equals(T? first, T? second)
+    public bool Equals(T? x, T? y)
     {
-        if (ReferenceEquals(first, second)) return true;
-        if (ReferenceEquals(first, null) || ReferenceEquals(second, null)) return false;
+        if (ReferenceEquals(x, y)) return true;
+        if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
 
-        return first.Name == second.Name &&
-               first.DeclaringType == second.DeclaringType &&
-               ParametersMatch(first, second);
+        return x.Name == y.Name &&
+               x.DeclaringType == y.DeclaringType &&
+               ParametersMatch(x, y);
     }
 
     private bool ParametersMatch(T first, T second)
@@ -22,6 +22,6 @@ internal class MemberInfoEqualityComparer<T> : IEqualityComparer<T> where T : Me
 
     public int GetHashCode(T obj)
     {
-        return obj.Name.GetHashCode() ^ obj.DeclaringType.GetHashCode();
+        return obj.Name.GetHashCode() ^ obj.DeclaringType?.GetHashCode() ?? 0;
     }
 }
