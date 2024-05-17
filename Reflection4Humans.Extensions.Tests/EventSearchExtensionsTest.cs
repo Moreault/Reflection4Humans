@@ -24,7 +24,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllEvents();
+            var result = typeof(Garbage).GetAllEvents();
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -39,7 +39,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllEvents(x => x.IsInstance());
+            var result = typeof(Garbage).GetAllEvents(x => x.IsInstance());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -57,7 +57,7 @@ public partial class MemberSearchExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var name = Fixture.Create<string>();
+            var name = Dummy.Create<string>();
 
             //Act
             var action = () => type.GetSingleEvent(name);
@@ -75,7 +75,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleEvent(name);
+            var action = () => typeof(Garbage).GetSingleEvent(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
@@ -87,7 +87,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleEvent(Fixture.Create<string>());
+            var action = () => typeof(Garbage).GetSingleEvent(Dummy.Create<string>());
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -99,7 +99,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnInternal");
+            var result = typeof(Garbage).GetSingleEvent("OnInternal");
 
             //Assert
             result.Should().NotBeNull();
@@ -111,7 +111,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent(x => x.IsProtected());
+            var result = typeof(Garbage).GetSingleEvent(x => x.IsProtected());
 
             //Assert
             result.Should().NotBeNull();
@@ -126,7 +126,7 @@ public partial class MemberSearchExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var name = Fixture.Create<string>();
+            var name = Dummy.Create<string>();
 
             //Act
             var action = () => type.GetSingleEventOrDefault(name);
@@ -144,7 +144,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleEventOrDefault(name);
+            var action = () => typeof(Garbage).GetSingleEventOrDefault(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
@@ -156,7 +156,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEventOrDefault("Les Meubles Alexandra");
+            var result = typeof(Garbage).GetSingleEventOrDefault("Les Meubles Alexandra");
 
             //Assert
             result.Should().BeNull();
@@ -168,7 +168,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEventOrDefault(Fixture.Create<string>());
+            var result = typeof(Garbage).GetSingleEventOrDefault(Dummy.Create<string>());
 
             //Assert
             result.Should().BeNull();
@@ -180,7 +180,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEventOrDefault("OnPrivate");
+            var result = typeof(Garbage).GetSingleEventOrDefault("OnPrivate");
 
             //Assert
             result.Should().NotBeNull();
@@ -192,7 +192,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEventOrDefault(x => x.IsProtected());
+            var result = typeof(Garbage).GetSingleEventOrDefault(x => x.IsProtected());
 
             //Assert
             result.Should().NotBeNull();

@@ -1,12 +1,10 @@
-﻿using System.Globalization;
+﻿namespace Reflection4Humans.Extensions.Tests.Garbage;
 
-namespace Reflection4Humans.Extensions.Tests.Dummies;
-
-public class DummyMemberInfo : MemberInfo
+public class GarbageMemberInfo : MemberInfo
 {
-    public override Type? DeclaringType => typeof(DummyMemberInfo);
+    public override Type? DeclaringType => typeof(GarbageMemberInfo);
     public override MemberTypes MemberType => MemberTypes.Custom;
-    public override string Name => nameof(DummyMemberInfo);
+    public override string Name => nameof(GarbageMemberInfo);
     public override Type? ReflectedType => typeof(object);
 
     public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();

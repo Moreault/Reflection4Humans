@@ -1,6 +1,6 @@
-﻿namespace Reflection4Humans.TypeFetcher.Tests.Dummies;
+﻿namespace Reflection4Humans.TypeFetcher.Tests.Garbage;
 
-public interface IDummy
+public interface IGarbage
 {
     public int Id { get; }
     public string Name { get; }
@@ -8,7 +8,7 @@ public interface IDummy
     public DateTimeOffset DateCreated { get; }
 }
 
-public record Dummy : IDummy
+public record Garbage : IGarbage
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;

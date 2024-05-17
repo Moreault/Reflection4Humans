@@ -110,4 +110,27 @@ public static class MemberInfoExtensions
         if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
         return memberInfo is PropertyInfo;
     }
+
+    /// <summary>
+    /// Returns the member's <see cref="Type"/>.
+    /// </summary>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotSupportedException"></exception>
+    public static Type GetMemberType(this MemberInfo memberInfo)
+    {
+        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
+
+        if (memberInfo is PropertyInfo propertyInfo)
+            return propertyInfo.PropertyType;
+        if (memberInfo is FieldInfo fieldInfo)
+            return fieldInfo.FieldType;
+        if (memberInfo is MethodBase methodInfo)
+            return methodInfo.GetMethodType();
+        if (memberInfo is Type type)
+            return type;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.EventHandlerType!;
+
+        throw new NotSupportedException($"MemberInfo of type {memberInfo.GetType()} is not supported.");
+    }
 }

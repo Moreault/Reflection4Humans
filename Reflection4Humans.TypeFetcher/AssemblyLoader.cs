@@ -39,6 +39,10 @@ internal static class AssemblyLoader
             {
                 //Happens with some (usually unimportant) assemblies but still unsure of the reason as of 2023-06-28
             }
+            catch (ReflectionTypeLoadException)
+            {
+                // Ignored (Same as above)
+            }
         }
 
         foreach (var a in AppDomain.CurrentDomain.GetAssemblies().Where(a => ShouldLoad(a.FullName)))

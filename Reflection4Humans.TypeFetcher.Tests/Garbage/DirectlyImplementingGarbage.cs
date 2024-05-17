@@ -1,6 +1,6 @@
-﻿namespace Reflection4Humans.TypeFetcher.Tests.Dummies;
+﻿namespace Reflection4Humans.TypeFetcher.Tests.Garbage;
 
-public class DirectlyImplementingDummy : IndirectlyImplementingDummy, IDummy
+public class DirectlyImplementingGarbage : IndirectlyImplementingGarbage, IGarbage
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;
@@ -8,7 +8,7 @@ public class DirectlyImplementingDummy : IndirectlyImplementingDummy, IDummy
     public DateTimeOffset DateCreated { get; init; }
 }
 
-public abstract class IndirectlyImplementingDummy : IDisposable
+public abstract class IndirectlyImplementingGarbage : IDisposable
 {
     public void Dispose()
     {

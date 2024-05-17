@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace Reflection4Humans.Extensions.Tests;
+﻿namespace Reflection4Humans.Extensions.Tests;
 
 public partial class MemberSearchExtensionsTest
 {
@@ -26,7 +24,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllFields();
+            var result = typeof(Garbage).GetAllFields();
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -41,7 +39,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllFields(x => x.IsStatic);
+            var result = typeof(Garbage).GetAllFields(x => x.IsStatic);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -59,7 +57,7 @@ public partial class MemberSearchExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var name = Fixture.Create<string>();
+            var name = Dummy.Create<string>();
 
             //Act
             var action = () => type.GetSingleField(name);
@@ -77,7 +75,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleField(name);
+            var action = () => typeof(Garbage).GetSingleField(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
@@ -89,7 +87,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleField(Fixture.Create<string>());
+            var action = () => typeof(Garbage).GetSingleField(Dummy.Create<string>());
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -101,7 +99,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleField("ShadowedField");
+            var action = () => typeof(Garbage).GetSingleField("ShadowedField");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -113,7 +111,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleField(x => x.Name == "ShadowedField" && x.IsPublic);
+            var result = typeof(Garbage).GetSingleField(x => x.Name == "ShadowedField" && x.IsPublic);
 
             //Assert
             result.Should().NotBeNull();
@@ -128,7 +126,7 @@ public partial class MemberSearchExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var name = Fixture.Create<string>();
+            var name = Dummy.Create<string>();
 
             //Act
             var action = () => type.GetSingleFieldOrDefault(name);
@@ -146,7 +144,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleFieldOrDefault(name);
+            var action = () => typeof(Garbage).GetSingleFieldOrDefault(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(name));
@@ -158,7 +156,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleFieldOrDefault(Fixture.Create<string>());
+            var action = () => typeof(Garbage).GetSingleFieldOrDefault(Dummy.Create<string>());
 
             //Assert
             action.Should().NotThrow();
@@ -170,7 +168,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleFieldOrDefault("ShadowedField");
+            var action = () => typeof(Garbage).GetSingleFieldOrDefault("ShadowedField");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -182,7 +180,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleFieldOrDefault(x => x.Name == "ShadowedField" && x.IsPublic);
+            var result = typeof(Garbage).GetSingleFieldOrDefault(x => x.Name == "ShadowedField" && x.IsPublic);
 
             //Assert
             result.Should().NotBeNull();

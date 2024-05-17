@@ -7,7 +7,7 @@ public abstract class ValueEqualityComparerTester : Tester
     protected override void InitializeTest()
     {
         base.InitializeTest();
-        Instance = new ValueEqualityComparer { Options = Fixture.Create<ValueEqualityOptions>() };
+        Instance = new ValueEqualityComparer { Options = Dummy.Create<ValueEqualityOptions>() };
 
     }
 }
@@ -35,7 +35,7 @@ public class ValueEqualityComparerTests
         {
             //Arrange
             object x = null!;
-            var y = Fixture.Create<object>();
+            var y = Dummy.Create<object>();
 
             //Act
             var result = Instance.Equals(x, y);
@@ -48,7 +48,7 @@ public class ValueEqualityComparerTests
         public void WhenYIsNullButXIsNot_ReturnFalse()
         {
             //Arrange
-            var x = Fixture.Create<object>();
+            var x = Dummy.Create<object>();
             object y = null!;
 
             //Act
@@ -62,7 +62,7 @@ public class ValueEqualityComparerTests
         public void WhenBothAreStringAndEqual_ReturnTrue()
         {
             //Arrange
-            var x = Fixture.Create<string>();
+            var x = Dummy.Create<string>();
 
             //Act
             var result = Instance.Equals(x, x);
@@ -81,7 +81,7 @@ public class ValueEqualityComparerTests
         public void WhenBothAreStringWithSameTextButDifferentCasing_ReturnTueOrFalseDependingOnStringComparison(StringComparison comparison, bool expected)
         {
             //Arrange
-            var x = Fixture.Create<string>().ToUpperInvariant();
+            var x = Dummy.Create<string>().ToUpperInvariant();
             var y = x.ToLowerInvariant();
 
             //Act
@@ -99,7 +99,7 @@ public class ValueEqualityComparerTests
         public void Always_ReturnObjectHashCode()
         {
             //Arrange
-            var obj = Fixture.Create<object>();
+            var obj = Dummy.Create<object>();
 
             //Act
             var result = Instance.GetHashCode(obj);

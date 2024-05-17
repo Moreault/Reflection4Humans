@@ -110,4 +110,10 @@ public static class TypeExtensions
         if (@interface is null) throw new ArgumentNullException(nameof(@interface));
         return type.GetDirectInterfaces().Any(x => x == @interface);
     }
+
+    public static object? GetDefaultValue(this Type type)
+    {
+        if (type is null) throw new ArgumentNullException(nameof(type));
+        return type.IsValueType ? Activator.CreateInstance(type) : null;
+    }
 }

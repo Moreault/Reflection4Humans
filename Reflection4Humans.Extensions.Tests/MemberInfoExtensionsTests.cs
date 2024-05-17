@@ -3,14 +3,14 @@
 namespace Reflection4Humans.Extensions.Tests;
 
 [TestClass]
-public class MemberInfoExtensionsTest
+public class MemberInfoExtensionsTests
 {
     [TestClass]
     public class IsStatic : Tester
     {
         public delegate void TestEventHandler(object sender, EventArgs e);
 
-        public record Dummy
+        public record Garbage
         {
             private static int _staticField;
             protected char _instanceField;
@@ -31,16 +31,16 @@ public class MemberInfoExtensionsTest
 
             }
 
-            public Dummy() { }
+            public Garbage() { }
 
-            static Dummy() { }
+            static Garbage() { }
         }
 
-        public sealed class SealedDummy { }
+        public sealed class SealedGarbage { }
 
-        public abstract class AbstractDummy { }
+        public abstract class AbstractGarbage { }
 
-        public static class StaticDummy { }
+        public static class StaticGarbage { }
 
         [TestMethod]
         public void WhenMemberInfoIsNull_Throw()
@@ -59,7 +59,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsStaticField_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("_staticField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("_staticField");
 
             //Act
             var result = memberInfo.IsStatic();
@@ -72,7 +72,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInstanceField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("_instanceField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("_instanceField");
 
             //Act
             var result = memberInfo.IsStatic();
@@ -85,7 +85,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsStaticProperty_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("StaticProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("StaticProperty");
 
             //Act
             var result = memberInfo.IsStatic();
@@ -98,7 +98,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInstanceProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("InstanceProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("InstanceProperty");
 
             //Act
             var result = memberInfo.IsStatic();
@@ -111,7 +111,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsStaticMethod_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("StaticMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("StaticMethod");
 
             //Act
             var result = memberInfo.IsStatic();
@@ -124,7 +124,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInstanceMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("InstanceMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("InstanceMethod");
 
             //Act
             var result = memberInfo.IsStatic();
@@ -137,7 +137,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsStaticConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsStatic);
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsStatic);
 
             //Act
             var result = memberInfo.IsStatic();
@@ -150,7 +150,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInstanceConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetAllConstructors(x => x.IsInstance() && x.HasNoParameter()).First();
+            MemberInfo memberInfo = typeof(Garbage).GetAllConstructors(x => x.IsInstance() && x.HasNoParameter()).First();
 
             //Act
             var result = memberInfo.IsStatic();
@@ -160,15 +160,15 @@ public class MemberInfoExtensionsTest
         }
 
         [TestMethod]
-        public void WhenIsDummyMemberInfo_Throw()
+        public void WhenIsGarbageMemberInfo_Throw()
         {
             //Arrange
 
             //Act
-            var action = () => new DummyMemberInfo().IsStatic();
+            var action = () => new GarbageMemberInfo().IsStatic();
 
             //Assert
-            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsStatic), nameof(DummyMemberInfo)));
+            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsStatic), nameof(GarbageMemberInfo)));
         }
 
         [TestMethod]
@@ -177,7 +177,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(StaticDummy).IsStatic();
+            var result = typeof(StaticGarbage).IsStatic();
 
             //Assert
             result.Should().BeTrue();
@@ -189,7 +189,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(AbstractDummy).IsStatic();
+            var result = typeof(AbstractGarbage).IsStatic();
 
             //Assert
             result.Should().BeFalse();
@@ -201,7 +201,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(SealedDummy).IsStatic();
+            var result = typeof(SealedGarbage).IsStatic();
 
             //Assert
             result.Should().BeFalse();
@@ -213,7 +213,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent(nameof(Dummy.OnStaticTest)).IsStatic();
+            var result = typeof(Garbage).GetSingleEvent(nameof(Garbage.OnStaticTest)).IsStatic();
 
             //Assert
             result.Should().BeTrue();
@@ -225,7 +225,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent(nameof(Dummy.OnTest)).IsStatic();
+            var result = typeof(Garbage).GetSingleEvent(nameof(Garbage.OnTest)).IsStatic();
 
             //Assert
             result.Should().BeFalse();
@@ -237,7 +237,7 @@ public class MemberInfoExtensionsTest
     {
         public delegate void TestEventHandler(object sender, EventArgs e);
 
-        public record Dummy
+        public record Garbage
         {
             private int _privateField;
             protected long NonPrivateField;
@@ -262,12 +262,12 @@ public class MemberInfoExtensionsTest
 
             }
 
-            public Dummy(int privateField)
+            public Garbage(int privateField)
             {
                 _privateField = privateField;
             }
 
-            private Dummy()
+            private Garbage()
             {
 
             }
@@ -290,7 +290,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPrivateField_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("_privateField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("_privateField");
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -303,7 +303,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPrivateField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("NonPrivateField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("NonPrivateField");
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -316,7 +316,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPrivateProperty_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("PrivateProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("PrivateProperty");
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -329,7 +329,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPrivateProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("NonPrivateProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("NonPrivateProperty");
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -342,7 +342,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPrivateMethod_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("PrivateMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("PrivateMethod");
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -355,7 +355,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPrivateMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("NonPrivateMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("NonPrivateMethod");
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -368,7 +368,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPrivateConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate);
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsPrivate);
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -381,7 +381,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPrivateConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsPrivate && x.HasParameters<int>());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => !x.IsPrivate && x.HasParameters<int>());
 
             //Act
             var result = memberInfo.IsPrivate();
@@ -391,15 +391,15 @@ public class MemberInfoExtensionsTest
         }
 
         [TestMethod]
-        public void WhenIsDummyMemberInfo_Throw()
+        public void WhenIsGarbageMemberInfo_Throw()
         {
             //Arrange
 
             //Act
-            var action = () => new DummyMemberInfo().IsPrivate();
+            var action = () => new GarbageMemberInfo().IsPrivate();
 
             //Assert
-            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsPrivate), nameof(DummyMemberInfo)));
+            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsPrivate), nameof(GarbageMemberInfo)));
         }
 
         [TestMethod]
@@ -408,7 +408,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnPrivate").IsPrivate();
+            var result = typeof(Garbage).GetSingleEvent("OnPrivate").IsPrivate();
 
             //Assert
             result.Should().BeTrue();
@@ -420,7 +420,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsPrivate();
+            var result = typeof(Garbage).GetSingleEvent("OnPublic").IsPrivate();
 
             //Assert
             result.Should().BeFalse();
@@ -432,7 +432,7 @@ public class MemberInfoExtensionsTest
     {
         public delegate void TestEventHandler(object sender, EventArgs e);
 
-        public record Dummy
+        public record Garbage
         {
             protected int _protectedField;
             private long NonProtectedField;
@@ -457,12 +457,12 @@ public class MemberInfoExtensionsTest
 
             }
 
-            public Dummy(int protectedField)
+            public Garbage(int protectedField)
             {
                 _protectedField = protectedField;
             }
 
-            protected Dummy()
+            protected Garbage()
             {
 
             }
@@ -485,7 +485,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProtectedField_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("_protectedField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("_protectedField");
 
             //Act
             var result = memberInfo.IsProtected();
@@ -498,7 +498,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonProtectedField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("NonProtectedField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("NonProtectedField");
 
             //Act
             var result = memberInfo.IsProtected();
@@ -511,7 +511,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProtectedProperty_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("ProtectedProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("ProtectedProperty");
 
             //Act
             var result = memberInfo.IsProtected();
@@ -524,7 +524,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonProtectedProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("NonProtectedProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("NonProtectedProperty");
 
             //Act
             var result = memberInfo.IsProtected();
@@ -537,7 +537,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProtectedMethod_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("ProtectedMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("ProtectedMethod");
 
             //Act
             var result = memberInfo.IsProtected();
@@ -550,7 +550,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonProtectedMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("NonProtectedMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("NonProtectedMethod");
 
             //Act
             var result = memberInfo.IsProtected();
@@ -563,7 +563,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProtectedConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsProtected() && x.HasNoParameter());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsProtected() && x.HasNoParameter());
 
             //Act
             var result = memberInfo.IsProtected();
@@ -576,7 +576,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonProtectedConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsProtected() && x.HasParameters<int>());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => !x.IsProtected() && x.HasParameters<int>());
 
             //Act
             var result = memberInfo.IsProtected();
@@ -586,15 +586,15 @@ public class MemberInfoExtensionsTest
         }
 
         [TestMethod]
-        public void WhenIsDummyMemberInfo_Throw()
+        public void WhenIsGarbageMemberInfo_Throw()
         {
             //Arrange
 
             //Act
-            var action = () => new DummyMemberInfo().IsProtected();
+            var action = () => new GarbageMemberInfo().IsProtected();
 
             //Assert
-            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsProtected), nameof(DummyMemberInfo)));
+            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsProtected), nameof(GarbageMemberInfo)));
         }
 
         [TestMethod]
@@ -603,7 +603,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnProtected").IsProtected();
+            var result = typeof(Garbage).GetSingleEvent("OnProtected").IsProtected();
 
             //Assert
             result.Should().BeTrue();
@@ -615,7 +615,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsProtected();
+            var result = typeof(Garbage).GetSingleEvent("OnPublic").IsProtected();
 
             //Assert
             result.Should().BeFalse();
@@ -627,7 +627,7 @@ public class MemberInfoExtensionsTest
     {
         public delegate void TestEventHandler(object sender, EventArgs e);
 
-        public record Dummy
+        public record Garbage
         {
             internal int _internalField;
             protected long NonInternalField;
@@ -652,18 +652,18 @@ public class MemberInfoExtensionsTest
 
             }
 
-            public Dummy(int internalField)
+            public Garbage(int internalField)
             {
                 _internalField = internalField;
             }
 
-            internal Dummy()
+            internal Garbage()
             {
 
             }
         }
 
-        internal record InternalDummy{}
+        internal record InternalGarbage { }
 
         [TestMethod]
         public void WhenMemberInfoIsNull_Throw()
@@ -682,7 +682,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInternalField_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("_internalField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("_internalField");
 
             //Act
             var result = memberInfo.IsInternal();
@@ -695,7 +695,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonInternalField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("NonInternalField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("NonInternalField");
 
             //Act
             var result = memberInfo.IsInternal();
@@ -708,7 +708,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInternalProperty_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("InternalProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("InternalProperty");
 
             //Act
             var result = memberInfo.IsInternal();
@@ -721,7 +721,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonInternalProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("NonInternalProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("NonInternalProperty");
 
             //Act
             var result = memberInfo.IsInternal();
@@ -734,7 +734,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInternalMethod_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("InternalMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("InternalMethod");
 
             //Act
             var result = memberInfo.IsInternal();
@@ -747,7 +747,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonInternalMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("NonInternalMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("NonInternalMethod");
 
             //Act
             var result = memberInfo.IsInternal();
@@ -760,7 +760,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsInternalConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsInternal());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsInternal());
 
             //Act
             var result = memberInfo.IsInternal();
@@ -773,7 +773,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonInternalConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsInternal() && x.HasParameters<int>());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => !x.IsInternal() && x.HasParameters<int>());
 
             //Act
             var result = memberInfo.IsInternal();
@@ -783,24 +783,24 @@ public class MemberInfoExtensionsTest
         }
 
         [TestMethod]
-        public void WhenIsDummyMemberInfo_Throw()
+        public void WhenIsGarbageMemberInfo_Throw()
         {
             //Arrange
 
             //Act
-            var action = () => new DummyMemberInfo().IsInternal();
+            var action = () => new GarbageMemberInfo().IsInternal();
 
             //Assert
-            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsInternal), nameof(DummyMemberInfo)));
+            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsInternal), nameof(GarbageMemberInfo)));
         }
 
         [TestMethod]
         public void WhenIsInternalClass_ReturnTrue()
         {
             //Arrange
-            
+
             //Act
-            var result = typeof(InternalDummy).IsInternal();
+            var result = typeof(InternalGarbage).IsInternal();
 
             //Assert
             result.Should().BeTrue();
@@ -812,7 +812,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).IsInternal();
+            var result = typeof(Garbage).IsInternal();
 
             //Assert
             result.Should().BeFalse();
@@ -824,7 +824,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnInternal").IsInternal();
+            var result = typeof(Garbage).GetSingleEvent("OnInternal").IsInternal();
 
             //Assert
             result.Should().BeTrue();
@@ -836,7 +836,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsInternal();
+            var result = typeof(Garbage).GetSingleEvent("OnPublic").IsInternal();
 
             //Assert
             result.Should().BeFalse();
@@ -848,7 +848,7 @@ public class MemberInfoExtensionsTest
     {
         public delegate void TestEventHandler(object sender, EventArgs e);
 
-        public record Dummy
+        public record Garbage
         {
             public int _publicField;
             protected long NonPublicField;
@@ -873,12 +873,12 @@ public class MemberInfoExtensionsTest
 
             }
 
-            private Dummy(int publicField)
+            private Garbage(int publicField)
             {
                 _publicField = publicField;
             }
 
-            public Dummy()
+            public Garbage()
             {
 
             }
@@ -901,7 +901,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPublicField_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("_publicField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("_publicField");
 
             //Act
             var result = memberInfo.IsPublic();
@@ -914,7 +914,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPublicField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("NonPublicField");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("NonPublicField");
 
             //Act
             var result = memberInfo.IsPublic();
@@ -927,7 +927,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPublicProperty_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("PublicProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("PublicProperty");
 
             //Act
             var result = memberInfo.IsPublic();
@@ -940,7 +940,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPublicProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("NonPublicProperty");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("NonPublicProperty");
 
             //Act
             var result = memberInfo.IsPublic();
@@ -953,7 +953,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPublicMethod_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("PublicMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("PublicMethod");
 
             //Act
             var result = memberInfo.IsPublic();
@@ -966,7 +966,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPublicMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("NonPublicMethod");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("NonPublicMethod");
 
             //Act
             var result = memberInfo.IsPublic();
@@ -979,7 +979,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsPublicConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetAllConstructors(x => x.IsPublic).First();
+            MemberInfo memberInfo = typeof(Garbage).GetAllConstructors(x => x.IsPublic).First();
 
             //Act
             var result = memberInfo.IsPublic();
@@ -992,7 +992,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsNonPublicConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => !x.IsPublic && x.HasParameters<int>());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => !x.IsPublic && x.HasParameters<int>());
 
             //Act
             var result = memberInfo.IsPublic();
@@ -1002,15 +1002,15 @@ public class MemberInfoExtensionsTest
         }
 
         [TestMethod]
-        public void WhenIsDummyMemberInfo_Throw()
+        public void WhenIsGarbageMemberInfo_Throw()
         {
             //Arrange
 
             //Act
-            var action = () => new DummyMemberInfo().IsPublic();
+            var action = () => new GarbageMemberInfo().IsPublic();
 
             //Assert
-            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsPublic), nameof(DummyMemberInfo)));
+            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberKindUnsupported, nameof(MemberInfoExtensions.IsPublic), nameof(GarbageMemberInfo)));
         }
 
         [TestMethod]
@@ -1019,7 +1019,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnPublic").IsPublic();
+            var result = typeof(Garbage).GetSingleEvent("OnPublic").IsPublic();
 
             //Assert
             result.Should().BeTrue();
@@ -1031,7 +1031,7 @@ public class MemberInfoExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleEvent("OnInternal").IsPublic();
+            var result = typeof(Garbage).GetSingleEvent("OnInternal").IsPublic();
 
             //Assert
             result.Should().BeFalse();
@@ -1041,7 +1041,7 @@ public class MemberInfoExtensionsTest
     [TestClass]
     public class IsConstructor : Tester
     {
-        public record Dummy
+        public record Garbage
         {
             public string Field;
 
@@ -1049,7 +1049,7 @@ public class MemberInfoExtensionsTest
 
             public void Method() { }
 
-            private Dummy() { }
+            private Garbage() { }
         }
 
         [TestMethod]
@@ -1069,7 +1069,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsPrivate());
 
             //Act
             var result = memberInfo.IsConstructor();
@@ -1082,7 +1082,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("Method");
 
             //Act
             var result = memberInfo.IsConstructor();
@@ -1095,7 +1095,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("Field");
 
             //Act
             var result = memberInfo.IsConstructor();
@@ -1108,7 +1108,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("Property");
 
             //Act
             var result = memberInfo.IsConstructor();
@@ -1121,7 +1121,7 @@ public class MemberInfoExtensionsTest
     [TestClass]
     public class IsMethod : Tester
     {
-        public record Dummy
+        public record Garbage
         {
             public string Field;
 
@@ -1129,7 +1129,7 @@ public class MemberInfoExtensionsTest
 
             public void Method() { }
 
-            private Dummy() { }
+            private Garbage() { }
         }
 
         [TestMethod]
@@ -1149,7 +1149,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsConstructor_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsPrivate());
 
             //Act
             var result = memberInfo.IsMethod();
@@ -1162,7 +1162,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsMethod_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("Method");
 
             //Act
             var result = memberInfo.IsMethod();
@@ -1175,7 +1175,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("Field");
 
             //Act
             var result = memberInfo.IsMethod();
@@ -1188,7 +1188,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("Property");
 
             //Act
             var result = memberInfo.IsMethod();
@@ -1201,7 +1201,7 @@ public class MemberInfoExtensionsTest
     [TestClass]
     public class IsField : Tester
     {
-        public record Dummy
+        public record Garbage
         {
             public string Field;
 
@@ -1209,7 +1209,7 @@ public class MemberInfoExtensionsTest
 
             public void Method() { }
 
-            private Dummy() { }
+            private Garbage() { }
         }
 
         [TestMethod]
@@ -1229,7 +1229,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsPrivate());
 
             //Act
             var result = memberInfo.IsField();
@@ -1242,7 +1242,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("Method");
 
             //Act
             var result = memberInfo.IsField();
@@ -1255,7 +1255,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsField_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("Field");
 
             //Act
             var result = memberInfo.IsField();
@@ -1268,7 +1268,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsProperty_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("Property");
 
             //Act
             var result = memberInfo.IsField();
@@ -1281,7 +1281,7 @@ public class MemberInfoExtensionsTest
     [TestClass]
     public class IsProperty : Tester
     {
-        public record Dummy
+        public record Garbage
         {
             public string Field;
 
@@ -1289,7 +1289,7 @@ public class MemberInfoExtensionsTest
 
             public void Method() { }
 
-            private Dummy() { }
+            private Garbage() { }
         }
 
         //TODO Test
@@ -1310,7 +1310,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsConstructor_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleConstructor(x => x.IsPrivate());
+            MemberInfo memberInfo = typeof(Garbage).GetSingleConstructor(x => x.IsPrivate());
 
             //Act
             var result = memberInfo.IsProperty();
@@ -1323,7 +1323,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsMethod_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleMethod("Method");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleMethod("Method");
 
             //Act
             var result = memberInfo.IsProperty();
@@ -1336,7 +1336,7 @@ public class MemberInfoExtensionsTest
         public void WhenIsField_ReturnFalse()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleField("Field");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleField("Field");
 
             //Act
             var result = memberInfo.IsProperty();
@@ -1349,13 +1349,44 @@ public class MemberInfoExtensionsTest
         public void WhenIsProperty_ReturnTrue()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Dummy).GetSingleProperty("Property");
+            MemberInfo memberInfo = typeof(Garbage).GetSingleProperty("Property");
 
             //Act
             var result = memberInfo.IsProperty();
 
             //Assert
             result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class GetMemberType : Tester
+    {
+        //TODO Test
+        [TestMethod]
+        public void WhenMemberInfoIsNull_Throw()
+        {
+            //Arrange
+            MemberInfo memberInfo = null!;
+
+            //Act
+            var action = () => memberInfo.GetMemberType();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(memberInfo));
+        }
+
+        [TestMethod]
+        public void WhenIsProperty_ReturnPropertyType()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Garbage.Garbage).GetSingleProperty(nameof(Garbage.Garbage.Id));
+
+            //Act
+            var result = memberInfo.GetMemberType();
+
+            //Assert
+            result.Should().Be(typeof(int));
         }
     }
 }
