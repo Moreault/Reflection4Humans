@@ -18,7 +18,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="ToolBX.Eloquentest.Dummies" Version="3.0.0-beta0g" />
+		<PackageReference Include="WhiteJackalStudio.TestTools" Version="1.0.0-beta0a" />
 		<PackageReference Include="ToolBX.OPEX" Version="2.2.0" />
 	</ItemGroup>
 

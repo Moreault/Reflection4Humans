@@ -1,4 +1,6 @@
-﻿namespace Reflection4Humans.Extensions.Tests.Comparers;
+﻿using ToolBX.Dummies;
+
+namespace Reflection4Humans.Extensions.Tests.Comparers;
 
 public abstract class MemberInfoEqualityComparerTester<T> : Tester where T : MemberInfo
 {

@@ -1,4 +1,6 @@
-﻿namespace Reflection4Humans.ValueEquality.Tests;
+﻿using ToolBX.Dummies;
+
+namespace Reflection4Humans.ValueEquality.Tests;
 
 public class ValueEqualityExtensionsTests
 {
