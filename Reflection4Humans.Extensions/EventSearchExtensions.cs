@@ -36,4 +36,7 @@ public static class EventSearchExtensions
     public static EventInfo GetSingleEvent(this Type type, Func<EventInfo, bool>? predicate = null) => type.GetAllEventsInternal(predicate).Single();
 
     public static EventInfo? GetSingleEventOrDefault(this Type type, Func<EventInfo, bool>? predicate = null) => type.GetAllEventsInternal(predicate).SingleOrDefault();
+
+    public static bool HasEvent(this Type type, Func<EventInfo, bool>? predicate = null) => type.GetAllEventsInternal(predicate).Any();
+
 }

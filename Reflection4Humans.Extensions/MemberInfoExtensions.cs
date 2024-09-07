@@ -133,4 +133,13 @@ public static class MemberInfoExtensions
 
         throw new NotSupportedException($"MemberInfo of type {memberInfo.GetType()} is not supported.");
     }
+
+    public static bool HasAttribute<T>(this MemberInfo member) where T : Attribute => member.HasAttribute(typeof(T));
+
+    public static bool HasAttribute(this MemberInfo member, Type type)
+    {
+        if (member is null) throw new ArgumentNullException(nameof(member));
+        if (type is null) throw new ArgumentNullException(nameof(type));
+        return type.GetCustomAttributes(type, true).Any();
+    }
 }

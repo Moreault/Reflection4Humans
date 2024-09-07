@@ -10,6 +10,7 @@ Reflection extension methods meant to be used by humans.
 * Type.GetAllMembers
 * Type.GetAllProperties
 * Type.GetAllFields
+* Type.GetAllPropertiesOrFields
 * Type.GetAllMethods
 * Type.GetAllConstructors
 * Type GetAllEvents
@@ -41,6 +42,7 @@ var constructors = typeof(Dummy).GetAllConstructors(x => x.HasParameters<int>() 
 * Type.GetSingleMember & Type.GetSingleMemberOrDefault
 * Type.GetSingleProperty & Type.GetSinglePropertyOrDefault
 * Type.GetSingleField & Type.GetSingleFieldOrDefault
+* Type.GetSinglePropertyOrField & Type.GetSinglePropertyOrFieldOrDefault
 * Type.GetSingleMethod & Type.GetSingleMethodOrDefault
 * Type.GetSingleConstructor & Type.GetSingleConstructorOrDefault
 * Type.GetSingleEvent & Type.GetSingleEventOrDefault
@@ -57,6 +59,15 @@ var propertyByName = typeof(Dummy).GetSingleProperty("Level");
 //But in the case of methods, multiple ones can share the same name and even some parameters. It can be difficult to find the right one in some cases
 var method = typeof(Dummy).GetSingleMethodOrDefault(x => x.Name == "LevelUp" && x.HasParameters<int, string>() && x.IsGeneric());
 ```
+
+### Has[MEMBER] methods
+
+* Type.HasMember
+* Type.HasField
+* Type.HasProperty
+* Type.HasMethod
+* Type.HasConstructor
+* Type.HasEvent
 
 ## Type.GetHumanReadableName
 
@@ -268,19 +279,76 @@ if (property.IsStatic())
 	...
 }
 ```
-* IsGet
+
+* IsIndexer
 ```cs
-//True if the property has a get accessor
-if (property.IsGet())
+//Returns true if the property is an indexer (aka this[int index])
+if (property.IsIndexer())
 {
 	...
 }
 ```
-* IsSet
+
+## PropertyOrField
+Encompasses both fields and properties as a single object. It is used for those times where you just don't care about whether or not you want fields or properties. You can limit your search to public or internal members to avoid getting properties _and_ their own backing fields.
+
 ```cs
-//True if the property has a set accessor
-if (property.IsSet())
-{
-	...
-}
+PropertOrField member = instance.GetType().GetSinglePropertyOrField(x => ...);
+//This does what you expect it to do... except that it will throw if your member is a write-only property (aka has no get; accessor)
+var result = member.GetValue(instance);
+
+//This one doesn't throw and instead encapsulates your value in a Result<T> (provided your member is a field or a property with a get accessor)
+var result = member.TryGetValue(instance);
+
+//The same rules apply to SetValue. This will throw if member is a property without a set or init accessor
+member.SetValue(instance, value);
+
+//And this will avoid throwing an exception if it's a read-only property
+member.TrySetValue(instance, value);
+```
+
+It's also possible to convert a collection of members into a collection of `IPropertyOrField`.
+
+```cs
+//Will throw an exception if there are other types of members in your collection, however
+var result = members.AsPropertyOrField();
+
+//Will filter out anything that is not a property or a field to avoid throwing exceptions
+var result = members.TryAsPropertyOrField();
+```
+
+It's important to note that by default, the `GetAllPropertiesOrFields` method (without a predicate) will return all properties and fields on a given type regardless of its accessibility or wheter it's a backing field (automatically-generated or otherwise). 
+
+```cs
+//Ensures that you're not getting anything in double with a property and its backing field for instance
+var result = typeof(MyType).GetAllPropertiesOrFields(x => !x.IsBackingField())
+```
+
+## IsBackingField & IsAutomaticBackingField
+These two extension methods to `FieldInfo` come in handy when you want to include or exclude backing fields. If you didn't know, the following property will generate a backing field by default : 
+
+```cs
+public string SomeProperty { get; set; }
+```
+
+Its name will look something like `<SomeProperty>k__BackingField`. These are referred to by Reflection4Humans as _Automatic backing fields_. If you made your own backing field following the commonly-accepted "official" C# standards, it would probably be something like `_someProperty`. That's not exclusive to _backing_ fields however as that's just how we normally write private field names in C#.
+
+Now, the `IsAutomaticBackingField` is a lot more accurate in acertaining that the field is indeed a backing field because you can't (normally) use "<>" in variable or member names in C#. 
+
+Your own backing fields are a lot more difficult to identify since they don't even have as much as an attribute to them. They're likely named just like any other field. By default, the `IsBackingField` method will look for fields that have properties with similar names prefixed with a `_`. It works for most cases. There's also a way to add your own `BackingFieldConvention` by passing it to the method or by adding it to a global config for Reflection4Humans.
+
+### BackingFieldConvention
+By default, the `ReflectionConfig` object only contains `BackingFieldConvention.Csharp` as its naming convention.
+
+```cs
+//This is only meant to be an example on how to add a new naming convention
+ReflectionConfig.Add(new BackingFieldConvention { Prefix = "m_", Suffix = "_backingField" })
+```
+
+Only use the above method if you have global naming conventions that you want to apply to all your project.
+
+You can just use this if you want to do it per-call : 
+
+```cs
+var result = typeof(MyType).GetAllPropertiesOrFields(x => !x.IsBackingField(new BackingFieldConvention { Prefix = "m_", Suffix = "_backingField" }))
 ```

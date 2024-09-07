@@ -30,6 +30,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="ToolBX.OutWarden" Version="3.0.0-beta1" />
+	  <PackageReference Include="ToolBX.SmartyStrings" Version="3.0.0-beta2" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Update="Resources\Exceptions.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>

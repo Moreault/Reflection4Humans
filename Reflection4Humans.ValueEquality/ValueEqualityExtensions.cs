@@ -17,8 +17,8 @@ public static class ValueEqualityExtensions
 
         if (!firstFields.Select(x => x.GetValue(first)).SequenceEqual(secondFields.Select(x => x.GetValue(second)), comparer)) return false;
 
-        var firstProperties = first.GetType().GetAllProperties(x => x.IsInstance() && x.IsPublic() && x.IsGet() && !x.IsIndexer());
-        var secondProperties = second.GetType().GetAllProperties(x => x.IsInstance() && x.IsPublic() && x.IsGet() && !x.IsIndexer());
+        var firstProperties = first.GetType().GetAllProperties(x => x.IsInstance() && x.IsPublic() && x.CanRead && !x.IsIndexer());
+        var secondProperties = second.GetType().GetAllProperties(x => x.IsInstance() && x.IsPublic() && x.CanRead && !x.IsIndexer());
 
         if (!firstFields.Any() && !secondFields.Any() && !firstProperties.Any() && !secondProperties.Any()) return comparer.Equals(first, second);
 

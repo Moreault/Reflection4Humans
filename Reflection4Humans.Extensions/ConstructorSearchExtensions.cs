@@ -24,4 +24,7 @@ public static class ConstructorSearchExtensions
     public static ConstructorInfo GetSingleConstructor(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).Single();
 
     public static ConstructorInfo? GetSingleConstructorOrDefault(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).SingleOrDefault();
+
+    public static bool HasConstructor(this Type type, Func<ConstructorInfo, bool>? predicate = null) => type.GetAllConstructorsInternal(predicate).Any();
+
 }

@@ -42,4 +42,7 @@ public static class MethodSearchExtensions
     {
         return type.GetAllMethods(predicate).SingleOrDefault();
     }
+
+    public static bool HasMethod(this Type type, Func<MethodInfo, bool>? predicate = null) => type.GetAllMethodsInternal(predicate).Any();
+
 }

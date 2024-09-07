@@ -25,7 +25,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetAllProperties(x => x.IsSet() && !x.IsGet());
+            var result = typeof(Garbage).GetAllProperties(x => x.CanWrite && !x.CanRead);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -40,7 +40,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetAllProperties(x => x.IsGet() && !x.IsSet());
+            var result = typeof(Garbage).GetAllProperties(x => x.CanRead && !x.CanWrite);
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -88,7 +88,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Garbage).GetSingleProperty(x => x.Name == "SetOnlyProperty" && x.IsGet());
+            var action = () => typeof(Garbage).GetSingleProperty(x => x.Name == "SetOnlyProperty" && x.CanRead);
 
             //Assert
             action.Should().Throw<Exception>();
@@ -100,7 +100,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetSingleProperty(x => x.Name == "GetOnlyProperty" && x.IsGet() && !x.IsSet());
+            var result = typeof(Garbage).GetSingleProperty(x => x.Name == "GetOnlyProperty" && x.CanRead && !x.CanWrite);
 
             //Assert
             result.Should().NotBeNull();
@@ -112,7 +112,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetSingleProperty(x => x.Name == "SetOnlyProperty" && x.IsSet());
+            var result = typeof(Garbage).GetSingleProperty(x => x.Name == "SetOnlyProperty" && x.CanWrite);
 
             //Assert
             result.Should().NotBeNull();
@@ -157,7 +157,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetSinglePropertyOrDefault(x => x.Name == "SetOnlyProperty" && x.IsGet());
+            var result = typeof(Garbage).GetSinglePropertyOrDefault(x => x.Name == "SetOnlyProperty" && x.CanRead);
 
             //Assert
             result.Should().BeNull();
@@ -169,7 +169,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetSinglePropertyOrDefault(x => x.Name == "GetOnlyProperty" && x.IsGet() && !x.IsSet());
+            var result = typeof(Garbage).GetSinglePropertyOrDefault(x => x.Name == "GetOnlyProperty" && x.CanRead && !x.CanWrite);
 
             //Assert
             result.Should().NotBeNull();
@@ -181,7 +181,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Garbage).GetSinglePropertyOrDefault(x => x.Name == "SetOnlyProperty" && x.IsSet());
+            var result = typeof(Garbage).GetSinglePropertyOrDefault(x => x.Name == "SetOnlyProperty" && x.CanWrite);
 
             //Assert
             result.Should().NotBeNull();
