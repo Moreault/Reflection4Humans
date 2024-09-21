@@ -217,7 +217,7 @@ public partial class MemberSearchExtensionsTest
                 "SomeoneTouchedMe", "SomeoneTouchedMe", "set_SetOnlyProperty", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode",
                 ".ctor", "Id", "PrivateGetSetProperty", "GetOnlyProperty", "SetOnlyProperty", "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField",
                 "<GetOnlyProperty>k__BackingField", "ShadowedField", "SomeoneTouchedMeVeryPrivately", ".ctor", "_wasPoked", "_setOnlyValue", ".ctor",
-                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload", 
+                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload",
                 "OnProtected", "OnInternal", "OnPrivate", "OnPublic",
                 "add_OnProtected", "add_OnInternal", "add_OnPrivate", "add_OnPublic",
                 "remove_OnProtected", "remove_OnInternal", "remove_OnPrivate", "remove_OnPublic",
@@ -247,7 +247,7 @@ public partial class MemberSearchExtensionsTest
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "add_OnPrivate", "remove_OnPrivate", "SomeoneTouchedMe", "SomeoneTouchedMe", 
+                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "add_OnPrivate", "remove_OnPrivate", "SomeoneTouchedMe", "SomeoneTouchedMe",
                 "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMeVeryPrivately"
             });
         }
@@ -363,7 +363,6 @@ public partial class MemberSearchExtensionsTest
         }
     }
 
-
     [TestClass]
     public class GetSingleMember_Predicate : Tester
     {
@@ -469,4 +468,113 @@ public partial class MemberSearchExtensionsTest
             result.Should().NotBeNull();
         }
     }
+
+    [TestClass]
+    public class HasMember_Name : Tester
+    {
+        [TestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void WhenNameIsEmpty_Throw(string name)
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Garbage).HasMember(name);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [TestMethod]
+        public void WhenThereIsMoreThanOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember("SomeoneTouchedMe");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoResultWithName_False()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember("SomeoneTouchedMeRightNow");
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenThereIsExactlyOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember("GetOnlyProperty");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class HasMember_Predicate : Tester
+    {
+        [TestMethod]
+        public void WhenPredicateIsEmpty_ThrowBecauseMoreThanOneMember()
+        {
+            //Arrange
+            Func<MemberInfo, bool>? predicate = null;
+
+            //Act
+            var result = typeof(Garbage).HasMember(predicate);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenThereIsMoreThanOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember(x => x.Name == "SomeoneTouchedMe");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoResultWithName_False()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember(x => x.Name == "SomeoneTouchedMeRightNow");
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenThereIsExactlyOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember(x => x.Name == "GetOnlyProperty");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
 }

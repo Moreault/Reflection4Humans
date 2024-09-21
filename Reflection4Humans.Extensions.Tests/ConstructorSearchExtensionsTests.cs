@@ -110,4 +110,40 @@ public partial class MemberSearchExtensionsTest : Tester
         //Assert
         result.Should().NotBeNull();
     }
+
+    [TestMethod]
+    public void HasConstructor_WhenMultipleConstructorsFitPredicate_True()
+    {
+        //Arrange
+
+        //Act
+        var result = typeof(Garbage).HasConstructor(x => x.HasNoParameter());
+
+        //Assert
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void HasConstructor_WhenNoConstructorFitPredicate_False()
+    {
+        //Arrange
+
+        //Act
+        var result = typeof(Garbage).HasConstructor(x => x.IsInternal());
+
+        //Assert
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void HasConstructor_WhenExactlyOneConstructorFitsPredicate_ReturnThatConstructor()
+    {
+        //Arrange
+
+        //Act
+        var result = typeof(Garbage).HasConstructor(x => x.IsProtected());
+
+        //Assert
+        result.Should().BeTrue();
+    }
 }

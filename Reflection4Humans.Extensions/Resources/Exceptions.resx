@@ -129,4 +129,22 @@
   <data name="AccessModifierUnsupported" xml:space="preserve">
 	  <value>Can't use method {0} : accessModifier is unrecognized and unsupported</value>
   </data>
+  <data name="UsingGetOnWriteOnlyProperty" xml:space="preserve">
+	  <value>Member '{0}' is a write-only property and therefore cannot be read</value>
+  </data>
+  <data name="UsingSetOnReadOnlyProperty" xml:space="preserve">
+	  <value>Member '{0}' is a read-only property and therefore cannot be written to</value>
+  </data>
+  <data name="MemberCannotBeCastToProperty" xml:space="preserve">
+	  <value>Member '{0}' cannot be cast to a property</value>
+  </data>
+  <data name="MemberCannotBeCastToField" xml:space="preserve">
+	  <value>Member '{0}' cannot be cast to a field</value>
+  </data>
+  <data name="MemberIsNeitherPropertyNorField" xml:space="preserve">
+	  <value>Member '{0}' is neither property nor field</value>
+  </data>
+  <data name="MemberInfoTypeNotSupported" xml:space="preserve">
+	  <value>MemberInfo of type '{0}' is not supported</value>
+  </data>
 </root>

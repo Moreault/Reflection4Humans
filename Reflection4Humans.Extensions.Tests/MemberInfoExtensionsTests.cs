@@ -1362,7 +1362,23 @@ public class MemberInfoExtensionsTests
     [TestClass]
     public class GetMemberType : Tester
     {
-        //TODO Test
+        private class Garbage
+        {
+            public delegate void OnSomething();
+
+            public int Id { get; set; }
+
+            public string Field;
+
+            public event OnSomething SomethingHappened;
+
+            public char Method()
+            {
+                throw new NotImplementedException();
+            }
+
+        }
+
         [TestMethod]
         public void WhenMemberInfoIsNull_Throw()
         {
@@ -1380,7 +1396,7 @@ public class MemberInfoExtensionsTests
         public void WhenIsProperty_ReturnPropertyType()
         {
             //Arrange
-            MemberInfo memberInfo = typeof(Garbage.Garbage).GetSingleProperty(nameof(Garbage.Garbage.Id));
+            var memberInfo = typeof(Garbage).GetSingleMember(nameof(Garbage.Id));
 
             //Act
             var result = memberInfo.GetMemberType();
@@ -1388,5 +1404,82 @@ public class MemberInfoExtensionsTests
             //Assert
             result.Should().Be(typeof(int));
         }
+
+        [TestMethod]
+        public void WhenIsField_ReturnFieldType()
+        {
+            //Arrange
+            var memberInfo = typeof(Garbage).GetSingleMember(nameof(Garbage.Field));
+
+            //Act
+            var result = memberInfo.GetMemberType();
+
+            //Assert
+            result.Should().Be(typeof(string));
+        }
+
+        [TestMethod]
+        public void WhenIsMethod_ReturnMethodType()
+        {
+            //Arrange
+            var memberInfo = typeof(Garbage).GetSingleMember(nameof(Garbage.Method));
+
+            //Act
+            var result = memberInfo.GetMemberType();
+
+            //Assert
+            result.Should().Be(typeof(char));
+        }
+
+        [TestMethod]
+        public void WhenIsType_ReturnType()
+        {
+            //Arrange
+            MemberInfo memberInfo = typeof(Garbage);
+
+            //Act
+            var result = memberInfo.GetMemberType();
+
+            //Assert
+            result.Should().Be(typeof(Garbage));
+        }
+
+        [TestMethod]
+        public void WhenIsEvent_ReturnEventHandlerType()
+        {
+            //Arrange
+            var memberInfo = typeof(Garbage).GetSingleMember(nameof(Garbage.SomethingHappened));
+
+            //Act
+            var result = memberInfo.GetMemberType();
+
+            //Assert
+            result.Should().Be(typeof(Garbage.OnSomething));
+        }
+
+        [TestMethod]
+        public void WhenIsSomethingElse_Throw()
+        {
+            //Arrange
+            var memberInfo = Dummy.Create<GarbageMemberInfo>();
+
+            //Act
+            var action = () => memberInfo.GetMemberType();
+
+            //Assert
+            action.Should().Throw<NotSupportedException>().WithMessage(string.Format(Exceptions.MemberInfoTypeNotSupported, memberInfo.GetType()));
+        }
+    }
+
+    [TestClass]
+    public class HasAttribute_Generic
+    {
+        //TODO Test
+    }
+
+    [TestClass]
+    public class HasAttribute_NonGeneric
+    {
+        //TODO Test
     }
 }

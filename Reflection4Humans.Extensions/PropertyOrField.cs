@@ -85,6 +85,14 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
     public override string Name => _unwrapped.Name;
     public override Type? ReflectedType => _unwrapped.ReflectedType;
 
+    public override bool IsCollectible => _unwrapped.IsCollectible;
+
+    public override IEnumerable<CustomAttributeData> CustomAttributes => _unwrapped.CustomAttributes;
+
+    public override Module Module => _unwrapped.Module;
+
+    public override int MetadataToken => _unwrapped.MetadataToken;
+
     public bool IsStatic { get; }
     public bool IsInstance => !IsStatic;
     public bool IsPrivate { get; }
@@ -133,14 +141,12 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
             CanWrite = property.CanWrite;
             _getValue = x =>
             {
-                //TODO Message
-                if (!CanRead) throw new InvalidOperationException();
+                if (!CanRead) throw new InvalidOperationException(string.Format(Exceptions.UsingGetOnWriteOnlyProperty, unwrapped.Name));
                 return property.GetValue(x);
             };
             _setValue = (instance, value) =>
             {
-                //TODO Message
-                if (!CanWrite) throw new InvalidOperationException();
+                if (!CanWrite) throw new InvalidOperationException(string.Format(Exceptions.UsingSetOnReadOnlyProperty, unwrapped.Name));
                 property.SetValue(instance, value);
             };
             IsStatic = property.IsStatic();
@@ -166,11 +172,12 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
             IsAutomaticBackingField = field.IsAutomaticBackingField();
         }
         else
-            //TODO Message : It's not even a field or property!
-            throw new InvalidOperationException();
+            throw new InvalidOperationException(string.Format(Exceptions.MemberIsNeitherPropertyNorField, unwrapped.Name));
 
         _unwrapped = unwrapped ?? throw new ArgumentNullException(nameof(unwrapped));
     }
+
+    public override IList<CustomAttributeData> GetCustomAttributesData() => _unwrapped.GetCustomAttributesData();
 
     public bool IsBackingField(params BackingFieldConvention[] conventions)
     {
@@ -190,16 +197,14 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
         return _unwrapped is not PropertyInfo value ? Result<PropertyInfo>.Failure() : Result<PropertyInfo>.Success(value);
     }
 
-    //TODO Message
-    public PropertyInfo AsProperty() => _unwrapped as PropertyInfo ?? throw new InvalidCastException();
+    public PropertyInfo AsProperty() => _unwrapped as PropertyInfo ?? throw new InvalidCastException(string.Format(Exceptions.MemberCannotBeCastToProperty, Name));
 
     public Result<FieldInfo> TryAsField()
     {
         return _unwrapped is not FieldInfo value ? Result<FieldInfo>.Failure() : Result<FieldInfo>.Success(value);
     }
 
-    //TODO Message
-    public FieldInfo AsField() => _unwrapped as FieldInfo ?? throw new InvalidCastException();
+    public FieldInfo AsField() => _unwrapped as FieldInfo ?? throw new InvalidCastException(string.Format(Exceptions.MemberCannotBeCastToField, Name));
 
     public bool Equals(IPropertyOrField? other)
     {

@@ -129,4 +129,22 @@
   <data name="AccessModifierUnsupported" xml:space="preserve">
 	  <value>Impossible d'utiliser la méthode {0} : le niveau d'accès est non reconnu et non supporté</value>
   </data>
+  <data name="UsingGetOnWriteOnlyProperty" xml:space="preserve">
+	  <value>Le membre '{0}' est une propriété en écriture-seule et ne peut donc pas être lue</value>
+  </data>
+  <data name="UsingSetOnReadOnlyProperty" xml:space="preserve">
+	  <value>Le membre '{0}' est une propriété en lecture-seule et ne peut donc pas être écrite</value>
+  </data>
+  <data name="MemberCannotBeCastToProperty" xml:space="preserve">
+	  <value>Le membre '{0}' ne peut pas être convertit en propriété</value>
+  </data>
+  <data name="MemberCannotBeCastToField" xml:space="preserve">
+	  <value>Le membre '{0}' ne peut pas être convertit en un champ</value>
+  </data>
+  <data name="MemberIsNeitherPropertyNorField" xml:space="preserve">
+	  <value>Le membre '{0}' n'est ni une propriété ni un champ</value>
+  </data>
+  <data name="MemberInfoTypeNotSupported" xml:space="preserve">
+	  <value>Le membre de type '{0}' n'est pas supporté</value>
+  </data>
 </root>

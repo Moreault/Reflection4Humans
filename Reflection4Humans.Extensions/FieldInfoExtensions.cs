@@ -3,7 +3,7 @@
 public static class FieldInfoExtensions
 {
     /// <summary>
-    /// 
+    /// True if field is a backing field that was created automatically by the compiler.
     /// </summary>
     public static bool IsAutomaticBackingField(this FieldInfo field)
     {
@@ -12,7 +12,7 @@ public static class FieldInfoExtensions
     }
 
     /// <summary>
-    /// True if 
+    /// True if naming convention of field makes it a backing field of a property. Also checks if it's an automatic backing field.
     /// </summary>
     public static bool IsBackingField(this FieldInfo fieldInfo, params BackingFieldConvention[] conventions)
     {

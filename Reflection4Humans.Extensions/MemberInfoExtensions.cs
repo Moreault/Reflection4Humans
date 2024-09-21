@@ -131,7 +131,7 @@ public static class MemberInfoExtensions
         if (memberInfo is EventInfo eventInfo)
             return eventInfo.EventHandlerType!;
 
-        throw new NotSupportedException($"MemberInfo of type {memberInfo.GetType()} is not supported.");
+        throw new NotSupportedException(string.Format(Exceptions.MemberInfoTypeNotSupported, memberInfo.GetType()));
     }
 
     public static bool HasAttribute<T>(this MemberInfo member) where T : Attribute => member.HasAttribute(typeof(T));

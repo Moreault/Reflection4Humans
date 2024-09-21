@@ -37,6 +37,12 @@ public static class MemberSearchExtensions
         return type.GetAllMembersInternal(x => x.Name.Equals(name, stringComparison)).SingleOrDefault();
     }
 
+    public static bool HasMember(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+        return type.GetAllMembersInternal(x => x.Name.Equals(name, stringComparison)).Any();
+    }
+
     public static bool HasMember(this Type type, Func<MemberInfo, bool>? predicate = null) => type.GetAllMembersInternal(predicate).Any();
 
 }

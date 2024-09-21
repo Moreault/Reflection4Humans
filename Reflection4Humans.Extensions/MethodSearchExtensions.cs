@@ -43,6 +43,12 @@ public static class MethodSearchExtensions
         return type.GetAllMethods(predicate).SingleOrDefault();
     }
 
+    public static bool HasMethod(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+        return type.GetAllMethodsInternal(x => x.Name.Equals(name, stringComparison)).Any();
+    }
+
     public static bool HasMethod(this Type type, Func<MethodInfo, bool>? predicate = null) => type.GetAllMethodsInternal(predicate).Any();
 
 }

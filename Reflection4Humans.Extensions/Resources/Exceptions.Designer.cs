@@ -79,6 +79,42 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Member &apos;{0}&apos; cannot be cast to a field.
+        /// </summary>
+        internal static string MemberCannotBeCastToField {
+            get {
+                return ResourceManager.GetString("MemberCannotBeCastToField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Member &apos;{0}&apos; cannot be cast to a property.
+        /// </summary>
+        internal static string MemberCannotBeCastToProperty {
+            get {
+                return ResourceManager.GetString("MemberCannotBeCastToProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string MemberInfoTypeNotSupported {
+            get {
+                return ResourceManager.GetString("MemberInfoTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Member &apos;{0}&apos; is neither property nor field.
+        /// </summary>
+        internal static string MemberIsNeitherPropertyNorField {
+            get {
+                return ResourceManager.GetString("MemberIsNeitherPropertyNorField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t use method {0} : member kind &apos;{1}&apos; is unsupported.
         /// </summary>
         internal static string MemberKindUnsupported {
@@ -93,6 +129,24 @@ namespace ToolBX.Reflection4Humans.Extensions.Resources {
         internal static string PropertyNotFoundOnType {
             get {
                 return ResourceManager.GetString("PropertyNotFoundOnType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Member &apos;{0}&apos; is a write-only property and therefore cannot be read.
+        /// </summary>
+        internal static string UsingGetOnWriteOnlyProperty {
+            get {
+                return ResourceManager.GetString("UsingGetOnWriteOnlyProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Member &apos;{0}&apos; is a read-only property and therefore cannot be written to.
+        /// </summary>
+        internal static string UsingSetOnReadOnlyProperty {
+            get {
+                return ResourceManager.GetString("UsingSetOnReadOnlyProperty", resourceCulture);
             }
         }
     }
