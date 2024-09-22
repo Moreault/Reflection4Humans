@@ -1471,15 +1471,4 @@ public class MemberInfoExtensionsTests
         }
     }
 
-    [TestClass]
-    public class HasAttribute_Generic
-    {
-        //TODO Test
-    }
-
-    [TestClass]
-    public class HasAttribute_NonGeneric
-    {
-        //TODO Test
-    }
 }

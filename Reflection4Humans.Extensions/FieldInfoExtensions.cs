@@ -24,7 +24,7 @@ public static class FieldInfoExtensions
 
         var declaringType = fieldInfo.DeclaringType!;
 
-        var propertyNames = conventions.Select(x => fieldInfo.Name.TrimStart(x.Prefix)/*.TrimEnd(x.Suffix)*/).ToList();
+        var propertyNames = conventions.Select(x => fieldInfo.Name.TrimStart(x.Prefix).TrimEnd(x.Suffix)).ToList();
 
         return propertyNames.Any(property => declaringType.HasProperty(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase)));
     }

@@ -1333,4 +1333,24 @@ public class TypesTests : Tester
         //Assert
         result.Should().BeEquivalentTo(AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).DistinctBy(x => x.FullName));
     }
+
+    [AutoCustomization]
+    public class AutoCustomizationGarbageOne;
+
+    [AutoCustomization]
+    public class AutoCustomizationGarbageTwo;
+
+    public sealed class AutoCustomizationAttribute : Attribute;
+
+    [TestMethod]
+    public void Where_WhenGettingAllClassesWithAttribute_ReturnAllOfThem()
+    {
+        //Arrange
+
+        //Act
+        var result = Types.Where(x => x.HasAttribute<AutoCustomizationAttribute>()).ToList();
+
+        //Assert
+        result.Should().BeEquivalentTo(new List<Type>{typeof(AutoCustomizationGarbageOne), typeof(AutoCustomizationGarbageTwo)});
+    }
 }

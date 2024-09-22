@@ -361,13 +361,13 @@ public class TypeExtensionsTest
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null!;
+            Type member = null!;
 
             //Act
-            var action = () => type.HasAttribute();
+            var action = () => member.HasAttribute();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(member));
         }
 
         [TestMethod]
@@ -405,13 +405,13 @@ public class TypeExtensionsTest
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null!;
+            Type member = null!;
 
             //Act
-            var action = () => type.HasAttribute<GarbageAttribute>();
+            var action = () => member.HasAttribute<GarbageAttribute>();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(member));
         }
 
         [TestMethod]
@@ -470,14 +470,14 @@ public class TypeExtensionsTest
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null!;
+            Type member = null!;
             var attribute = Dummy.Create<Type>();
 
             //Act
-            var action = () => type.HasAttribute(attribute);
+            var action = () => member.HasAttribute(attribute);
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(member));
         }
 
         [TestMethod]
