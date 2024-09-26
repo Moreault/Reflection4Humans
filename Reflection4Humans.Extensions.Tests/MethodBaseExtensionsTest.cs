@@ -3,7 +3,7 @@
 [TestClass]
 public class MethodBaseExtensionsTest
 {
-    private class Dummy
+    private class Garbage
     {
         private void SomeMethod()
         {
@@ -62,7 +62,7 @@ public class MethodBaseExtensionsTest
             MethodBase methodInfo = null!;
 
             //Act
-            var action = () => methodInfo.HasParameters(Fixture.CreateMany<Type>().ToArray());
+            var action = () => methodInfo.HasParameters(Dummy.CreateMany<Type>().ToArray());
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(methodInfo));
@@ -72,7 +72,7 @@ public class MethodBaseExtensionsTest
         public void WhenParametersIsNull_Throw()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasNoParameter());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasNoParameter());
             Type[] parameters = null!;
 
             //Act
@@ -86,7 +86,7 @@ public class MethodBaseExtensionsTest
         public void WhenParametersIsEmpty_ReturnTrueIfMethodHasNoParameters()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasNoParameter());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasNoParameter());
             var parameters = Array.Empty<Type>();
 
             //Act
@@ -100,7 +100,7 @@ public class MethodBaseExtensionsTest
         public void WhenParametersIsEmpty_ReturnFalseIfMethodHasParameters()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<string>());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<string>());
             var parameters = Array.Empty<Type>();
 
             //Act
@@ -119,7 +119,7 @@ public class MethodBaseExtensionsTest
         {
             //Arrange
             MethodBase methodInfo = null!;
-            var count = Fixture.Create<int>();
+            var count = Dummy.Create<int>();
 
             //Act
             var action = () => methodInfo.HasParameters(count);
@@ -132,7 +132,7 @@ public class MethodBaseExtensionsTest
         public void WhenParameterCountIsTheSame_ReturnTrue()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<int, char>());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<int, char>());
 
             //Act
             var result = methodInfo.HasParameters(2);
@@ -145,7 +145,7 @@ public class MethodBaseExtensionsTest
         public void WhenParameterCountIsDifferent_ReturnFalse()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<int, char>());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<int, char>());
 
             //Act
             var result = methodInfo.HasParameters(3);
@@ -175,7 +175,7 @@ public class MethodBaseExtensionsTest
         public void WhenMethodHasNoParameter_ReturnTrue()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasNoParameter());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasNoParameter());
 
             //Act
             var result = methodInfo.HasNoParameter();
@@ -188,7 +188,7 @@ public class MethodBaseExtensionsTest
         public void WhenMethodHasParameters_ReturnFalse()
         {
             //Arrange
-            var methodInfo = typeof(Dummy).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<int, char>());
+            var methodInfo = typeof(Garbage).GetSingleMethod(x => x.Name == "SomeMethod" && x.HasParameters<int, char>());
 
             //Act
             var result = methodInfo.HasNoParameter();

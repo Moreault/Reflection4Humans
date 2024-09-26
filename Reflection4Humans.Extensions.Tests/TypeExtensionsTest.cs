@@ -1,4 +1,5 @@
-﻿using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
+﻿using System.Data;
+using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
 
 namespace Reflection4Humans.Extensions.Tests;
 
@@ -25,52 +26,52 @@ public class TypeExtensionsTest
         public void WhenIsNotGeneric_ReturnName()
         {
             //Arrange
-            var type = typeof(Dummy);
+            var type = typeof(Garbage.Garbage);
 
             //Act
             var result = type.GetHumanReadableName();
 
             //Assert
-            result.Should().Be("Dummy");
+            result.Should().Be("Garbage");
         }
 
         [TestMethod]
         public void WhenIsGeneric_ReturnNameWithGenericParameter()
         {
             //Arrange
-            var type = typeof(List<Dummy>);
+            var type = typeof(List<Garbage.Garbage>);
 
             //Act
             var result = type.GetHumanReadableName();
 
             //Assert
-            result.Should().Be("List<Dummy>");
+            result.Should().Be("List<Garbage>");
         }
 
         [TestMethod]
         public void WhenHasMultipleGenericParameters_ReturnNameWithGenericParameters()
         {
             //Arrange
-            var type = typeof(Dictionary<string, Dummy>);
+            var type = typeof(Dictionary<string, Garbage.Garbage>);
 
             //Act
             var result = type.GetHumanReadableName();
 
             //Assert
-            result.Should().Be("Dictionary<String, Dummy>");
+            result.Should().Be("Dictionary<String, Garbage>");
         }
 
         [TestMethod]
         public void WhenIsNestedGeneric_ReturnNameWithGenericParameters()
         {
             //Arrange
-            var type = typeof(List<Dictionary<int, Dummy>>);
+            var type = typeof(List<Dictionary<int, Garbage.Garbage>>);
 
             //Act
             var result = type.GetHumanReadableName();
 
             //Assert
-            result.Should().Be("List<Dictionary<Int32, Dummy>>");
+            result.Should().Be("List<Dictionary<Int32, Garbage>>");
         }
     }
 
@@ -83,7 +84,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyAttribute).IsAttribute();
+            var result = typeof(GarbageAttribute).IsAttribute();
 
             //Assert
             result.Should().BeTrue();
@@ -95,7 +96,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).IsAttribute();
+            var result = typeof(Garbage.Garbage).IsAttribute();
 
             //Assert
             result.Should().BeFalse();
@@ -107,7 +108,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyInheritedAttribute).IsAttribute();
+            var result = typeof(GarbageInheritedAttribute).IsAttribute();
 
             //Assert
             result.Should().BeTrue();
@@ -119,7 +120,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyThirdChildOfAttribute).IsAttribute();
+            var result = typeof(GarbageThirdChildOfAttribute).IsAttribute();
 
             //Assert
             result.Should().BeTrue();
@@ -134,8 +135,8 @@ public class TypeExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var propertyName = Fixture.Create<string>();
-            var comparison = Fixture.Create<StringComparison>();
+            var propertyName = Dummy.Create<string>();
+            var comparison = Dummy.Create<StringComparison>();
 
             //Act
             var action = () => type.GetPropertyPath(propertyName, comparison);
@@ -151,8 +152,8 @@ public class TypeExtensionsTest
         public void WhenPropertyNameIsEmpty_Throw(string propertyName)
         {
             //Arrange
-            var type = Fixture.Create<Type>();
-            var comparison = Fixture.Create<StringComparison>();
+            var type = Dummy.Create<Type>();
+            var comparison = Dummy.Create<StringComparison>();
 
             //Act
             var action = () => type.GetPropertyPath(propertyName, comparison);
@@ -165,9 +166,9 @@ public class TypeExtensionsTest
         public void WhenPropertyIsNotOnObject_Throw()
         {
             //Arrange
-            var type = Fixture.Create<Type>();
-            var propertyName = Fixture.Create<string>();
-            var comparison = Fixture.Create<StringComparison>();
+            var type = typeof(object);
+            var propertyName = Dummy.Create<string>();
+            var comparison = Dummy.Create<StringComparison>();
 
             //Act
             var action = () => type.GetPropertyPath(propertyName, comparison);
@@ -180,39 +181,39 @@ public class TypeExtensionsTest
         public void WhenChildPropertyIsNotOnChild_Throw()
         {
             //Arrange
-            var type = typeof(DummyChild);
-            var missingProperty = Fixture.Create<string>();
-            var propertyName = $"{nameof(DummyChild.GrandChild)}.{missingProperty}";
-            var comparison = Fixture.Create<StringComparison>();
+            var type = typeof(GarbageChild);
+            var missingProperty = Dummy.Create<string>();
+            var propertyName = $"{nameof(GarbageChild.GrandChild)}.{missingProperty}";
+            var comparison = Dummy.Create<StringComparison>();
 
             //Act
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, missingProperty, nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, missingProperty, nameof(GarbageGrandChild))}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
         public void WhenPropertyIsOnObjectButWithDifferentCasingWithoutIgnoreCase_Throw()
         {
             //Arrange
-            var type = typeof(DummyChild);
-            var propertyName = $"{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age).ToUpper()}";
+            var type = typeof(GarbageChild);
+            var propertyName = $"{nameof(GarbageChild.GrandChild)}.{nameof(GarbageGrandChild.Age).ToUpper()}";
             var comparison = StringComparison.CurrentCulture;
 
             //Act
             var action = () => type.GetPropertyPath(propertyName, comparison);
 
             //Assert
-            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, nameof(DummyGrandChild.Age).ToUpper(), nameof(DummyGrandChild))}*").WithParameterName(nameof(propertyName));
+            action.Should().Throw<ArgumentException>().WithMessage($"{string.Format(Exceptions.PropertyNotFoundOnType, nameof(GarbageGrandChild.Age).ToUpper(), nameof(GarbageGrandChild))}*").WithParameterName(nameof(propertyName));
         }
 
         [TestMethod]
         public void WhenPropertyIsOnObjectWithSameCasingWithoutIgnoreCase_Return()
         {
             //Arrange
-            var type = typeof(DummyChild);
-            var propertyName = $"{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age)}";
+            var type = typeof(GarbageChild);
+            var propertyName = $"{nameof(GarbageChild.GrandChild)}.{nameof(GarbageGrandChild.Age)}";
             var comparison = StringComparison.CurrentCulture;
 
             //Act
@@ -221,8 +222,8 @@ public class TypeExtensionsTest
             //Assert
             result.Should().BeEquivalentTo(new List<PropertyPath>
             {
-                new() { Property = typeof(DummyChild).GetProperty(nameof(DummyChild.GrandChild))!, Owner = typeof(DummyChild) },
-                new() { Property = typeof(DummyGrandChild).GetProperty(nameof(DummyGrandChild.Age))!, Owner = typeof(DummyGrandChild) },
+                new() { Property = typeof(GarbageChild).GetProperty(nameof(GarbageChild.GrandChild))!, Owner = typeof(GarbageChild) },
+                new() { Property = typeof(GarbageGrandChild).GetProperty(nameof(GarbageGrandChild.Age))!, Owner = typeof(GarbageGrandChild) },
             });
         }
 
@@ -230,8 +231,8 @@ public class TypeExtensionsTest
         public void WhenPropertyIsOnObjectWithDifferentCasingWithIgnoreCase_Return()
         {
             //Arrange
-            var type = typeof(DummyChild);
-            var propertyName = $"{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age).ToUpper()}";
+            var type = typeof(GarbageChild);
+            var propertyName = $"{nameof(GarbageChild.GrandChild)}.{nameof(GarbageGrandChild.Age).ToUpper()}";
             var comparison = StringComparison.InvariantCultureIgnoreCase;
 
             //Act
@@ -240,8 +241,8 @@ public class TypeExtensionsTest
             //Assert
             result.Should().BeEquivalentTo(new List<PropertyPath>
             {
-                new() { Property = typeof(DummyChild).GetProperty(nameof(DummyChild.GrandChild))!, Owner = typeof(DummyChild) },
-                new() { Property = typeof(DummyGrandChild).GetProperty(nameof(DummyGrandChild.Age))!, Owner = typeof(DummyGrandChild) },
+                new() { Property = typeof(GarbageChild).GetProperty(nameof(GarbageChild.GrandChild))!, Owner = typeof(GarbageChild) },
+                new() { Property = typeof(GarbageGrandChild).GetProperty(nameof(GarbageGrandChild.Age))!, Owner = typeof(GarbageGrandChild) },
             });
         }
 
@@ -249,17 +250,17 @@ public class TypeExtensionsTest
         public void WhenPropertyIsOnGrandChild_ReturnFullPath()
         {
             //Arrange
-            var type = typeof(MultiLevelDummy);
+            var type = typeof(MultiLevelGarbage);
 
             //Act
-            var result = type.GetPropertyPath($"{nameof(MultiLevelDummy.Child)}.{nameof(DummyChild.GrandChild)}.{nameof(DummyGrandChild.Age)}");
+            var result = type.GetPropertyPath($"{nameof(MultiLevelGarbage.Child)}.{nameof(GarbageChild.GrandChild)}.{nameof(GarbageGrandChild.Age)}");
 
             //Assert
             result.Should().BeEquivalentTo(new List<PropertyPath>
             {
-                new() { Property = typeof(MultiLevelDummy).GetProperty(nameof(MultiLevelDummy.Child))!, Owner = typeof(MultiLevelDummy) },
-                new() { Property = typeof(DummyChild).GetProperty(nameof(DummyChild.GrandChild))!, Owner = typeof(DummyChild) },
-                new() { Property = typeof(DummyGrandChild).GetProperty(nameof(DummyGrandChild.Age))!, Owner = typeof(DummyGrandChild) },
+                new() { Property = typeof(MultiLevelGarbage).GetProperty(nameof(MultiLevelGarbage.Child))!, Owner = typeof(MultiLevelGarbage) },
+                new() { Property = typeof(GarbageChild).GetProperty(nameof(GarbageChild.GrandChild))!, Owner = typeof(GarbageChild) },
+                new() { Property = typeof(GarbageGrandChild).GetProperty(nameof(GarbageGrandChild.Age))!, Owner = typeof(GarbageGrandChild) },
             });
         }
     }
@@ -286,10 +287,10 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyWithInterfaces).GetDirectInterfaces();
+            var result = typeof(GarbageWithInterfaces).GetDirectInterfaces();
 
             //Assert
-            result.Should().BeEquivalentTo(new List<Type> { typeof(ITopDummy1), typeof(ITopDummy2) });
+            result.Should().BeEquivalentTo(new List<Type> { typeof(ITopGarbage1), typeof(ITopGarbage2) });
         }
     }
 
@@ -301,7 +302,7 @@ public class TypeExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var value = Fixture.Create<Type>();
+            var value = Dummy.Create<Type>();
 
             //Act
             var action = () => type.Implements(value);
@@ -314,7 +315,7 @@ public class TypeExtensionsTest
         public void WhenValueIsNull_Throw()
         {
             //Arrange
-            var type = Fixture.Create<Type>();
+            var type = Dummy.Create<Type>();
             Type value = null!;
 
             //Act
@@ -328,7 +329,7 @@ public class TypeExtensionsTest
         public void WhenTypeImplementsInterface_ReturnTrue()
         {
             //Arrange
-            var type = typeof(DummyWithInterfaces);
+            var type = typeof(GarbageWithInterfaces);
 
             //Act
             var result = type.Implements<IDisposable>();
@@ -341,7 +342,7 @@ public class TypeExtensionsTest
         public void WhenTypeDoesNotImplementInterface_ReturnFalse()
         {
             //Arrange
-            var type = typeof(Dummy);
+            var type = typeof(Garbage.Garbage);
 
             //Act
             var result = type.Implements<IDisposable>();
@@ -354,19 +355,19 @@ public class TypeExtensionsTest
     [TestClass]
     public class HasAttribute_Any : Tester
     {
-        public class Dummy { }
+        public class Garbage { }
 
         [TestMethod]
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null!;
+            Type member = null!;
 
             //Act
-            var action = () => type.HasAttribute();
+            var action = () => member.HasAttribute();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(member));
         }
 
         [TestMethod]
@@ -375,7 +376,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).HasAttribute();
+            var result = typeof(Garbage).HasAttribute();
 
             //Assert
             result.Should().BeFalse();
@@ -387,7 +388,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyWithAttribute).HasAttribute();
+            var result = typeof(GarbageWithAttribute).HasAttribute();
 
             //Assert
             result.Should().BeTrue();
@@ -397,20 +398,20 @@ public class TypeExtensionsTest
     [TestClass]
     public class HasAttribute_Generic : Tester
     {
-        [Dummy(Name = "Roger")]
-        public class DummyRoger { }
+        [Garbage(Name = "Roger")]
+        public class GarbageRoger { }
 
         [TestMethod]
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null!;
+            Type member = null!;
 
             //Act
-            var action = () => type.HasAttribute<DummyAttribute>();
+            var action = () => member.HasAttribute<GarbageAttribute>();
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(member));
         }
 
         [TestMethod]
@@ -419,7 +420,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).HasAttribute(Fixture.Create<Func<DummyAttribute, bool>>());
+            var result = typeof(Garbage.Garbage).HasAttribute(Dummy.Create<Func<GarbageAttribute, bool>>());
 
             //Assert
             result.Should().BeFalse();
@@ -431,7 +432,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyRoger).HasAttribute();
+            var result = typeof(GarbageRoger).HasAttribute();
 
             //Assert
             result.Should().BeTrue();
@@ -443,7 +444,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyRoger).HasAttribute<DummyAttribute>(x => x.Name == "Seb");
+            var result = typeof(GarbageRoger).HasAttribute<GarbageAttribute>(x => x.Name == "Seb");
 
             //Assert
             result.Should().BeFalse();
@@ -455,7 +456,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyRoger).HasAttribute<DummyAttribute>(x => x.Name == "Roger");
+            var result = typeof(GarbageRoger).HasAttribute<GarbageAttribute>(x => x.Name == "Roger");
 
             //Assert
             result.Should().BeTrue();
@@ -469,21 +470,21 @@ public class TypeExtensionsTest
         public void WhenTypeIsNull_Throw()
         {
             //Arrange
-            Type type = null!;
-            var attribute = Fixture.Create<Type>();
+            Type member = null!;
+            var attribute = Dummy.Create<Type>();
 
             //Act
-            var action = () => type.HasAttribute(attribute);
+            var action = () => member.HasAttribute(attribute);
 
             //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(member));
         }
 
         [TestMethod]
         public void WhenAttributeIsNull_Throw()
         {
             //Arrange
-            var type = Fixture.Create<Type>();
+            var type = Dummy.Create<Type>();
             Type attribute = null!;
 
             //Act
@@ -497,8 +498,8 @@ public class TypeExtensionsTest
         public void WhenTypeHasThatAttribute_ReturnTrue()
         {
             //Arrange
-            var type = typeof(DummyWithAttribute);
-            var attribute = typeof(DummyAttribute);
+            var type = typeof(GarbageWithAttribute);
+            var attribute = typeof(GarbageAttribute);
 
             //Act
             var result = type.HasAttribute(attribute);
@@ -511,7 +512,7 @@ public class TypeExtensionsTest
         public void WhenTypeDoesNotHaveAttribute_ReturnFalse()
         {
             //Arrange
-            var type = typeof(DummyWithAttribute);
+            var type = typeof(GarbageWithAttribute);
             var attribute = typeof(SerializableAttribute);
 
             //Act
@@ -525,7 +526,7 @@ public class TypeExtensionsTest
     [TestClass]
     public class HasInterface_Any : Tester
     {
-        public class Dummy { }
+        public class Garbage { }
 
         [TestMethod]
         public void WhenTypeIsNull_Throw()
@@ -546,7 +547,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).HasInterface();
+            var result = typeof(Garbage).HasInterface();
 
             //Assert
             result.Should().BeFalse();
@@ -558,7 +559,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(DummyWithInterfaces).HasInterface();
+            var result = typeof(GarbageWithInterfaces).HasInterface();
 
             //Assert
             result.Should().BeTrue();
@@ -568,13 +569,13 @@ public class TypeExtensionsTest
     [TestClass]
     public class DirectlyImplements_Generic : Tester
     {
-        public interface IDummy { }
+        public interface IGarbage { }
 
-        public interface IDummyBase { }
+        public interface IGarbageBase { }
 
-        public class Dummy : DummyBase, IDummy { }
+        public class Garbage : GarbageBase, IGarbage { }
 
-        public class DummyBase : IDummyBase { }
+        public class GarbageBase : IGarbageBase { }
 
         [TestMethod]
         public void WhenTypeIsNull_Throw()
@@ -583,7 +584,7 @@ public class TypeExtensionsTest
             Type type = null!;
 
             //Act
-            var action = () => type.DirectlyImplements<IDummy>();
+            var action = () => type.DirectlyImplements<IGarbage>();
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
@@ -595,7 +596,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements<IDummyBase>();
+            var result = typeof(Garbage).DirectlyImplements<IGarbageBase>();
 
             //Assert
             result.Should().BeFalse();
@@ -607,7 +608,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements<DummyBase>();
+            var result = typeof(Garbage).DirectlyImplements<GarbageBase>();
 
             //Assert
             result.Should().BeFalse();
@@ -619,7 +620,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements<IDisposable>();
+            var result = typeof(Garbage).DirectlyImplements<IDisposable>();
 
             //Assert
             result.Should().BeFalse();
@@ -631,7 +632,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements<IDummy>();
+            var result = typeof(Garbage).DirectlyImplements<IGarbage>();
 
             //Assert
             result.Should().BeTrue();
@@ -641,13 +642,13 @@ public class TypeExtensionsTest
     [TestClass]
     public class DirectlyImplements_Type : Tester
     {
-        public interface IDummy { }
+        public interface IGarbage { }
 
-        public interface IDummyBase { }
+        public interface IGarbageBase { }
 
-        public class Dummy : DummyBase, IDummy { }
+        public class Garbage : GarbageBase, IGarbage { }
 
-        public class DummyBase : IDummyBase { }
+        public class GarbageBase : IGarbageBase { }
 
         [TestMethod]
         public void WhenTypeIsNull_Throw()
@@ -656,7 +657,7 @@ public class TypeExtensionsTest
             Type type = null!;
 
             //Act
-            var action = () => type.DirectlyImplements(typeof(IDummy));
+            var action = () => type.DirectlyImplements(typeof(IGarbage));
 
             //Assert
             action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
@@ -666,7 +667,7 @@ public class TypeExtensionsTest
         public void WhenInterfaceIsNull_Throw()
         {
             //Arrange
-            var type = typeof(Dummy);
+            var type = typeof(Garbage);
             Type @interface = null!;
 
             //Act
@@ -682,7 +683,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements(typeof(IDummyBase));
+            var result = typeof(Garbage).DirectlyImplements(typeof(IGarbageBase));
 
             //Assert
             result.Should().BeFalse();
@@ -694,7 +695,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements(typeof(DummyBase));
+            var result = typeof(Garbage).DirectlyImplements(typeof(GarbageBase));
 
             //Assert
             result.Should().BeFalse();
@@ -706,7 +707,7 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements(typeof(IDisposable));
+            var result = typeof(Garbage).DirectlyImplements(typeof(IDisposable));
 
             //Assert
             result.Should().BeFalse();
@@ -718,10 +719,63 @@ public class TypeExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).DirectlyImplements(typeof(IDummy));
+            var result = typeof(Garbage).DirectlyImplements(typeof(IGarbage));
 
             //Assert
             result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class GetDefaultValue : Tester
+    {
+        [TestMethod]
+        public void WhenTypeIsNull_Throw()
+        {
+            //Arrange
+            Type type = null!;
+
+            //Act
+            var action = () => type.GetDefaultValue();
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(type));
+        }
+
+        [TestMethod]
+        [DataRow(typeof(int))]
+        [DataRow(typeof(uint))]
+        [DataRow(typeof(byte))]
+        [DataRow(typeof(sbyte))]
+        [DataRow(typeof(short))]
+        [DataRow(typeof(ushort))]
+        [DataRow(typeof(long))]
+        [DataRow(typeof(ulong))]
+        [DataRow(typeof(float))]
+        [DataRow(typeof(decimal))]
+        [DataRow(typeof(double))]
+        public void WhenIsValueType_ReturnDefault(Type type)
+        {
+            //Arrange
+
+            //Act
+            var result = type.GetDefaultValue();
+
+            //Assert
+            result.Should().Be(Convert.ChangeType(0, type));
+        }
+
+        [TestMethod]
+        public void WhenIsReferenceType_ReturnNull()
+        {
+            //Arrange
+            var type = typeof(string);
+
+            //Act
+            var result = type.GetDefaultValue();
+
+            //Assert
+            result.Should().BeNull();
         }
     }
 }

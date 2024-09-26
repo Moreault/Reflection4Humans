@@ -1,21 +1,19 @@
-﻿using ToolBX.Eloquentest.Extensions;
-
-namespace Reflection4Humans.ValueEquality.Tests;
+﻿namespace Reflection4Humans.ValueEquality.Tests;
 
 [TestClass]
 public sealed class ValueHashCodeExtensionsTests : Tester
 {
-    public sealed class SimpleDummy
+    public sealed class SimpleGarbage
     {
         public string Name { get; init; } = null!;
         public int Age { get; init; }
     }
 
-    public sealed class ComplexDummy
+    public sealed class ComplexGarbage
     {
         public string Name { get; init; } = null!;
         public int Age { get; init; }
-        public SimpleDummy SimpleDummy { get; init; } = null!;
+        public SimpleGarbage SimpleGarbage { get; init; } = null!;
         public char Field;
     }
 
@@ -30,7 +28,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenIsNullEnumerable_ReturnZero()
     {
         //Arrange
-        IEnumerable<SimpleDummy> value = null!;
+        IEnumerable<SimpleGarbage> value = null!;
 
         //Act
         var result = value.GetValueHashCode();
@@ -43,7 +41,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenIsEnumerableWithShallowDepthOnSimpleType_ReturnInconsistentBetweenEquivalentObjects()
     {
         //Arrange
-        var value1 = Fixture.CreateMany<SimpleDummy>().ToList();
+        var value1 = Dummy.CreateMany<SimpleGarbage>().ToList();
         var value2 = value1.Select(x => x.Clone()).ToList();
 
         //Act
@@ -58,7 +56,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenIsEnumerableWithRecursiveDepthOnSimpleType_ReturnConsistentBetweenEquivalentObjects()
     {
         //Arrange
-        var value1 = Fixture.CreateMany<SimpleDummy>().ToList();
+        var value1 = Dummy.CreateMany<SimpleGarbage>().ToList();
         var value2 = value1.Select(x => x.Clone()).ToList();
 
         //Act
@@ -73,7 +71,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenIsEnumerableWithShallowDepthOnComplexType_ReturnInconsistentBetweenEquivalentObjects()
     {
         //Arrange
-        var value1 = Fixture.CreateMany<ComplexDummy>().ToList();
+        var value1 = Dummy.CreateMany<ComplexGarbage>().ToList();
         var value2 = value1.Select(x => x.Clone()).ToList();
 
         //Act
@@ -88,7 +86,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenIsEnumerableWithRecursiveDepthOnComplexType_ReturnConsistentBetweenEquivalentObjects()
     {
         //Arrange
-        var value1 = Fixture.CreateMany<ComplexDummy>().ToList();
+        var value1 = Dummy.CreateMany<ComplexGarbage>().ToList();
         var value2 = value1.Select(x => x.Clone()).ToList();
 
         //Act
@@ -103,7 +101,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenSimpleTypesWithShallowDepth_ReturnConsistentCode()
     {
         //Arrange
-        var value1 = Fixture.Create<SimpleDummy>();
+        var value1 = Dummy.Create<SimpleGarbage>();
         var value2 = value1.Clone();
 
         //Act
@@ -118,7 +116,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenSimpleTypesWithRecursiveDepth_ReturnConsistentCode()
     {
         //Arrange
-        var value1 = Fixture.Create<SimpleDummy>();
+        var value1 = Dummy.Create<SimpleGarbage>();
         var value2 = value1.Clone();
 
         //Act
@@ -133,7 +131,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenComplexTypesWithShallowDepth_ReturnInconsistentCode()
     {
         //Arrange
-        var value1 = Fixture.Create<ComplexDummy>();
+        var value1 = Dummy.Create<ComplexGarbage>();
         var value2 = value1.Clone();
 
         //Act
@@ -148,7 +146,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenComplexTypesWithRecursiveDepth_ReturnConsistentCode()
     {
         //Arrange
-        var value1 = Fixture.Create<ComplexDummy>();
+        var value1 = Dummy.Create<ComplexGarbage>();
         var value2 = value1.Clone();
 
         //Act
@@ -165,7 +163,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenTwoStringsWithSameCasing_ReturnConsistentCode(Depth depth)
     {
         //Arrange
-        var value1 = Fixture.Create<string>();
+        var value1 = Dummy.Create<string>();
         var value2 = value1;
 
         //Act
@@ -182,7 +180,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenTwoStringsWithDifferentCasing_ReturnInconsistentCode(Depth depth)
     {
         //Arrange
-        var value1 = Fixture.Create<string>().ToLower();
+        var value1 = Dummy.Create<string>().ToLower();
         var value2 = value1.ToUpper();
 
         //Act
@@ -197,7 +195,7 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenTwoEquivalentObjectsWithTwoListsWithRecursiveDepth_ShouldBeConsistent()
     {
         //Arrange
-        var value1 = Fixture.Create<Splitted<SimpleDummy>>();
+        var value1 = Dummy.Create<Splitted<SimpleGarbage>>();
         var value2 = value1.Clone();
 
         //Act
@@ -212,8 +210,8 @@ public sealed class ValueHashCodeExtensionsTests : Tester
     public void WhenTwoDifferentObjectsWithTwoListsWithRecursiveDepth_ShouldBeInconsistent()
     {
         //Arrange
-        var value1 = Fixture.Create<Splitted<SimpleDummy>>();
-        var value2 = Fixture.Create<Splitted<SimpleDummy>>();
+        var value1 = Dummy.Create<Splitted<SimpleGarbage>>();
+        var value2 = Dummy.Create<Splitted<SimpleGarbage>>();
 
         //Act
         var result1 = value1.GetValueHashCode();

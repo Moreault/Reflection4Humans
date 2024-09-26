@@ -76,26 +76,6 @@ public static class TypeExtensions
         return type.GetInterfaces().Any(x => x == value);
     }
 
-    public static bool HasAttribute(this Type type)
-    {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        return type.GetCustomAttributes().Any();
-    }
-
-    public static bool HasAttribute<T>(this Type type, Func<T, bool>? predicate = null) where T : Attribute
-    {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        if (type.GetCustomAttribute(typeof(T), true) is not T attribute) return false;
-        return predicate is null || predicate(attribute);
-    }
-
-    public static bool HasAttribute(this Type type, Type attribute)
-    {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        if (attribute is null) throw new ArgumentNullException(nameof(attribute));
-        return type.GetCustomAttribute(attribute, true) != null;
-    }
-
     public static bool HasInterface(this Type type)
     {
         if (type is null) throw new ArgumentNullException(nameof(type));
@@ -109,5 +89,11 @@ public static class TypeExtensions
         if (type is null) throw new ArgumentNullException(nameof(type));
         if (@interface is null) throw new ArgumentNullException(nameof(@interface));
         return type.GetDirectInterfaces().Any(x => x == @interface);
+    }
+
+    public static object? GetDefaultValue(this Type type)
+    {
+        if (type is null) throw new ArgumentNullException(nameof(type));
+        return type.IsValueType ? Activator.CreateInstance(type) : null;
     }
 }

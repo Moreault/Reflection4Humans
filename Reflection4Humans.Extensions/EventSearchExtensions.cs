@@ -36,4 +36,13 @@ public static class EventSearchExtensions
     public static EventInfo GetSingleEvent(this Type type, Func<EventInfo, bool>? predicate = null) => type.GetAllEventsInternal(predicate).Single();
 
     public static EventInfo? GetSingleEventOrDefault(this Type type, Func<EventInfo, bool>? predicate = null) => type.GetAllEventsInternal(predicate).SingleOrDefault();
+
+    public static bool HasEvent(this Type type, string name, StringComparison stringComparison = StringComparison.Ordinal)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+        return type.GetAllEventsInternal(x => x.Name.Equals(name, stringComparison)).Any();
+    }
+
+    public static bool HasEvent(this Type type, Func<EventInfo, bool>? predicate = null) => type.GetAllEventsInternal(predicate).Any();
+
 }

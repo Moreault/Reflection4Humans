@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>ToolBX.$(AssemblyName)</RootNamespace>
 		<Nullable>enable</Nullable>
@@ -10,7 +10,7 @@
 		<PackageId>ToolBX.$(AssemblyName)</PackageId>
 		<RepositoryUrl>https://github.com/Moreault/Reflection4Humans</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>2.2.0-beta9</Version>
+		<Version>3.0.0-beta4</Version>
 		<PackageIcon>reflection4humans.png</PackageIcon>
 		<Description>Reflection extension methods meant to be used by humans.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -27,6 +27,11 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>Reflection4Humans.Extensions.Tests</_Parameter1>
 		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="ToolBX.OutWarden" Version="3.0.0" />
+	  <PackageReference Include="ToolBX.SmartyStrings" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

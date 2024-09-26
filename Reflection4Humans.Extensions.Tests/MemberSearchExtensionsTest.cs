@@ -5,7 +5,7 @@ public partial class MemberSearchExtensionsTest
 {
     public delegate void TestEventHandler(object sender, EventArgs e);
 
-    public class Dummy : AbstractDummy<Dummy>
+    public class Garbage : AbstractGarbage<Garbage>
     {
         public long Id { get; }
 
@@ -21,7 +21,7 @@ public partial class MemberSearchExtensionsTest
         internal event TestEventHandler OnInternal;
         private event TestEventHandler OnPrivate;
 
-        public Dummy()
+        public Garbage()
         {
             Id = NextId;
         }
@@ -36,12 +36,12 @@ public partial class MemberSearchExtensionsTest
 
         }
 
-        private void SomeoneTouchedMe(int numberOfTimes, Dummy dummy)
+        private void SomeoneTouchedMe(int numberOfTimes, Garbage garbage)
         {
 
         }
 
-        private void SomeoneTouchedMe<T>(int numberOfTimes, Dummy dummy)
+        private void SomeoneTouchedMe<T>(int numberOfTimes, Garbage garbage)
         {
 
         }
@@ -64,7 +64,7 @@ public partial class MemberSearchExtensionsTest
         public void Overload(string arg1, int arg2, long arg3, char arg4, string arg5, float arg6, double arg7, string arg8, int arg9, char arg10) { }
     }
 
-    public abstract class AbstractDummy<T>
+    public abstract class AbstractGarbage<T>
     {
         public static long NextId => _nextId++;
         private static long _nextId;
@@ -87,7 +87,7 @@ public partial class MemberSearchExtensionsTest
 
         private void SomeoneTouchedMeVeryPrivately() => _wasPoked = true;
 
-        protected AbstractDummy()
+        protected AbstractGarbage()
         {
 
         }
@@ -101,7 +101,7 @@ public partial class MemberSearchExtensionsTest
         {
             //Arrange
             Type type = null!;
-            var predicate = Fixture.Create<Func<MemberInfo, bool>>();
+            var predicate = Dummy.Create<Func<MemberInfo, bool>>();
 
             //Act
             var action = () => type.GetAllMembers(predicate);
@@ -116,7 +116,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers();
+            var result = typeof(Garbage).GetAllMembers();
 
             //Assert
             result.Should().HaveCount(63);
@@ -128,7 +128,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsStatic());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsStatic());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -143,7 +143,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsStatic() && x.IsPrivate());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsStatic() && x.IsPrivate());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -158,7 +158,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsStatic() && x.IsPublic());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsStatic() && x.IsPublic());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -173,7 +173,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsPrivate() && x.IsProperty());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsPrivate() && x.IsProperty());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -188,7 +188,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsPrivate() && x.IsField());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsPrivate() && x.IsField());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
@@ -203,7 +203,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsInstance());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsInstance());
 
             var getHashCode1 = result.First(x => x.Name == "GetHashCode");
             var getHashCode2 = result.Last(x => x.Name == "GetHashCode");
@@ -217,7 +217,7 @@ public partial class MemberSearchExtensionsTest
                 "SomeoneTouchedMe", "SomeoneTouchedMe", "set_SetOnlyProperty", "Poke", "GetType", "MemberwiseClone", "Finalize", "ToString", "Equals", "GetHashCode",
                 ".ctor", "Id", "PrivateGetSetProperty", "GetOnlyProperty", "SetOnlyProperty", "<Id>k__BackingField", "ShadowedField", "<PrivateGetSetProperty>k__BackingField",
                 "<GetOnlyProperty>k__BackingField", "ShadowedField", "SomeoneTouchedMeVeryPrivately", ".ctor", "_wasPoked", "_setOnlyValue", ".ctor",
-                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload", 
+                "Overload", "Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload","Overload",
                 "OnProtected", "OnInternal", "OnPrivate", "OnPublic",
                 "add_OnProtected", "add_OnInternal", "add_OnPrivate", "add_OnPublic",
                 "remove_OnProtected", "remove_OnInternal", "remove_OnPrivate", "remove_OnPublic",
@@ -230,7 +230,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsConstructor());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsConstructor());
 
             //Assert
             result.Should().HaveCount(3);
@@ -242,12 +242,12 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetAllMembers(x => x.IsPrivate() && x.IsMethod());
+            var result = typeof(Garbage).GetAllMembers(x => x.IsPrivate() && x.IsMethod());
 
             //Assert
             result.Select(x => x.Name).Should().BeEquivalentTo(new List<string>
             {
-                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "add_OnPrivate", "remove_OnPrivate", "SomeoneTouchedMe", "SomeoneTouchedMe", 
+                "get_PrivateGetSetProperty", "set_PrivateGetSetProperty", "add_OnPrivate", "remove_OnPrivate", "SomeoneTouchedMe", "SomeoneTouchedMe",
                 "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMe", "SomeoneTouchedMeVeryPrivately"
             });
         }
@@ -265,7 +265,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMember(name);
+            var action = () => typeof(Garbage).GetSingleMember(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>();
@@ -277,7 +277,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMember("SomeoneTouchedMe");
+            var action = () => typeof(Garbage).GetSingleMember("SomeoneTouchedMe");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -289,7 +289,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMember("SomeoneTouchedMeRightNow");
+            var action = () => typeof(Garbage).GetSingleMember("SomeoneTouchedMeRightNow");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -301,7 +301,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMember("GetOnlyProperty");
+            var result = typeof(Garbage).GetSingleMember("GetOnlyProperty");
 
             //Assert
             result.Should().NotBeNull();
@@ -320,7 +320,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMemberOrDefault(name);
+            var action = () => typeof(Garbage).GetSingleMemberOrDefault(name);
 
             //Assert
             action.Should().Throw<ArgumentNullException>();
@@ -332,7 +332,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMemberOrDefault("SomeoneTouchedMe");
+            var action = () => typeof(Garbage).GetSingleMemberOrDefault("SomeoneTouchedMe");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -344,7 +344,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMemberOrDefault("SomeoneTouchedMeRightNow");
+            var result = typeof(Garbage).GetSingleMemberOrDefault("SomeoneTouchedMeRightNow");
 
             //Assert
             result.Should().BeNull();
@@ -356,13 +356,12 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMemberOrDefault("GetOnlyProperty");
+            var result = typeof(Garbage).GetSingleMemberOrDefault("GetOnlyProperty");
 
             //Assert
             result.Should().NotBeNull();
         }
     }
-
 
     [TestClass]
     public class GetSingleMember_Predicate : Tester
@@ -373,7 +372,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMember();
+            var action = () => typeof(Garbage).GetSingleMember();
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -385,7 +384,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMember(x => x.Name == "SomeoneTouchedMe");
+            var action = () => typeof(Garbage).GetSingleMember(x => x.Name == "SomeoneTouchedMe");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -397,11 +396,12 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMember(x => x.Name == "SomeoneTouchedMeRightNow");
+            var action = () => typeof(Garbage).GetSingleMember(x => x.Name == "SomeoneTouchedMeRightNow");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
         }
+
 
         [TestMethod]
         public void WhenThereIsExactlyOneResultWithName_Return()
@@ -409,7 +409,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMember(x => x.Name == "GetOnlyProperty");
+            var result = typeof(Garbage).GetSingleMember(x => x.Name == "GetOnlyProperty");
 
             //Assert
             result.Should().NotBeNull();
@@ -426,7 +426,7 @@ public partial class MemberSearchExtensionsTest
             Func<MemberInfo, bool>? predicate = null;
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMemberOrDefault(predicate);
+            var action = () => typeof(Garbage).GetSingleMemberOrDefault(predicate);
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -438,7 +438,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var action = () => typeof(Dummy).GetSingleMemberOrDefault(x => x.Name == "SomeoneTouchedMe");
+            var action = () => typeof(Garbage).GetSingleMemberOrDefault(x => x.Name == "SomeoneTouchedMe");
 
             //Assert
             action.Should().Throw<InvalidOperationException>();
@@ -450,7 +450,7 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMemberOrDefault(x => x.Name == "SomeoneTouchedMeRightNow");
+            var result = typeof(Garbage).GetSingleMemberOrDefault(x => x.Name == "SomeoneTouchedMeRightNow");
 
             //Assert
             result.Should().BeNull();
@@ -462,10 +462,119 @@ public partial class MemberSearchExtensionsTest
             //Arrange
 
             //Act
-            var result = typeof(Dummy).GetSingleMemberOrDefault(x => x.Name == "GetOnlyProperty");
+            var result = typeof(Garbage).GetSingleMemberOrDefault(x => x.Name == "GetOnlyProperty");
 
             //Assert
             result.Should().NotBeNull();
         }
     }
+
+    [TestClass]
+    public class HasMember_Name : Tester
+    {
+        [TestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow(null)]
+        public void WhenNameIsEmpty_Throw(string name)
+        {
+            //Arrange
+
+            //Act
+            var action = () => typeof(Garbage).HasMember(name);
+
+            //Assert
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [TestMethod]
+        public void WhenThereIsMoreThanOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember("SomeoneTouchedMe");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoResultWithName_False()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember("SomeoneTouchedMeRightNow");
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenThereIsExactlyOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember("GetOnlyProperty");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
+    [TestClass]
+    public class HasMember_Predicate : Tester
+    {
+        [TestMethod]
+        public void WhenPredicateIsEmpty_ThrowBecauseMoreThanOneMember()
+        {
+            //Arrange
+            Func<MemberInfo, bool>? predicate = null;
+
+            //Act
+            var result = typeof(Garbage).HasMember(predicate);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenThereIsMoreThanOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember(x => x.Name == "SomeoneTouchedMe");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void WhenThereIsNoResultWithName_False()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember(x => x.Name == "SomeoneTouchedMeRightNow");
+
+            //Assert
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void WhenThereIsExactlyOneResultWithName_True()
+        {
+            //Arrange
+
+            //Act
+            var result = typeof(Garbage).HasMember(x => x.Name == "GetOnlyProperty");
+
+            //Assert
+            result.Should().BeTrue();
+        }
+    }
+
 }

@@ -36,4 +36,6 @@ public static class PropertySearchExtensions
     public static PropertyInfo GetSingleProperty(this Type type, Func<PropertyInfo, bool>? predicate = null) => type.GetAllProperties(predicate).Single();
 
     public static PropertyInfo? GetSinglePropertyOrDefault(this Type type, Func<PropertyInfo, bool>? predicate = null) => type.GetAllProperties(predicate).SingleOrDefault();
+
+    public static bool HasProperty(this Type type, Func<PropertyInfo, bool>? predicate = null) => type.GetAllPropertiesInternal(predicate).Any();
 }

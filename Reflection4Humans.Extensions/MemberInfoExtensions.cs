@@ -110,4 +110,48 @@ public static class MemberInfoExtensions
         if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
         return memberInfo is PropertyInfo;
     }
+
+    /// <summary>
+    /// Returns the member's <see cref="Type"/>.
+    /// </summary>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="NotSupportedException"></exception>
+    public static Type GetMemberType(this MemberInfo memberInfo)
+    {
+        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
+
+        if (memberInfo is PropertyInfo propertyInfo)
+            return propertyInfo.PropertyType;
+        if (memberInfo is FieldInfo fieldInfo)
+            return fieldInfo.FieldType;
+        if (memberInfo is MethodBase methodInfo)
+            return methodInfo.GetMethodType();
+        if (memberInfo is Type type)
+            return type;
+        if (memberInfo is EventInfo eventInfo)
+            return eventInfo.EventHandlerType!;
+
+        throw new NotSupportedException(string.Format(Exceptions.MemberInfoTypeNotSupported, memberInfo.GetType()));
+    }
+
+    public static bool HasAttribute(this MemberInfo member)
+    {
+        if (member is null) throw new ArgumentNullException(nameof(member));
+        return member.GetCustomAttributes().Any();
+    }
+
+    public static bool HasAttribute<T>(this MemberInfo member) where T : Attribute => member.HasAttribute(typeof(T));
+
+    public static bool HasAttribute(this MemberInfo member, Type attribute)
+    {
+        if (member is null) throw new ArgumentNullException(nameof(member));
+        if (attribute is null) throw new ArgumentNullException(nameof(attribute));
+        return member.GetCustomAttribute(attribute, true) != null;
+    }
+
+    public static bool HasAttribute<T>(this MemberInfo member, Func<T, bool> predicate) where T : Attribute
+    {
+        if (member is null) throw new ArgumentNullException(nameof(member));
+        return member.GetCustomAttribute(typeof(T), true) is T attribute && predicate(attribute);
+    }
 }

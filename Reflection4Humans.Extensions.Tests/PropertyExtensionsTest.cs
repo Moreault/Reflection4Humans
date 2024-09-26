@@ -3,7 +3,7 @@
 [TestClass]
 public class PropertyExtensionsTest
 {
-    public record Dummy
+    public record Garbage
     {
         public int InstanceGetOnly { get; }
 
@@ -52,7 +52,7 @@ public class PropertyExtensionsTest
         public void WhenPropertyIsInstanceWithGetOnly_ReturnFalse()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("InstanceGetOnly");
 
             //Act
             var result = propertyInfo.IsStatic();
@@ -65,7 +65,7 @@ public class PropertyExtensionsTest
         public void WhenPropertyIsInstanceWithSetOnly_ReturnFalse()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceSetOnly");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("InstanceSetOnly");
 
             //Act
             var result = propertyInfo.IsStatic();
@@ -78,7 +78,7 @@ public class PropertyExtensionsTest
         public void WhenPropertyIsInstanceWithGetSet_ReturnFalse()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetSet");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("InstanceGetSet");
 
             //Act
             var result = propertyInfo.IsStatic();
@@ -91,7 +91,7 @@ public class PropertyExtensionsTest
         public void WhenPropertyIsStaticWithGetOnly_ReturnTrue()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("StaticGetOnly");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("StaticGetOnly");
 
             //Act
             var result = propertyInfo.IsStatic();
@@ -104,7 +104,7 @@ public class PropertyExtensionsTest
         public void WhenPropertyIsStaticWithSetOnly_ReturnTrue()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("StaticSetOnly");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("StaticSetOnly");
 
             //Act
             var result = propertyInfo.IsStatic();
@@ -117,122 +117,10 @@ public class PropertyExtensionsTest
         public void WhenPropertyIsStaticWithGetSet_ReturnTrue()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("StaticGetSet");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("StaticGetSet");
 
             //Act
             var result = propertyInfo.IsStatic();
-
-            //Assert
-            result.Should().BeTrue();
-        }
-    }
-
-    [TestClass]
-    public class IsGet : Tester
-    {
-        [TestMethod]
-        public void WhenPropertyInfoIsNull_Throw()
-        {
-            //Arrange
-            PropertyInfo propertyInfo = null!;
-
-            //Act
-            var action = () => propertyInfo.IsGet();
-
-            //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(propertyInfo));
-        }
-
-        [TestMethod]
-        public void WhenPropertyInfoHasGetOnly_ReturnTrue()
-        {
-            //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
-
-            //Act
-            var result = propertyInfo.IsGet();
-
-            //Assert
-            result.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void WhenPropertyInfoHasBothGetAndSet_ReturnTrue()
-        {
-            //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetSet");
-
-            //Act
-            var result = propertyInfo.IsGet();
-
-            //Assert
-            result.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void WhenPropertyInfoHasNoGet_ReturnFalse()
-        {
-            //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceSetOnly");
-
-            //Act
-            var result = propertyInfo.IsGet();
-
-            //Assert
-            result.Should().BeFalse();
-        }
-    }
-
-    [TestClass]
-    public class IsSet : Tester
-    {
-        [TestMethod]
-        public void WhenPropertyInfoIsNull_Throw()
-        {
-            //Arrange
-            PropertyInfo propertyInfo = null!;
-
-            //Act
-            var action = () => propertyInfo.IsSet();
-
-            //Assert
-            action.Should().Throw<ArgumentNullException>().WithParameterName(nameof(propertyInfo));
-        }
-
-        [TestMethod]
-        public void WhenPropertyInfoHasGetOnly_ReturnFalse()
-        {
-            //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
-
-            //Act
-            var result = propertyInfo.IsSet();
-
-            //Assert
-            result.Should().BeFalse();
-        }
-
-        [TestMethod]
-        public void WhenPropertyInfoHasBothGetAndSet_ReturnTrue()
-        {
-            //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetSet");
-
-            //Act
-            var result = propertyInfo.IsSet();
-
-            //Assert
-            result.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void WhenPropertyInfoHasNoGet_ReturnTrue()
-        {
-            //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceSetOnly");
-
-            //Act
-            var result = propertyInfo.IsSet();
 
             //Assert
             result.Should().BeTrue();
@@ -259,7 +147,7 @@ public class PropertyExtensionsTest
         public void WhenIsRegularGetOnly_ReturnFalse()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("InstanceGetOnly");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("InstanceGetOnly");
 
             //Act
             var result = propertyInfo.IsIndexer();
@@ -272,7 +160,7 @@ public class PropertyExtensionsTest
         public void WhenIsIndexer_ReturnFalse()
         {
             //Arrange
-            var propertyInfo = typeof(Dummy).GetSingleProperty("Item");
+            var propertyInfo = typeof(Garbage).GetSingleProperty("Item");
 
             //Act
             var result = propertyInfo.IsIndexer();
