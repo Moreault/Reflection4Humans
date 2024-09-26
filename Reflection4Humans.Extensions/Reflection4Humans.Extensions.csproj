@@ -30,8 +30,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="ToolBX.OutWarden" Version="3.0.0-beta1" />
-	  <PackageReference Include="ToolBX.SmartyStrings" Version="3.0.0-beta2" />
+	  <PackageReference Include="ToolBX.OutWarden" Version="3.0.0" />
+	  <PackageReference Include="ToolBX.SmartyStrings" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
