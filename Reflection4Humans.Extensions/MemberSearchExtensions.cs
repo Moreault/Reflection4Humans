@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class MemberSearchExtensions
 {
@@ -6,7 +6,7 @@ public static class MemberSearchExtensions
 
     private static IEnumerable<MemberInfo> GetAllMembersInternal(this Type type, Func<MemberInfo, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<MemberInfo> members = Array.Empty<MemberInfo>();
 
@@ -15,7 +15,7 @@ public static class MemberSearchExtensions
         {
             members = members.Concat(currentType.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         members = members.Distinct(new MemberInfoEqualityComparer<MemberInfo>());
         return predicate is null ? members : members.Where(predicate);

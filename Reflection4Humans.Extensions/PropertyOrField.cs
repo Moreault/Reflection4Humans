@@ -219,14 +219,14 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
 
     public bool Equals(MemberInfo? other) => _unwrapped.Equals(other);
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object? obj) => obj switch
     {
-        if (obj is IPropertyOrField propertyOrField) return Equals(propertyOrField);
-        if (obj is PropertyInfo propertyInfo) return Equals(propertyInfo);
-        if (obj is FieldInfo fieldInfo) return Equals(fieldInfo);
-        if (obj is MemberInfo memberInfo) return Equals(memberInfo);
-        return false;
-    }
+        IPropertyOrField pof => Equals(pof),
+        PropertyInfo pi => Equals(pi),
+        FieldInfo fi => Equals(fi),
+        MemberInfo mi => Equals(mi),
+        _ => false
+    };
 
     public override int GetHashCode() => _unwrapped.GetHashCode();
 

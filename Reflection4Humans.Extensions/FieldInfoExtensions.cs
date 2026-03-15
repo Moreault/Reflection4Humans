@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class FieldInfoExtensions
 {
@@ -7,7 +7,7 @@ public static class FieldInfoExtensions
     /// </summary>
     public static bool IsAutomaticBackingField(this FieldInfo field)
     {
-        if (field is null) throw new ArgumentNullException(nameof(field));
+        ArgumentNullException.ThrowIfNull(field);
         return field.Name.StartsWith("<") && field.Name.EndsWith(">k__BackingField");
     }
 

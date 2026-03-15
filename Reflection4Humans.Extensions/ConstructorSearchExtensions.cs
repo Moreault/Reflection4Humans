@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class ConstructorSearchExtensions
 {
@@ -6,7 +6,7 @@ public static class ConstructorSearchExtensions
 
     private static IEnumerable<ConstructorInfo> GetAllConstructorsInternal(this Type type, Func<ConstructorInfo, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<ConstructorInfo> constructors = Array.Empty<ConstructorInfo>();
 
@@ -15,7 +15,7 @@ public static class ConstructorSearchExtensions
         {
             constructors = constructors.Concat(currentType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         constructors = constructors.Distinct(new MemberInfoEqualityComparer<ConstructorInfo>());
         return predicate is null ? constructors : constructors.Where(predicate);
