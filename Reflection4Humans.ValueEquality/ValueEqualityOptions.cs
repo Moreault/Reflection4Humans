@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.ValueEquality;
+namespace ToolBX.Reflection4Humans.ValueEquality;
 
 public readonly record struct ValueEqualityOptions
 {
@@ -8,6 +8,5 @@ public readonly record struct ValueEqualityOptions
 
     public ValueEqualityOptions()
     {
-
     }
 }
