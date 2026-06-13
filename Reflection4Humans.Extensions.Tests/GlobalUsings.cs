@@ -1,12 +1,13 @@
 // Global using directives
 
-global using FluentAssertions;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using Reflection4Humans.Extensions.Tests.Garbage;
 global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using System.Reflection;
+global using ToolBX.AssertBox;
+global using ToolBX.AssertBox.Assertions;
 global using ToolBX.CoinFlip;
 global using ToolBX.Dummies;
 global using ToolBX.Dummies.Customizations;

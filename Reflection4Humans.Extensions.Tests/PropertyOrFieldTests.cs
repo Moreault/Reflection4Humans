@@ -906,7 +906,7 @@ public sealed class PropertyOrFieldTests : Tester
         var action = () => member.GetValue(instance);
 
         //Assert
-        action.Should().Throw<InvalidOperationException>(string.Format(Exceptions.UsingGetOnWriteOnlyProperty, member.Name));
+        action.Should().Throw<InvalidOperationException>().WithMessage(string.Format(Exceptions.UsingGetOnWriteOnlyProperty, member.Name));
     }
 
     [TestMethod]
