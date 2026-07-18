@@ -31,8 +31,6 @@ public class MemberInfoExtensionsTests
 
             }
 
-            public Garbage() { }
-
             static Garbage() { }
         }
 

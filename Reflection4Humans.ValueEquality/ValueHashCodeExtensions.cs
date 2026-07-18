@@ -12,6 +12,9 @@ public static class ValueHashCodeExtensions
         if (value is string str)
             return str.GetHashCode();
 
+        if (value.IsNumber() && value is IConvertible)
+            return Convert.ToDecimal(value).GetHashCode();
+
         if (value is IEnumerable enumerable)
         {
             unchecked

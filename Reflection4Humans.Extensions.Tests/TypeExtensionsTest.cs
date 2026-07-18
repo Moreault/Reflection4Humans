@@ -1,5 +1,4 @@
-﻿using System.Data;
-using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
+﻿using TypeExtensions = ToolBX.Reflection4Humans.Extensions.TypeExtensions;
 
 namespace Reflection4Humans.Extensions.Tests;
 

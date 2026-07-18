@@ -30,7 +30,7 @@ public static class MethodBaseExtensions
         return methodInfo.GetParameters().Length == count;
     }
 
-    public static bool HasParameters(this MethodBase methodInfo, params Func<ParameterInfo, bool>[] predicates) => HasParameters(methodInfo, (IEnumerable<Func<ParameterInfo, bool>>)predicates);
+    public static bool HasParameters(this MethodBase methodInfo, params Func<ParameterInfo, bool>[] predicates) => methodInfo.HasParameters((IEnumerable<Func<ParameterInfo, bool>>)predicates);
 
     public static bool HasParameters(this MethodBase methodInfo, IEnumerable<Func<ParameterInfo, bool>> predicates)
     {

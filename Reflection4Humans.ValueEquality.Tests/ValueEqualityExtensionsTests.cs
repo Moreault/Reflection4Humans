@@ -1,5 +1,3 @@
-using ToolBX.Dummies;
-
 namespace Reflection4Humans.ValueEquality.Tests;
 
 public class ValueEqualityExtensionsTests
@@ -64,7 +62,8 @@ public class ValueEqualityExtensionsTests
             var obj2 = obj1 with { Strings = obj1.Strings.ToList(), Longs = obj1.Longs.ToList() };
 
             //Act
-            var result = obj1.ValueEquals(obj2);
+            //The collections are copied to different instances so equivalence only holds by digging into them (Recursive).
+            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { Depth = Depth.Recursive });
 
             //Assert
             result.Should().BeTrue();
@@ -215,7 +214,8 @@ public class ValueEqualityExtensionsTests
             var obj2 = obj1 with { Strings = new List<string> { "ALPHA", "BRAVO" } };
 
             //Act
-            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { StringComparison = StringComparison.InvariantCultureIgnoreCase });
+            //String comparison only reaches collection elements when the collection is dug into (Recursive).
+            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { StringComparison = StringComparison.InvariantCultureIgnoreCase, Depth = Depth.Recursive });
 
             //Assert
             result.Should().BeTrue();
@@ -242,7 +242,9 @@ public class ValueEqualityExtensionsTests
         {
             //Arrange
             var items1 = Dummy.CreateMany<GarbageChild>().ToList();
-            var items2 = Dummy.CreateMany<GarbageChild>().ToList();
+            //Guarantee every child differs so the collections are deterministically unequal
+            //instead of relying on the odds that two random collections never coincide.
+            var items2 = items1.Select(x => x with { Age = x.Age + 1 }).ToList();
 
             var obj1 = new GarbageCollection<GarbageChild>(items1);
             var obj2 = new GarbageCollection<GarbageChild>(items2);

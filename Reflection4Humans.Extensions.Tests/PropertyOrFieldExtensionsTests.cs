@@ -55,13 +55,14 @@ public sealed class PropertyOrFieldExtensionsTests : Tester
         var result = typeof(Garbage).GetAllPropertiesOrFields(x => !x.IsBackingField());
 
         //Assert
-        result.Should().BeEquivalentTo(new List<MemberInfo>
-        {
+        IEnumerable<MemberInfo> expected =
+        [
             typeof(Garbage).GetSingleField(x => x.Name == "ValueField"),
             typeof(Garbage).GetSingleProperty(x => x.Name == "ValueProperty"),
             typeof(Garbage).GetSingleProperty(x => x.Name == "ReadOnly"),
             typeof(Garbage).GetSingleProperty(x => x.Name == "WriteOnly")
-        });
+        ];
+        result.Should().BeEquivalentTo(expected);
     }
 
 

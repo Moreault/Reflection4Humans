@@ -799,7 +799,7 @@ public sealed class PropertyOrFieldTests : Tester
         var result = member.TryGetValue(instance);
 
         //Assert
-        result.Should().Be(Result<object>.Success(instance.Field));
+        result.Should().Be(Result<object?>.Success(instance.Field));
     }
 
     [TestMethod]
@@ -814,7 +814,7 @@ public sealed class PropertyOrFieldTests : Tester
         var result = member.TryGetValue(instance);
 
         //Assert
-        result.Should().Be(Result<object>.Success(instance.ReadOnlyProperty));
+        result.Should().Be(Result<object?>.Success(instance.ReadOnlyProperty));
     }
 
 
@@ -830,7 +830,7 @@ public sealed class PropertyOrFieldTests : Tester
         var result = member.TryGetValue(instance);
 
         //Assert
-        result.Should().Be(Result<object>.Success(instance.Property));
+        result.Should().Be(Result<object?>.Success(instance.Property));
     }
 
     [TestMethod]
@@ -845,7 +845,7 @@ public sealed class PropertyOrFieldTests : Tester
         var result = member.TryGetValue(instance);
 
         //Assert
-        result.Should().Be(Result<object>.Failure());
+        result.Should().Be(Result<object?>.Failure());
     }
 
     [TestMethod]

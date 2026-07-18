@@ -86,11 +86,6 @@ public partial class MemberSearchExtensionsTest
         }
 
         private void SomeoneTouchedMeVeryPrivately() => _wasPoked = true;
-
-        protected AbstractGarbage()
-        {
-
-        }
     }
 
     [TestClass]

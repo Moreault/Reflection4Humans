@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
+		<NoWarn>$(NoWarn);CS8618;CS0067;CS0649;CS0169;CS0414</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>		<PackageReference Include="AssertBox" Version="4.0.0" />
