@@ -1,10 +1,10 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class TypeExtensions
 {
     public static string GetHumanReadableName(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type), string.Format(Exceptions.CannotUseMethodBecauseParamaterIsMandatory, nameof(GetHumanReadableName), nameof(type)));
+        if (type is null) throw new ArgumentNullException(nameof(type), string.Format(Exceptions.CannotUseMethodBecauseParamaterIsMandatory, nameof(GetHumanReadableName), nameof(type)));
 
         var name = type.Name;
         var indexOfApostrophe = name.IndexOf('`');
@@ -25,7 +25,7 @@ public static class TypeExtensions
     /// </summary>
     public static IReadOnlyList<PropertyPath> GetPropertyPath(this Type type, string propertyName, StringComparison comparison = StringComparison.InvariantCultureIgnoreCase)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
         if (string.IsNullOrWhiteSpace(propertyName)) throw new ArgumentNullException(nameof(propertyName));
 
         var path = new List<PropertyPath>();
@@ -51,7 +51,7 @@ public static class TypeExtensions
     /// </summary>
     public static IReadOnlyList<Type> GetDirectInterfaces(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         var allInterfaces = new List<Type>();
         var childInterfaces = new List<Type>();
@@ -71,14 +71,14 @@ public static class TypeExtensions
 
     public static bool Implements(this Type type, Type value)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        if (value is null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(value);
         return type.GetInterfaces().Any(x => x == value);
     }
 
     public static bool HasInterface(this Type type)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
         return type.GetInterfaces().Any();
     }
 
@@ -86,14 +86,14 @@ public static class TypeExtensions
 
     public static bool DirectlyImplements(this Type type, Type @interface)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
-        if (@interface is null) throw new ArgumentNullException(nameof(@interface));
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(@interface, nameof(@interface));
         return type.GetDirectInterfaces().Any(x => x == @interface);
     }
 
     public static object? GetDefaultValue(this Type type)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
         return type.IsValueType ? Activator.CreateInstance(type) : null;
     }
 }

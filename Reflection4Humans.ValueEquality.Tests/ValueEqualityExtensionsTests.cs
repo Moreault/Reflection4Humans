@@ -1,4 +1,4 @@
-﻿using ToolBX.Dummies;
+using ToolBX.Dummies;
 
 namespace Reflection4Humans.ValueEquality.Tests;
 
@@ -9,7 +9,6 @@ public class ValueEqualityExtensionsTests
         public int Id { get; init; }
 
         public string Name { get; init; } = string.Empty;
-        //TODO Add public fields on parent AND child as well as protected, internal, private props and fields on both
 
         public List<string> Strings { get; init; } = new();
 
@@ -57,7 +56,6 @@ public class ValueEqualityExtensionsTests
     [TestClass]
     public class ValueEquals : Tester
     {
-        //TODO Test
         [TestMethod]
         public void WhenTwoDifferentObjectsOfSameTypeAreEquivalent_ReturnTrue()
         {
@@ -194,12 +192,13 @@ public class ValueEqualityExtensionsTests
         }
 
         [TestMethod]
-        [Ignore("Flaky")]
         public void WhenObjectsHaveSamePropertiesButDifferentFields_ReturnFalse()
         {
             //Arrange
             var obj1 = Dummy.Create<GarbageParent>();
-            var obj2 = obj1 with { Field = Dummy.Create<char>() };
+            char differentField;
+            do { differentField = Dummy.Create<char>(); } while (differentField == obj1.Field);
+            var obj2 = obj1 with { Field = differentField };
 
             //Act
             var result = obj1.ValueEquals(obj2);
@@ -208,9 +207,20 @@ public class ValueEqualityExtensionsTests
             result.Should().BeFalse();
         }
 
-        //TODO Test equivalent objects with strings with different casings (also test it in collections)
+        [TestMethod]
+        public void WhenObjectsHaveStringCollectionWithDifferentCasingAndCasingIsIgnored_ReturnTrue()
+        {
+            //Arrange
+            var obj1 = Dummy.Build<GarbageParent>().With(x => x.Strings, new List<string> { "alpha", "bravo" }).Create();
+            var obj2 = obj1 with { Strings = new List<string> { "ALPHA", "BRAVO" } };
 
-        //TODO Fix issue with indexers (probably should be ignored)
+            //Act
+            var result = obj1.ValueEquals(obj2, new ValueEqualityOptions { StringComparison = StringComparison.InvariantCultureIgnoreCase });
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
         [TestMethod]
         public void WhenEquivalentComplexCollection_ShouldBeTrue()
         {

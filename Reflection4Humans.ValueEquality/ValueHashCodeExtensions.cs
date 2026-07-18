@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.ValueEquality;
+namespace ToolBX.Reflection4Humans.ValueEquality;
 
 public static class ValueHashCodeExtensions
 {
@@ -30,8 +30,7 @@ public static class ValueHashCodeExtensions
 
         var derived = value.GetType();
 
-        var fields = derived.GetAllFields(x => x.IsInstance() && x.IsPublic);
-        var properties = derived.GetAllProperties(x => x.IsInstance() && x.IsPublic());
+        var (fields, properties) = MemberCache.GetPublicInstanceMembers(derived);
 
         unchecked
         {

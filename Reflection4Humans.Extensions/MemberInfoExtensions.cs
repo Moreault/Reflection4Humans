@@ -1,113 +1,99 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class MemberInfoExtensions
 {
     public static bool IsStatic(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.IsStatic;
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.IsStatic();
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.IsStatic;
-        if (memberInfo is Type type)
-            return type.IsClass && type.IsAbstract && type.IsSealed;
-        if (memberInfo is EventInfo eventInfo)
-            return eventInfo.AddMethod?.IsStatic ?? eventInfo.AddMethod!.IsStatic;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsStatic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        return memberInfo switch
+        {
+            FieldInfo f => f.IsStatic,
+            PropertyInfo p => p.IsStatic(),
+            MethodBase m => m.IsStatic,
+            Type t => t.IsClass && t.IsAbstract && t.IsSealed,
+            EventInfo e => e.AddMethod?.IsStatic ?? e.AddMethod!.IsStatic,
+            _ => throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsStatic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"))
+        };
     }
 
     public static bool IsInstance(this MemberInfo memberInfo) => !memberInfo.IsStatic();
 
     public static bool IsPrivate(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.IsPrivate;
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.GetMethod?.IsPrivate ?? propertyInfo.SetMethod!.IsPrivate;
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.IsPrivate;
-        if (memberInfo is Type type)
-            return type.IsNestedPrivate;
-        if (memberInfo is EventInfo eventInfo)
-            return eventInfo.AddMethod?.IsPrivate ?? eventInfo.RemoveMethod!.IsPrivate;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPrivate), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        return memberInfo switch
+        {
+            FieldInfo f => f.IsPrivate,
+            PropertyInfo p => p.GetMethod?.IsPrivate ?? p.SetMethod!.IsPrivate,
+            MethodBase m => m.IsPrivate,
+            Type t => t.IsNestedPrivate,
+            EventInfo e => e.AddMethod?.IsPrivate ?? e.RemoveMethod!.IsPrivate,
+            _ => throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPrivate), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"))
+        };
     }
 
     public static bool IsProtected(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.IsFamily;
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.GetMethod?.IsFamily ?? propertyInfo.SetMethod!.IsFamily;
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.IsFamily;
-        if (memberInfo is Type type)
-            return type.IsNestedFamily;
-        if (memberInfo is EventInfo eventInfo)
-            return eventInfo.AddMethod?.IsFamily ?? eventInfo.RemoveMethod!.IsFamily;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsProtected), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        return memberInfo switch
+        {
+            FieldInfo f => f.IsFamily,
+            PropertyInfo p => p.GetMethod?.IsFamily ?? p.SetMethod!.IsFamily,
+            MethodBase m => m.IsFamily,
+            Type t => t.IsNestedFamily,
+            EventInfo e => e.AddMethod?.IsFamily ?? e.RemoveMethod!.IsFamily,
+            _ => throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsProtected), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"))
+        };
     }
 
     public static bool IsInternal(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.IsAssembly;
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.GetMethod?.IsAssembly ?? propertyInfo.SetMethod!.IsAssembly;
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.IsAssembly;
-        if (memberInfo is Type type)
-            return type.IsNestedAssembly;
-        if (memberInfo is EventInfo eventInfo)
-            return eventInfo.AddMethod?.IsAssembly ?? eventInfo.RemoveMethod!.IsAssembly;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsInternal), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        return memberInfo switch
+        {
+            FieldInfo f => f.IsAssembly,
+            PropertyInfo p => p.GetMethod?.IsAssembly ?? p.SetMethod!.IsAssembly,
+            MethodBase m => m.IsAssembly,
+            Type t => t.IsNestedAssembly,
+            EventInfo e => e.AddMethod?.IsAssembly ?? e.RemoveMethod!.IsAssembly,
+            _ => throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsInternal), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"))
+        };
     }
 
     public static bool IsPublic(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.IsPublic;
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.GetMethod?.IsPublic ?? propertyInfo.SetMethod!.IsPublic;
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.IsPublic;
-        if (memberInfo is EventInfo eventInfo)
-            return eventInfo.AddMethod?.IsPublic ?? eventInfo.RemoveMethod!.IsPublic;
-        throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPublic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        return memberInfo switch
+        {
+            FieldInfo f => f.IsPublic,
+            PropertyInfo p => p.GetMethod?.IsPublic ?? p.SetMethod!.IsPublic,
+            MethodBase m => m.IsPublic,
+            EventInfo e => e.AddMethod?.IsPublic ?? e.RemoveMethod!.IsPublic,
+            _ => throw new NotSupportedException(string.Format(Exceptions.MemberKindUnsupported, nameof(IsPublic), memberInfo.DeclaringType?.GetHumanReadableName() ?? "(null)"))
+        };
     }
 
     public static bool IsConstructor(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
         return memberInfo is ConstructorInfo;
     }
 
     public static bool IsMethod(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
         return memberInfo is MethodBase;
     }
 
     public static bool IsField(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
         return memberInfo is FieldInfo;
     }
 
     public static bool IsProperty(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
+        ArgumentNullException.ThrowIfNull(memberInfo);
         return memberInfo is PropertyInfo;
     }
 
@@ -118,25 +104,21 @@ public static class MemberInfoExtensions
     /// <exception cref="NotSupportedException"></exception>
     public static Type GetMemberType(this MemberInfo memberInfo)
     {
-        if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
-
-        if (memberInfo is PropertyInfo propertyInfo)
-            return propertyInfo.PropertyType;
-        if (memberInfo is FieldInfo fieldInfo)
-            return fieldInfo.FieldType;
-        if (memberInfo is MethodBase methodInfo)
-            return methodInfo.GetMethodType();
-        if (memberInfo is Type type)
-            return type;
-        if (memberInfo is EventInfo eventInfo)
-            return eventInfo.EventHandlerType!;
-
-        throw new NotSupportedException(string.Format(Exceptions.MemberInfoTypeNotSupported, memberInfo.GetType()));
+        ArgumentNullException.ThrowIfNull(memberInfo);
+        return memberInfo switch
+        {
+            PropertyInfo p => p.PropertyType,
+            FieldInfo f => f.FieldType,
+            MethodBase m => m.GetMethodType(),
+            Type t => t,
+            EventInfo e => e.EventHandlerType!,
+            _ => throw new NotSupportedException(string.Format(Exceptions.MemberInfoTypeNotSupported, memberInfo.GetType()))
+        };
     }
 
     public static bool HasAttribute(this MemberInfo member)
     {
-        if (member is null) throw new ArgumentNullException(nameof(member));
+        ArgumentNullException.ThrowIfNull(member);
         return member.GetCustomAttributes().Any();
     }
 
@@ -144,14 +126,14 @@ public static class MemberInfoExtensions
 
     public static bool HasAttribute(this MemberInfo member, Type attribute)
     {
-        if (member is null) throw new ArgumentNullException(nameof(member));
-        if (attribute is null) throw new ArgumentNullException(nameof(attribute));
-        return member.GetCustomAttribute(attribute, true) != null;
+        ArgumentNullException.ThrowIfNull(member);
+        ArgumentNullException.ThrowIfNull(attribute);
+        return member.GetCustomAttribute(attribute, true) is not null;
     }
 
     public static bool HasAttribute<T>(this MemberInfo member, Func<T, bool> predicate) where T : Attribute
     {
-        if (member is null) throw new ArgumentNullException(nameof(member));
+        ArgumentNullException.ThrowIfNull(member);
         return member.GetCustomAttribute(typeof(T), true) is T attribute && predicate(attribute);
     }
 }

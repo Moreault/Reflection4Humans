@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class MethodSearchExtensions
 {
@@ -6,7 +6,7 @@ public static class MethodSearchExtensions
 
     private static IEnumerable<MethodInfo> GetAllMethodsInternal(this Type type, Func<MethodInfo, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<MethodInfo> methods = Array.Empty<MethodInfo>();
 
@@ -15,7 +15,7 @@ public static class MethodSearchExtensions
         {
             methods = methods.Concat(currentType.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         methods = methods.Distinct(new MemberInfoEqualityComparer<MethodInfo>());
         return predicate is null ? methods : methods.Where(predicate);

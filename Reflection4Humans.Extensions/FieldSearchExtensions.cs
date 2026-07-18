@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class FieldSearchExtensions
 {
@@ -6,7 +6,7 @@ public static class FieldSearchExtensions
 
     private static IEnumerable<FieldInfo> GetAllFieldsInternal(this Type type, Func<FieldInfo, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<FieldInfo> fields = Array.Empty<FieldInfo>();
 
@@ -15,7 +15,7 @@ public static class FieldSearchExtensions
         {
             fields = fields.Concat(currentType.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         fields = fields.Distinct(new MemberInfoEqualityComparer<FieldInfo>());
         return predicate is null ? fields : fields.Where(predicate);
