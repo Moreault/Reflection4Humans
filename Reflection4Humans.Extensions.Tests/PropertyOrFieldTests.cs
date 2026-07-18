@@ -1248,7 +1248,6 @@ public sealed class PropertyOrFieldTests : Tester
         action.Should().Throw<InvalidCastException>().WithMessage(string.Format(Exceptions.MemberCannotBeCastToField, "WriteOnly"));
     }
 
-    //TODO Test equality
     [TestMethod]
     public void Equality_WhenAreSameReference_DoNotThrow()
     {
