@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.TypeFetcher;
+namespace ToolBX.Reflection4Humans.TypeFetcher;
 
 public static class Types
 {
@@ -7,7 +7,7 @@ public static class Types
     /// </summary>
     public static IEnumerable<Type> From(Assembly assembly)
     {
-        if (assembly is null) throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
         return assembly.GetTypes().DistinctBy(x => x.FullName);
     }
 
@@ -16,7 +16,7 @@ public static class Types
     /// </summary>
     public static IEnumerable<Type> Where(Func<Type, bool> predicate)
     {
-        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(predicate);
         return GetAllTypes().Where(predicate);
     }
 

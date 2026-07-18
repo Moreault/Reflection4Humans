@@ -1,4 +1,4 @@
-﻿namespace Reflection4Humans.ValueEquality.Tests;
+namespace Reflection4Humans.ValueEquality.Tests;
 
 public abstract class ValueEqualityComparerTester : Tester
 {
@@ -96,16 +96,61 @@ public class ValueEqualityComparerTests
     public class GetHashCodeMethod : ValueEqualityComparerTester
     {
         [TestMethod]
-        public void Always_ReturnObjectHashCode()
+        public void WhenValueIsString_ReturnHashCodeConsistentWithStringComparison()
         {
             //Arrange
-            var obj = Dummy.Create<object>();
+            var instance = new ValueEqualityComparer { Options = new ValueEqualityOptions { StringComparison = StringComparison.OrdinalIgnoreCase } };
+            var str = Dummy.Create<string>();
 
             //Act
-            var result = Instance.GetHashCode(obj);
+            var result = instance.GetHashCode(str);
 
             //Assert
-            result.Equals(obj.GetHashCode());
+            result.Should().Be(StringComparer.OrdinalIgnoreCase.GetHashCode(str));
+        }
+
+        [TestMethod]
+        public void WhenValueIsNumber_ReturnDecimalHashCode()
+        {
+            //Arrange
+            var value = Dummy.Create<int>();
+
+            //Act
+            var result = Instance.GetHashCode(value);
+
+            //Assert
+            result.Should().Be(Convert.ToDecimal(value).GetHashCode());
+        }
+
+        [TestMethod]
+        public void WhenTwoEqualStringsWithDifferentCasing_ReturnSameHashCodeWithCaseInsensitiveComparison()
+        {
+            //Arrange
+            var instance = new ValueEqualityComparer { Options = new ValueEqualityOptions { StringComparison = StringComparison.OrdinalIgnoreCase } };
+            var str1 = Dummy.Create<string>().ToUpperInvariant();
+            var str2 = str1.ToLowerInvariant();
+
+            //Act
+            var result1 = instance.GetHashCode(str1);
+            var result2 = instance.GetHashCode(str2);
+
+            //Assert
+            result1.Should().Be(result2);
+        }
+
+        [TestMethod]
+        public void WhenEquivalentNumericTypes_ReturnSameHashCode()
+        {
+            //Arrange
+            var intValue = Dummy.Create<int>();
+            long longValue = intValue;
+
+            //Act
+            var result1 = Instance.GetHashCode(intValue);
+            var result2 = Instance.GetHashCode(longValue);
+
+            //Assert
+            result1.Should().Be(result2);
         }
     }
 }

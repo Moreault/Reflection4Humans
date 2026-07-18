@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class PropertyOrFieldExtensions
 {
@@ -6,7 +6,7 @@ public static class PropertyOrFieldExtensions
 
     private static IEnumerable<IPropertyOrField> GetAllPropertiesOrFieldsInternal(this Type type, Func<IPropertyOrField, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<MemberInfo> members = Array.Empty<MemberInfo>();
 
@@ -15,7 +15,7 @@ public static class PropertyOrFieldExtensions
         {
             members = members.Concat(currentType.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         members = members.Distinct(new MemberInfoEqualityComparer<MemberInfo>());
 
@@ -42,20 +42,20 @@ public static class PropertyOrFieldExtensions
 
     public static IEnumerable<IPropertyOrField> AsPropertyOrField(this IEnumerable<MemberInfo> source)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         foreach (var member in source)
             yield return member.AsPropertyOrField();
     }
 
     public static IPropertyOrField AsPropertyOrField(this MemberInfo member)
     {
-        if (member is null) throw new ArgumentNullException(nameof(member));
+        ArgumentNullException.ThrowIfNull(member);
         return new PropertyOrField(member);
     }
 
     public static IEnumerable<IPropertyOrField> TryAsPropertyOrField(this IEnumerable<MemberInfo> source)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         foreach (var member in source.Where(x => x is FieldInfo or PropertyInfo))
             yield return new PropertyOrField(member);

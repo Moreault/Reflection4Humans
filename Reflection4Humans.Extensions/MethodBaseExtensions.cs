@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class MethodBaseExtensions
 {
@@ -16,8 +16,8 @@ public static class MethodBaseExtensions
     public static bool HasParameters(this MethodBase methodInfo, params Type[] parameters) => methodInfo.HasParameters((IEnumerable<Type>)parameters);
     public static bool HasParameters(this MethodBase methodInfo, IEnumerable<Type> parameters)
     {
-        if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
-        if (parameters is null) throw new ArgumentNullException(nameof(parameters));
+        ArgumentNullException.ThrowIfNull(methodInfo);
+        ArgumentNullException.ThrowIfNull(parameters);
 
         var parametersArray = parameters as IList<Type> ?? parameters.ToArray();
         if (parametersArray.Count == 0) return methodInfo.GetParameters().Length == 0;
@@ -26,7 +26,7 @@ public static class MethodBaseExtensions
 
     public static bool HasParameters(this MethodBase methodInfo, int count)
     {
-        if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
         return methodInfo.GetParameters().Length == count;
     }
 
@@ -34,8 +34,8 @@ public static class MethodBaseExtensions
 
     public static bool HasParameters(this MethodBase methodInfo, IEnumerable<Func<ParameterInfo, bool>> predicates)
     {
-        if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
-        if (predicates is null) throw new ArgumentNullException(nameof(predicates));
+        ArgumentNullException.ThrowIfNull(methodInfo);
+        ArgumentNullException.ThrowIfNull(predicates);
 
         var list = predicates as IList<Func<ParameterInfo, bool>> ?? predicates.ToList();
 
@@ -53,15 +53,15 @@ public static class MethodBaseExtensions
 
     public static bool HasParametersAssignableFrom(this MethodBase methodInfo, IEnumerable<Type?> parameters)
     {
-        if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
-        if (parameters is null) throw new ArgumentNullException(nameof(parameters));
+        ArgumentNullException.ThrowIfNull(methodInfo);
+        ArgumentNullException.ThrowIfNull(parameters);
 
         var list = parameters as IList<Type?> ?? parameters.ToList();
         if (list.Count != methodInfo.GetParameters().Length) return false;
 
         for (var i = 0; i < list.Count; i++)
         {
-            if (list[i] != null && !list[i]!.IsAssignableFrom(methodInfo.GetParameters()[i].ParameterType)) return false;
+            if (list[i] is not null && !list[i]!.IsAssignableFrom(methodInfo.GetParameters()[i].ParameterType)) return false;
         }
 
         return true;
@@ -71,15 +71,15 @@ public static class MethodBaseExtensions
 
     public static bool HasParametersAssignableTo(this MethodBase methodInfo, IEnumerable<Type?> parameters)
     {
-        if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
-        if (parameters is null) throw new ArgumentNullException(nameof(parameters));
+        ArgumentNullException.ThrowIfNull(methodInfo);
+        ArgumentNullException.ThrowIfNull(parameters);
 
         var list = parameters as IList<Type?> ?? parameters.ToList();
         if (list.Count != methodInfo.GetParameters().Length) return false;
 
         for (var i = 0; i < list.Count; i++)
         {
-            if (list[i] != null && !list[i]!.IsAssignableTo(methodInfo.GetParameters()[i].ParameterType)) return false;
+            if (list[i] is not null && !list[i]!.IsAssignableTo(methodInfo.GetParameters()[i].ParameterType)) return false;
         }
 
         return true;
@@ -87,17 +87,17 @@ public static class MethodBaseExtensions
 
     public static bool HasNoParameter(this MethodBase methodInfo)
     {
-        if (methodInfo is null) throw new ArgumentNullException(nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
         return methodInfo.GetParameters().Length == 0;
     }
 
     public static bool IsPropertyAccessor(this MethodBase method)
     {
-        if (method is null) throw new ArgumentNullException(nameof(method));
-        if (method.IsSpecialName && method.IsPublic && method.DeclaringType != null)
+        ArgumentNullException.ThrowIfNull(method);
+        if (method.IsSpecialName && method.IsPublic && method.DeclaringType is not null)
         {
             var property = method.DeclaringType.GetProperty(method.Name[4..]);
-            if (property != null)
+            if (property is not null)
             {
                 var accessors = property.GetAccessors();
                 return accessors.Contains(method);
@@ -109,7 +109,7 @@ public static class MethodBaseExtensions
 
     public static Type GetMethodType(this MethodBase method)
     {
-        if (method is null) throw new ArgumentNullException(nameof(method));
+        ArgumentNullException.ThrowIfNull(method);
         if (method is ConstructorInfo)
             return method.DeclaringType!;
 

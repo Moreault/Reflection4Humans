@@ -219,7 +219,7 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
 
     public bool Equals(MemberInfo? other) => _unwrapped.Equals(other);
 
-    public override bool Equals(object? obj)
+    public override bool Equals(object? obj) => obj switch
     {
         return obj switch
         {

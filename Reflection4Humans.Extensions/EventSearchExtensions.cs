@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class EventSearchExtensions
 {
@@ -6,7 +6,7 @@ public static class EventSearchExtensions
 
     private static IEnumerable<EventInfo> GetAllEventsInternal(this Type type, Func<EventInfo, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<EventInfo> events = Array.Empty<EventInfo>();
 
@@ -15,7 +15,7 @@ public static class EventSearchExtensions
         {
             events = events.Concat(currentType.GetEvents(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         events = events.Distinct(new MemberInfoEqualityComparer<EventInfo>());
         return predicate is null ? events : events.Where(predicate);

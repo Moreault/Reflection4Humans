@@ -1,4 +1,4 @@
-﻿namespace ToolBX.Reflection4Humans.Extensions;
+namespace ToolBX.Reflection4Humans.Extensions;
 
 public static class PropertySearchExtensions
 {
@@ -6,7 +6,7 @@ public static class PropertySearchExtensions
 
     private static IEnumerable<PropertyInfo> GetAllPropertiesInternal(this Type type, Func<PropertyInfo, bool>? predicate = null)
     {
-        if (type is null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         IEnumerable<PropertyInfo> properties = Array.Empty<PropertyInfo>();
 
@@ -15,7 +15,7 @@ public static class PropertySearchExtensions
         {
             properties = properties.Concat(currentType.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance));
             currentType = currentType.BaseType;
-        } while (currentType != null);
+        } while (currentType is not null);
 
         properties = properties.Distinct(new MemberInfoEqualityComparer<PropertyInfo>());
         return predicate is null ? properties : properties.Where(predicate);
