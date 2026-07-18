@@ -221,15 +221,12 @@ internal sealed class PropertyOrField : MemberInfo, IPropertyOrField
 
     public override bool Equals(object? obj) => obj switch
     {
-        return obj switch
-        {
-            IPropertyOrField propertyOrField => Equals(propertyOrField),
-            PropertyInfo propertyInfo => Equals(propertyInfo),
-            FieldInfo fieldInfo => Equals(fieldInfo),
-            MemberInfo memberInfo => Equals(memberInfo),
-            _ => false
-        };
-    }
+        IPropertyOrField propertyOrField => Equals(propertyOrField),
+        PropertyInfo propertyInfo => Equals(propertyInfo),
+        FieldInfo fieldInfo => Equals(fieldInfo),
+        MemberInfo memberInfo => Equals(memberInfo),
+        _ => false
+    };
 
     public override int GetHashCode() => _unwrapped.GetHashCode();
 
